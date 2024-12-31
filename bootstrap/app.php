@@ -12,7 +12,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware
+        ->trustProxies('*') // Confía en todos los proxies
+        ->trustHosts(['eazzyreship.com'])
+        ->trustHosts(['www.eazzyreship.com']); // Define los hosts confiables
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

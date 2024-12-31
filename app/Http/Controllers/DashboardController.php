@@ -36,7 +36,6 @@ class DashboardController extends Controller
             // Para otros roles o no autenticados
             abort(403, 'No autorizado');
         }
-        //return 'hello there!';
     }
 
     public function getShipmentsDash($client_id = null)
