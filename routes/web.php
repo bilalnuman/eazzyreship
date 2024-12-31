@@ -14,6 +14,7 @@ use App\Http\Controllers\ReceiverController;
 use App\http\Controllers\PaymentController;
 use App\http\Controllers\ManifestController;
 use App\http\Controllers\DashboardController;
+use App\http\Controllers\DashController;
 use App\Models\Client;
 use App\Models\Package;
 use App\Models\Package_shipment;
@@ -39,7 +40,7 @@ Route::get('/tracking/view/{id}', [ShipmentController::class, 'track'])->name('p
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');*/
 
-
+Route::get('/dash', [DashController::class, 'index'])->name('dash');
 
 Route::middleware('auth', 'verified')->group(function () {
 

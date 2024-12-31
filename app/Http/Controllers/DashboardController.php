@@ -12,7 +12,7 @@ class DashboardController extends Controller
 
     public function index()
     {
-       /* $user = auth()->user();
+       $user = auth()->user();
         if ($user->hasRole('admin')) {
             $allShipments = Shipment::count(); // Total general
             $savedShipments = Shipment::where('status_id', '1')->count();
@@ -35,8 +35,8 @@ class DashboardController extends Controller
         } else {
             // Para otros roles o no autenticados
             abort(403, 'No autorizado');
-        }*/
-        return 'hello there!';
+        }
+        //return 'hello there!';
     }
 
     public function getShipmentsDash($client_id = null)
