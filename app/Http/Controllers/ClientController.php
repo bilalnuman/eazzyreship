@@ -10,6 +10,8 @@ use App\Models\Country;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
 
+use Illuminate\Support\Facades\Http;
+
 use App\Models\State;
 use App\Models\Branch;
 
@@ -108,7 +110,7 @@ class ClientController extends Controller
         'branch' => $request->branch_code,
         ];
         
-        //Http::post('https://shopandtake-9dcc127c6236.herokuapp.com/tekcore/registerLocation', $userData);
+        Http::post('https://shopandtake-9dcc127c6236.herokuapp.com/tekcore/registerLocation', $userData);
 
         return redirect()->route('pages.clients.index')
         ->with('message', 'Client created successfully.')

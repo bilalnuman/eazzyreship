@@ -257,7 +257,7 @@ return [
     */
 
     'use_route_url' => false,
-    'dashboard_url' => 'home',
+    'dashboard_url' => '/',
     'logout_url' => 'logout',
     'login_url' => 'login',
     'register_url' => 'register',
@@ -328,7 +328,7 @@ return [
         ],
         [
             'text' => 'Dashboard',
-            'url' => '/',
+            'url' => '/dashboard',
             'icon' => 'fas fa-fw fa-store',
         ],
         ['header' => 'account_settings'],

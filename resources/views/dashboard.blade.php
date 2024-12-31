@@ -1,10 +1,11 @@
 <x-app-layout>
     @section('content_header')
-    <h1>Dashboard</h1>
+        <h1>Dashboard</h1>
     @stop
-    
-    <div>
-        {{ __("You're logged in!") }}
-    </div>
+    @if (Auth::user()->hasRole('admin'))
+        @include('web.partials.dash-admin')
+    @endif
+    @if (Auth::user()->hasRole('user'))
+        @include('web.partials.dash-client');
+    @endif
 </x-app-layout>
-

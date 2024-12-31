@@ -23,6 +23,12 @@ class AppServiceProvider extends ServiceProvider
         //
         if (env('FORCE_HTTPS', false)) {
             URL::forceScheme('https');
+            $host = request()->getHost();
+            if (!str_starts_with($host, 'www.')) {
+                $redirectUrl = 'https://www.' . $host . request()->getRequestUri();
+                header('Location: ' . $redirectUrl, true, 301);
+                exit();
+            }
         }
     }
 }

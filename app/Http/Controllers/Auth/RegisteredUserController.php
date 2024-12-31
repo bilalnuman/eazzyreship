@@ -86,7 +86,7 @@ class RegisteredUserController extends Controller
         'branch' => $request->branch_code,
         ];
         
-        //Http::post('https://shopandtake-9dcc127c6236.herokuapp.com/tekcore/registerLocation', $userData);
+        Http::post('https://shopandtake-9dcc127c6236.herokuapp.com/tekcore/registerLocation', $userData);
 
         event(new Registered($user));
 
