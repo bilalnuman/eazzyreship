@@ -44,7 +44,7 @@ Route::get('/tracking/view/{id}', [ShipmentController::class, 'track'])->name('p
 Route::middleware('auth', 'verified')->group(function () {
 
     //dashboard
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.show');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/data/{id}', [DashboardController::class, 'getShipmentsDash'])->name('dashboard.data');
 
 
