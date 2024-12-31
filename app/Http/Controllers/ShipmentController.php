@@ -207,7 +207,24 @@ class ShipmentController extends Controller
             $shipment = Shipment::create($validated);
             if ($token) {
 
-                $order = $request->Shipment['order_id'];
+                /*$order = $request->Shipment['order_id'];
+                $parts = explode('-', $order);
+
+                if (isset($parts[1]) && $parts[1] !== 'NA') {
+                    $subparts = explode("\x1D", $parts[1]);
+                    $shipment->update(['order_id' => $subparts[1] ?? null]);
+                } else {
+                    $shipment->update(['order_id' => null]);
+                }
+
+                $code = $parts[0];
+                $barcode = $parts[1] ?? null;
+                $shipment->update(['code' => $prefix->value . $code, 'barcode' => $barcode]);*/
+
+
+
+
+                $order = $request['order_id'];
                 $parts = explode('-', $order);
 
                 if (isset($parts[1]) && $parts[1] !== 'NA') {
