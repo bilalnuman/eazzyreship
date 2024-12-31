@@ -266,9 +266,9 @@ class ShipmentController extends Controller
             $user = User::where('remember_token', $request->header('token'))->first();
             if ($user) {
                 $message = $this->store($request, $request->header('token'));
-                return response()->json(['message' => $message]);
+                return response()->json(['message1' => $message]);
             } else {
-                return response()->json(['message' => 'Not Authorized']);
+                return response()->json(['message2' => 'Not Authorized']);
             }
         } catch (\Exception $e) {
 
