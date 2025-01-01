@@ -472,16 +472,19 @@ return [
             'text' => 'Settings',
             'icon_color' => 'red',
             'url' => '#',
+            'can' => 'users',
         ],
         [
             'text' => 'warning',
             'icon_color' => 'yellow',
             'url' => '#',
+            'can' => 'users',
         ],
         [
             'text' => 'information',
             'icon_color' => 'cyan',
             'url' => '#',
+            'can' => 'users',
         ],
     ],
 
