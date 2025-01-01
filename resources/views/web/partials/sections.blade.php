@@ -114,10 +114,12 @@
                     <div class="col-md-6">
                         <div class="info-item d-flex flex-column justify-content-center align-items-center"
                             data-aos="fade-up" data-aos-delay="300">
-                            <i class="bi bi-telephone"></i>
+                        <div class="d-flex flex-row justify-content-center align-items-center">
+                            <i class="bi bi-telephone"></i><i class="bi bi-whatsapp ms-2"></i>
+                        </div>                         
                             <h3>Call Us</h3>
-                            <p>+1 (305) 280 1457</p>
-                        </div>
+                            <p>+1 (786) 824-65497</p>
+                    </div>
                     </div><!-- End Info Item -->
 
                     <div class="col-md-6">

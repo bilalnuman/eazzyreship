@@ -22,7 +22,7 @@ class DashboardController extends Controller
             
             return view('dashboard', compact('allShipments', 'savedShipments', 'inProgressShipments', 'deliveredShipments'));
         
-        } elseif ($user->hasRole('client')) {
+        } elseif ($user->hasRole('user')) {
             // Lógica para client
             $allShipments = Shipment::where('client_id', $user->id)->count();
             $savedShipments = Shipment::where('client_id', $user->id)->where('status_id', '1')->count();

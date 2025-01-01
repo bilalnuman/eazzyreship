@@ -342,6 +342,7 @@ return [
             'text' => 'change_password',
             'url' => 'admin/settings',
             'icon' => 'fas fa-fw fa-lock',
+            'can' => 'users',
         ],
         [
             'text' => 'Shipment',
@@ -363,6 +364,7 @@ return [
         [
             'text' => 'Customers',
             'icon' => 'fas fa-fw fa-user',
+            'can' => 'users',
             'submenu' => [
                         [
                             'text' => 'all Customers',
