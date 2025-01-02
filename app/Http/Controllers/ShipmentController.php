@@ -18,6 +18,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ShipmentCreatedMail;
 use Auth;
 
 class ShipmentController extends Controller
@@ -443,6 +445,7 @@ class ShipmentController extends Controller
             }
 
             DB::commit();
+            Mail::to($shipment->client->email)->send(new ShipmentCreatedMail($shipment->code));
             return redirect()->route('pages.shipments.index')
                 ->with('message', 'Shipment updated successfully.')
                 ->with('icon', 'success');

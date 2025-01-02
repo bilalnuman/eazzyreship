@@ -50,7 +50,9 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+});
 
+Route::middleware('role:admin','auth', 'verified')->group(function () {
     //branches->
     Route::get('/branch', [BranchController::class, 'index'])->name('pages.branches.index');
     Route::get('/branch/data', [BranchController::class, 'getBranches'])->name('branches.data');

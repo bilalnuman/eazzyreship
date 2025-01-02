@@ -9,24 +9,18 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class WelcomeEmail extends Mailable
+class ShipmentCreatedMail extends Mailable
 {
     use Queueable, SerializesModels;
 
     /**
      * Create a new message instance.
      */
-    /**
-     * The user ID.
-     *
-     * @var string
-     */
-    public $userId;
+    public $code;
 
-    public function __construct(string $userId)
+    public function __construct($code)
     {
-        $this->userId = $userId;
-        //
+        $this->code = $code;
     }
 
     /**
@@ -35,7 +29,7 @@ class WelcomeEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'New Eazzyship account created',
+            subject: 'Shipment Created',
         );
     }
 
@@ -45,7 +39,7 @@ class WelcomeEmail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.welcome-email',
+            view: 'emails.shipment-created',
         );
     }
 
