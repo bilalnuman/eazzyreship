@@ -8,9 +8,9 @@
                         <div class="card bg-light">
                             <div class="card-body">
                                 <a href="#" class="text-decoration-none">
-                                    <h5 class="font-weight-bold">{{ __('This is your air address:') }}</h5>
+                                    <h5 class="font-weight-bold">{{ __('This is your air shipment address:') }}</h5>
                                     <p class="font-weight-bold text-success mt-2"></p>
-                                    <p class="text-danger text-dark mt-3">
+                                    <p class="text-danger text-dark mt-3">{{'EazzyReship / (your name here)'}}<br>
                                         {{ '8069 NW 67th St' }}<br>{{ 'Suite: # ' }}{{ $client->code }}{{'-A'}}<br>{{ 'Miami FL 33166' }}<br>{{ 'USA' }}<br>{{ '+1 (786) 824-6549' }}
                                     </p>
                                     <p class="font-weight-bold text-dark text-success mt-3"></p>
@@ -29,9 +29,9 @@
                         <div class="card bg-light">
                             <div class="card-body">
                                 <a href="#" class="text-decoration-none">
-                                    <h5 class="font-weight-bold">{{ __('This is your ocean address:') }}</h5>
+                                    <h5 class="font-weight-bold">{{ __('This is your ocean shipment address:') }}</h5>
                                     <p class="font-weight-bold text-success mt-2"></p>
-                                    <p class="text-danger text-dark mt-3">
+                                    <p class="text-danger text-dark mt-3">{{'EazzyReship / (your name here)'}}<br>
                                         {{ '8069 NW 67th St' }}<br>{{ 'Suite: # ' }}{{ $client->code }}{{'-O'}}<br>{{ 'Miami FL 33166' }}<br>{{ 'USA' }}<br>{{ '+1 (786) 824-6549' }}
                                     </p>
                                     <p class="font-weight-bold text-dark text-success mt-3"></p>
@@ -182,7 +182,7 @@
                     }
                 ],
                 language: {
-                    url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json",
+                    url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/en-EN.json",
                 }
             });
         });

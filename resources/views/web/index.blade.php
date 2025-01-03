@@ -95,6 +95,21 @@
                                 <li><a href="{{ route('register') }}">Register</a></li>
                             @endif
                         @endauth
+                        <li class="dropdown"><a href="#"><span>More</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+                            <ul>
+                                <li><a href="#buy_for_me">Buy For Me</a></li>
+                                <li><a href="#rates">Rates</a></li>
+                                <li><a href="#services">Services</a></li>
+                                <li><a href="#how_it_works">How It Works</a></li>
+                                <li><a href="#locations">Locations</a></li>
+                                <li><a href="#calculator">Calculator</a></li>
+                                <li><a href="#pre_notifications">Pre-Notifications</a></li>
+                                <li><a href="#where_to_shop">Where To Shop</a></li>
+                                <li><a href="#contact">Contact Us</a></li>
+                                <li><a href="#faqs">FAQS</a></li>
+                                
+                            </ul>
+                        </li>
                     </ul>
                     <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
                 </nav>
@@ -104,7 +119,7 @@
                         <button type="submit" class="btn btn-default btn-flat float-right cta-btn">Sign out</button>
                     </form>
                 @else
-                <a class="cta-btn" href="{{route('login') }}">Log in</a>
+                    <a class="cta-btn" href="{{ route('login') }}">Log in</a>
                 @endauth
             @endif
         </div>
@@ -136,5 +151,4 @@
     <!-- Main JS File -->
     <script src="{{ asset('web/js/main.js') }}"></script>
 </body>
-
 </html>
