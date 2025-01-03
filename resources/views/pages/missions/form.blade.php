@@ -21,7 +21,7 @@
     <label for="from_branch_id">From Branch</label>
     <select name="from_branch_id" id="from_branch_id" class="form-control">
         <option value="">-- Select Branch --</option>
-        @foreach ($branches as $branch)
+        @foreach ($branches0 as $branch)
             <option value="{{ $branch->id }}"
                 {{ old('from_branch_id', $mission->from_branch_id ?? '') == $branch->id ? 'selected' : '' }}>
                 {{ $branch->name }}</option>

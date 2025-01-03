@@ -57,8 +57,9 @@
                             className: 'text-right',
                             render: function(data, type, row) {
                                 return `                                 
-                                    ${row.status_id != 'Close' ? `<a href="/mission/${row.id}/edit" class="btn btn-sm btn-primary">Edit</a> <a href="/mission/change-status/${row.id}" class="btn btn-sm btn-warning">Close</a>
-                                    <a href="#" onclick="confirmDelete(${row.id})" class="btn btn-sm btn-danger">Delete</a>` : ''}
+                                    ${row.status_id != 'Close' ? `<a href="/mission/${row.id}/edit" class="btn btn-sm btn-primary">Edit</a>
+                                    <a href="/mission/${row.id}/change-status" class="btn btn-sm btn-warning">Close</a>
+                                    <!--a href="#" onclick="confirmDelete(${row.id})" class="btn btn-sm btn-danger">Delete</a-->` : ''}
                                     
                                 `;
                             },

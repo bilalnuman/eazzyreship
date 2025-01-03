@@ -20,7 +20,7 @@
                     <div class="col-10">
                         <div class="d-flex justify-content-between flex-column flex-md-row mb-4">
                             <div>
-                                <h1 class="text-dark mb-2">{{ __('Shipment: ') }}{{$shipment['code']}}</h1>
+                                <h1 class="text-dark mb-2">{{ __('Shipment: ') }}{{ $shipment['code'] }}</h1>
                                 @if ($shipment['order_id'])
                                     <p class="text-muted">
                                         <strong>{{ __('Order ID') }}:</strong> {{ $shipment['order_id'] }}
@@ -52,7 +52,7 @@
                         </div>
 
                         <!-- Shipment details -->
-                       
+
                         <div class="row shipment-details-row">
                             <div class="col-12 col-sm-6 col-md-3">
                                 <h6 class="text-dark font-weight-bold">{{ __('Client Sender') }}</h6>
@@ -154,13 +154,14 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($packages as $package)
+                                    @foreach ($packages as $package)
                                         <tr>
                                             <td>{{ $package->description }}</td>
                                             <td class="text-center">{{ $package->qty }}</td>
                                             <td class="text-center">{{ $package->package->name ?? '-' }}</td>
                                             <td class="text-center">{{ $package->weight }} LB</td>
-                                            <td class="text-center">{{ $package->length }} x {{ $package->width }} x {{ $package->height }} IN</td>
+                                            <td class="text-center">{{ $package->length }} x {{ $package->width }} x
+                                                {{ $package->height }} IN</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -183,7 +184,9 @@
                                         <td>{{ $shipment['payment_method_id'] }}</td>
                                         <td>{{ $shipment['paid'] == 1 ? __('Paid') : __('Pending') }}</td>
                                         <td>{{ $shipment['paid'] ? $shipment['collection_time'] : '-' }}</td>
-                                        <td class="text-right">{{ $shipment['shipping_cost'] + $shipment['tax'] + $shipment['insurance'] + $shipment['return_cost'] }}</td>
+                                        <td class="text-right">
+                                            {{ $shipment['shipping_cost'] + $shipment['tax'] + $shipment['insurance'] + $shipment['return_cost'] }}
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -191,8 +194,26 @@
 
                         <!-- Actions -->
                         <div class="d-flex justify-content-between mt-4">
-                            <a href="{{ route('pages.shipments.invoice', [$shipment['id'], 'label']) }}" class="btn btn-outline-primary">{{ __('Print Label') }}</a>
-                            <a href="{{ route('pages.shipments.invoice', [$shipment['id'], 'invoice']) }}" class="btn btn-outline-secondary">{{ __('Print Invoice') }}</a>
+                            <!--a href="route('pages.shipments.invoice', [$shipment['id'], 'label'])" class="btn btn-outline-primary">('Print Label')</a-->
+                            @role('admin')
+                                <a href="#"
+                                    class="btn btn-outline-primary">
+                                    {{ __('Print Label') }}
+                                </a>
+
+                                <a href="{{ route('pages.shipments.invoice', [$shipment['id'], 'invoice']) }}"
+                                    class="btn btn-outline-secondary">
+                                    {{ __('Print Invoice') }}
+                                </a>
+                            @endrole
+
+                            @role('user')
+                                <!-- Esto se mostrará solo para usuarios con el rol de "user" -->
+                                <a href="{{ route('dashboard.invoice', [$shipment['id'], 'invoice']) }}"
+                                    class="btn btn-outline-primary">
+                                    {{ __('Print Invoice') }}
+                                </a>
+                            @endrole
                         </div>
                     </div>
                 </div>

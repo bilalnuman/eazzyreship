@@ -118,7 +118,6 @@ class BranchController extends Controller
                 ->with('message', 'An error occurred while updating the Branch.')
                 ->with('icon', 'error')
                 ->withInput(); // Retorna los valores ingresados
-
         }
     }
 

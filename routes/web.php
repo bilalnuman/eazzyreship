@@ -44,6 +44,13 @@ Route::middleware('auth', 'verified')->group(function () {
     //dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/data/{id}', [DashboardController::class, 'getShipmentsDash'])->name('dashboard.data');
+    Route::get('/dashboard/show/{id}', [DashboardController::class, 'show'])->name('dashboard.show');
+    Route::get('/dashboard/invoice/{id}', [DashboardController::class, 'invoice'])->name('dashboard.invoice');
+    Route::get('/dashboard/editclient', [DashboardController::class, 'editClient'])->name('dashboard.editclient');
+    Route::put('/dashborad/updateclient', [DashboardController::class, 'updateClient'])->name('dashboard.updateclient');
+
+    //states
+    Route::get('/states/{country_id}', [StateController::class, 'getStatesByCountry'])->name('states.byCountry');
 
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -62,8 +69,7 @@ Route::middleware('role:admin','auth', 'verified')->group(function () {
     Route::put('/branch/update/{id}', [BranchController::class, 'update'])->name('branches.update');
     Route::get('/branch/{id}/delete', [BranchController::class, 'destroy'])->name('branches.delete');
 
-    //states
-    Route::get('/states/{country_id}', [StateController::class, 'getStatesByCountry'])->name('states.byCountry');
+
 
 
     //clients
@@ -125,6 +131,7 @@ Route::middleware('role:admin','auth', 'verified')->group(function () {
     Route::get('/mission/{id}/edit', [MissionController::class, 'edit'])->name('pages.missions.edit');
     Route::put('/mission/update/{id}', [MissionController::class, 'update'])->name('missions.update');
     Route::get('/mission/{id}/delete', [MissionController::class, 'destroy'])->name('missions.delete');
+    Route::get('/mission/{id}/change-status/', [MissionController::class, 'status'])->name('missions.change-status');
 
     //Payment
     Route::get('/payment', [PaymentController::class, 'index'])->name('pages.payments.index');

@@ -7,7 +7,8 @@
     @stop
 
     @section('content')
-        <form action="{{ route('clients.update', $client->id) }}" method="POST">
+    
+        <form action="{{ auth()->user()->hasRole('user') ? route('dashboard.updateclient') : route('clients.update', $client->id) }}"  method="POST">
             @csrf
             @method('PUT')
             @include('pages.clients.form', ['client' => $client])
@@ -16,4 +17,17 @@
             </div>
         </form>
     @stop
+    @push('js')
+    @if (($message = Session::get('message')) && ($icon = Session::get('icon')))
+            <script>
+                Swal.fire({
+                    position: "top-end",
+                    icon: "{{ $icon }}",
+                    title: "{{ $message }}",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            </script>
+        @endif
+    @endpush
 </x-app-layout>

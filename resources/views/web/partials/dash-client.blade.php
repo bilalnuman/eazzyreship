@@ -3,26 +3,53 @@
         <div class="row">
             <!-- Wallet Card -->
             <div class="col-lg-12">
-                <div class="card bg-light">
-                    <div class="card-body">
-                        <a href="#" class="text-decoration-none">
-                            <h5 class="font-weight-bold">{{ __('This is our address:') }}</h5>
-                            <p class="font-weight-bold text-success mt-2"></p>
-                            <p class="text-danger text-dark mt-3">
-                                {{ '8069 NW 67th St' }}<br>{{ 'Suite: # ' }}{{ $client->code }}<br>{{ 'Miami FL 33166' }}<br>{{ 'USA' }}<br>{{ '(305) 280 1457' }}
-                            </p>
-                            <p class="font-weight-bold text-dark text-success mt-3"></p>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <a href="#" class="text-decoration-none">
+                                    <h5 class="font-weight-bold">{{ __('This is your air address:') }}</h5>
+                                    <p class="font-weight-bold text-success mt-2"></p>
+                                    <p class="text-danger text-dark mt-3">
+                                        {{ '8069 NW 67th St' }}<br>{{ 'Suite: # ' }}{{ $client->code }}{{'-A'}}<br>{{ 'Miami FL 33166' }}<br>{{ 'USA' }}<br>{{ '+1 (786) 824-6549' }}
+                                    </p>
+                                    <p class="font-weight-bold text-dark text-success mt-3"></p>
 
-                            <div style="width: 100%; height: 1px; background-color: #3f4254; margin-top: 9px;"></div>
-                        </a>
+                                    <div style="width: 100%; height: 1px; background-color: #3f4254; margin-top: 9px;">
+                                    </div>
+                                </a>
 
-                        <p class="m-0 text-dark text-xs"><br>
-                            {{ __('If you have any questions, feel free to contact us at info@eazzyship.com') }}
-                        </p>
+                                <p class="m-0 text-dark text-xs"><br>
+                                    {{ __('If you have any questions, feel free to contact us at info@eazzyship.com') }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <a href="#" class="text-decoration-none">
+                                    <h5 class="font-weight-bold">{{ __('This is your ocean address:') }}</h5>
+                                    <p class="font-weight-bold text-success mt-2"></p>
+                                    <p class="text-danger text-dark mt-3">
+                                        {{ '8069 NW 67th St' }}<br>{{ 'Suite: # ' }}{{ $client->code }}{{'-O'}}<br>{{ 'Miami FL 33166' }}<br>{{ 'USA' }}<br>{{ '+1 (786) 824-6549' }}
+                                    </p>
+                                    <p class="font-weight-bold text-dark text-success mt-3"></p>
+
+                                    <div style="width: 100%; height: 1px; background-color: #3f4254; margin-top: 9px;">
+                                    </div>
+                                </a>
+
+                                <p class="m-0 text-dark text-xs"><br>
+                                    <br/>
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-
+        </div>
+        <div class="row">
             <!-- All Shipments -->
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-info">
@@ -33,8 +60,7 @@
                     <div class="icon">
                         <i class="fas fa-box-open"></i>
                     </div>
-                    <a href="#"
-                        class="small-box-footer">
+                    <a href="#" class="small-box-footer">
                         {{ __('total info') }}</i>
                     </a>
                 </div>
@@ -50,8 +76,7 @@
                     <div class="icon">
                         <i class="fas fa-box-open"></i>
                     </div>
-                    <a href="#"
-                        class="small-box-footer">
+                    <a href="#" class="small-box-footer">
                         {{ __('total info') }}</i>
                     </a>
                 </div>
@@ -67,8 +92,7 @@
                     <div class="icon">
                         <i class="fas fa-box-open"></i>
                     </div>
-                    <a href="#"
-                        class="small-box-footer">
+                    <a href="#" class="small-box-footer">
                         {{ __('total info') }}</i>
                     </a>
                 </div>
@@ -84,8 +108,7 @@
                     <div class="icon">
                         <i class="fas fa-box-open"></i>
                     </div>
-                    <a href="#"
-                        class="small-box-footer">
+                    <a href="#" class="small-box-footer">
                         {{ __('total info') }}</i>
                     </a>
                 </div>
@@ -153,7 +176,7 @@
                         render: function(data, type, row) {
                             return `
                     <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-                        <a href="/shipment/show/${row.id}" class="btn btn-primary"><i class="fas fa-eye"></i></a>                              
+                        <a href="/dashboard/show/${row.id}" class="btn btn-primary"><i class="fas fa-eye"></i></a>                              
                     </div>`;
                         }
                     }

@@ -140,12 +140,15 @@ class ShipmentController extends Controller
     {
         //$clients = Client::pluck('name', 'id', 'address', 'mobile', );
         $clients = Client::select('name', 'id', 'address', 'mobile', 'branch_id')->get();
-        $branches = Branch::pluck('name', 'id');
+        $excludedBranchIds1 = [1,2,3,4,5]; // IDs a excluir
+        $branches0 = Branch::whereNotIn('id', $excludedBranchIds1)->pluck('name', 'id');
+        $excludedBranchIds2 = [6];
+        $branches = Branch::whereNotIn('id', $excludedBranchIds2)->pluck('name', 'id');
         $packages = Package::pluck('name', 'id');
-        $missions = Mission::pluck('code', 'id');
+        $missions = Mission::where('status_id', 1)->pluck('code', 'id');
         $receivers = Receiver::all();
 
-        return view('pages.shipments.create', compact('clients', 'branches', 'receivers', 'packages', 'missions'));
+        return view('pages.shipments.create', compact('clients','branches0', 'branches', 'receivers', 'packages', 'missions'));
     }
 
     /**
@@ -383,15 +386,18 @@ class ShipmentController extends Controller
     public function edit($id)
     {
         $clients = Client::select('name', 'id', 'address', 'mobile', 'branch_id')->get();
-        $branches = Branch::pluck('name', 'id');
+        $excludedBranchIds1 = [1,2,3,4,5]; // IDs a excluir
+        $branches0 = Branch::whereNotIn('id', $excludedBranchIds1)->pluck('name', 'id');
+        $excludedBranchIds2 = [6]; // IDs a excluir
+        $branches = Branch::whereNotIn('id', $excludedBranchIds2)->pluck('name', 'id');
         $packages = Package::pluck('name', 'id');
-        $missions = Mission::pluck('code', 'id');
+        $missions = Mission::where('status_id', 1)->pluck('code', 'id');
         $receivers = Receiver::all();
         //$shipment = Shipment::findOrFail($id);
         $shipment = Shipment::with('client')->findOrFail($id);
         $package_shipments = Package_shipment::where('shipment_id', $id)->get();
 
-        return view('pages.shipments.edit', compact('shipment', 'branches', 'clients', 'receivers', 'packages', 'package_shipments', 'missions'));
+        return view('pages.shipments.edit', compact('shipment', 'branches0', 'branches', 'clients', 'receivers', 'packages', 'package_shipments', 'missions'));
     }
 
     /**
@@ -445,7 +451,7 @@ class ShipmentController extends Controller
             }
 
             DB::commit();
-            Mail::to($shipment->client->email)->send(new ShipmentCreatedMail($shipment->code));
+            Mail::to($shipment->client->email)->send(new ShipmentCreatedMail($shipment));
             return redirect()->route('pages.shipments.index')
                 ->with('message', 'Shipment updated successfully.')
                 ->with('icon', 'success');

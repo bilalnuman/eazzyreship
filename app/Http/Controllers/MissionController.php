@@ -18,10 +18,14 @@ class MissionController extends Controller
 
     public function create()
     {
-        $branches = Branch::all();
-        return view('pages.missions.create', compact('branches'));
+        $excludedBranchIds1 = [1, 2, 3, 4, 5]; // IDs a excluir
+        $branches0 = Branch::whereNotIn('id', $excludedBranchIds1)->get();
+        $excludedBranchIds2 = [6]; // IDs a excluir
+        $branches = Branch::whereNotIn('id', $excludedBranchIds2)->get();
+
+        return view('pages.missions.create', compact('branches0', 'branches'));
     }
-    
+
     public function show($var = null)
     {
         $missionsData = $this->getMissions($var);
@@ -63,9 +67,12 @@ class MissionController extends Controller
 
     public function edit($id)
     {
-        $branches = Branch::all();
+        $excludedBranchIds1 = [1, 2, 3, 4, 5]; // IDs a excluir
+        $branches0 = Branch::whereNotIn('id', $excludedBranchIds1)->get();
+        $excludedBranchIds2 = [6]; // IDs a excluir
+        $branches = Branch::whereNotIn('id', $excludedBranchIds2)->get();
         $mission = Mission::findOrFail($id);
-        return view('pages.missions.edit', compact('mission', 'branches'));
+        return view('pages.missions.edit', compact('mission', 'branches0', 'branches'));
     }
 
     public function update(Request $request, $id)
@@ -98,10 +105,29 @@ class MissionController extends Controller
             ->with('icon', 'success');
     }
 
-    public function destroy(Mission $mission)
+    public function status($id)
     {
+        $mission = Mission::find($id);
+
+        if (!$mission) {
+            return redirect()->back()
+            ->with('message', 'Mission not found.')
+            ->with('icon', 'error');
+        }
+
+        $mission->status_id = $mission->status_id == 1 ? 0 : 0; // 1 = Activo, 0 = Inactivo
+        $mission->save();
+
+        return redirect()->route('pages.missions.index')
+                        ->with('message', 'Mission closed successfully.')
+                        ->with('icon','success');
+    }
+
+    public function destroy($id)
+    {
+        $mission = Mission::findOrFail($id);
         $mission->delete();
-        return redirect()->route('missions.index')
+        return redirect()->route('pages.missions.index')
             ->with('message', 'Mission deleted successfully!')
             ->with('icon', 'success');
     }
@@ -111,8 +137,8 @@ class MissionController extends Controller
         $type = ($var === 'active') ? '1' : (($var === 'close') ? '0' : null);
 
         if ($type != null) {
-            $missions = Mission::with('tobranch:id,name','frombranch:id,name') // Asegúrate de tener una relación definida entre Mission y Branch
-                ->select(['id', 'code', 'status_id', 'type', 'due_date', 'from_branch_id','to_branch_id'])
+            $missions = Mission::with('tobranch:id,name', 'frombranch:id,name') // Asegúrate de tener una relación definida entre Mission y Branch
+                ->select(['id', 'code', 'status_id', 'type', 'due_date', 'from_branch_id', 'to_branch_id'])
                 ->where('status_id', $type)
                 ->orderBy('id', 'desc')
                 ->get()
@@ -128,7 +154,7 @@ class MissionController extends Controller
                     ];
                 });
         } else {
-            $missions = Mission::with('tobranch:id,name','frombranch:id,name') // Asegúrate de tener una relación definida entre Mission y Branch
+            $missions = Mission::with('tobranch:id,name', 'frombranch:id,name') // Asegúrate de tener una relación definida entre Mission y Branch
                 ->select(['id', 'code', 'status_id', 'type', 'due_date', 'from_branch_id', 'to_branch_id'])
                 ->orderBy('id', 'desc')
                 ->get()

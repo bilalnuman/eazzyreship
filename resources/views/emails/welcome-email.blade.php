@@ -25,12 +25,13 @@
     <h1>Welcome to Eazzyreship</h1>
     <p>Hi There!</p>
     <p>Thank you for signing up with Eazzyreship! Your account is now active.</p>
-    <p> This is our address:<br/><br/>
+    <p> This is your address:<br/><br/>
         8069 NW 67th St.<br/>
-        Suite: #  {{ $userId }} <br/>
+        Suite: #  {{ $userId }}-A (for air)<br/>
+        Suite: #  {{ $userId }}-O (for ocean)<br/>
         Miami FL 33166<br/>
         USA<br/>
-        (305) 280 1457</p>
+        +1 (786) 824-6549</p>
     <p><a href="{{ url('/') }}" class="button">Start Exploring</a></p>
     <p>If you have any questions, feel free to contact us at info@eazzyship.com</p>
     <p>Currently by default we ship via sea freight on a weekly basis but if you need to ship your packages by air via Fedex / DHL please let us know as soon as your packages are received in our Miami Warehouse</p>

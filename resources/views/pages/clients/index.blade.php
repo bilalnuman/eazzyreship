@@ -52,7 +52,7 @@
                             render: function(data, type, row) {
                                 return `
                                 <a href="/client/${row.id}/edit" class="btn btn-sm btn-primary">Edit</a>
-                                <a href="#" onclick="confirmDelete(${row.id})" class="btn btn-sm btn-danger">Delete</a>
+                                <!--a href="#" onclick="confirmDelete(${row.id})" class="btn btn-sm btn-danger">Delete</a-->
                             `;
                             },
                             className: 'text-right'

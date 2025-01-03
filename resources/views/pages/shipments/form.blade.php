@@ -21,8 +21,8 @@
             <label for="from_branch_id">From Branch</label>
             <select name="from_branch_id" id="from_branch_id"
                 class="form-control @error('from_branch_id') is-invalid @enderror" required>
-                <option value="">Select a branch</option>
-                @foreach ($branches as $id => $name)
+                <!--option value="">Select a branch</option-->
+                @foreach ($branches0 as $id => $name)
                     <option value="{{ $id }}"
                         {{ old('from_branch_id', $shipment->from_branch_id ?? '6') == $id ? 'selected' : '' }}>
                         {{ $name }}
@@ -77,7 +77,7 @@
         <div class="form-group">
             <label for="responsible_mobile">Customer phone</label>
             <input type="text" name="responsible_mobile" id="responsible_mobile" class="form-control"
-                value="{{ old('responsible_mobile', $shipment->client->mobile ?? '') }}">
+                value="{{ old('responsible_mobile', $shipment->client->mobile ?? '') }}" readonly>
         </div>
     </div>
 
@@ -86,7 +86,7 @@
             <label for="responsible_address">Customer Address</label>
             <input type="text" name="responsible_address" id="responsible_address"
                 class="form-control @error('responsible_address') is-invalid @enderror"
-                value="{{ old('responsible_address', $shipment->client->address ?? '') }}">
+                value="{{ old('responsible_address', $shipment->client->address ?? '') }}" readonly>
             @error('responsible_address')
                 <span class="invalid-feedback">{{ $message }}</span>
             @enderror
@@ -221,14 +221,14 @@
         <div class="form-group">
             <label for="shipping_cost">Shipping Cost:</label>
             <input type="number" name="shipping_cost" id="shipping_cost" class="form-control" step="0.10"
-                min="1" value="{{ old('shipping_cost', $shipment->shipping_cost ?? '0.00') }}">
+                min="0" value="{{ old('shipping_cost', $shipment->shipping_cost ?? '0.00') }}">
         </div>
     </div>
     <div class="col-md-6">
         <div class="form-group">
-            <label for="return_cost">Return Cost:</label>
+            <label for="return_cost">Delivery Cost:</label>
             <input type="number" name="return_cost" id="return_cost" class="form-control" step="0.10"
-                min="1" value="{{ old('return_cost', $shipment->return_cost ?? '0.00') }}">
+                min="0" value="{{ old('return_cost', $shipment->return_cost ?? '0.00') }}">
         </div>
     </div>
 </div>

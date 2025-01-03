@@ -20,7 +20,6 @@
                             <th>Email</th>
                             <th>Responsible Mobile</th>
                             <th>Address</th>
-                            <th>Created At</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -43,7 +42,6 @@
                         { data: 'email', name: 'email' },
                         { data: 'responsible_mobile', name: 'responsible_mobile' },
                         { data: 'address', name: 'address' },
-                        { data: 'created_at', name: 'created_at' },
                         {
                             data: null,
                             name: 'action',
@@ -53,7 +51,7 @@
                             render: function (data, type, row) {
                                 return `
                                     <a href="/branch/${row.id}/edit" class="btn btn-sm btn-primary">Edit</a>
-                                    <a href="#" onclick="confirmDelete(${row.id})" class="btn btn-sm btn-danger">Delete</a>
+                                    <!--a href="#" onclick="confirmDelete(${row.id})" class="btn btn-sm btn-danger">Delete</a-->
                                 `;
                             }
                         }

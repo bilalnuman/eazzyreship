@@ -16,11 +16,11 @@ class ShipmentCreatedMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public $code;
+    public $shipment;
 
-    public function __construct($code)
+    public function __construct($shipment)
     {
-        $this->code = $code;
+        $this->shipment = $shipment;
     }
 
     /**

@@ -115,10 +115,15 @@
                         <div class="info-item d-flex flex-column justify-content-center align-items-center"
                             data-aos="fade-up" data-aos-delay="300">
                         <div class="d-flex flex-row justify-content-center align-items-center">
-                            <i class="bi bi-telephone"></i><i class="bi bi-whatsapp ms-2"></i>
+                            <a href="tel:+17868246549" aria-label="Llamar por teléfono">
+                                <i class="bi bi-telephone"></i>
+                            </a>                        
+                            <a href="https://wa.me/17868246549" target="_blank" rel="noopener noreferrer">
+                                <i class="bi bi-whatsapp ms-2"></i>
+                            </a>
                         </div>                         
                             <h3>Call Us</h3>
-                            <p>+1 (786) 824-65497</p>
+                            <p>+1 (786) 824-6549</p>
                     </div>
                     </div><!-- End Info Item -->
 

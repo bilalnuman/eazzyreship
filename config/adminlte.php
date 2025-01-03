@@ -333,10 +333,10 @@ return [
         ],
         ['header' => 'account_settings'],
         [
-            'text' => 'profile',
-            'url' => 'admin/settings',
+            'text' => 'address',
+            'url' => '/dashboard/editclient',
             'icon' => 'fas fa-fw fa-user',
-            'can' => 'users',
+            'can' => 'client',
         ],
         [
             'text' => 'change_password',
