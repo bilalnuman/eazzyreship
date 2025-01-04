@@ -241,10 +241,9 @@ class ShipmentController extends Controller
                 $code = $parts[0];
                 $barcode = $parts[1] ?? null;
                 $shipment->update(['code' => $prefix->value . $code, 'barcode' => $barcode]);
+            }else{
+                $shipment->update(['code' => $prefix->value . $shipment->id]);
             }
-
-            $shipment->update(['code' => $prefix->value . $shipment->id]);
-
             // Log client shipment
             Client_shipment_log::create([
                 'from' => 1,
