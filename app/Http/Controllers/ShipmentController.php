@@ -532,15 +532,16 @@ class ShipmentController extends Controller
             $shipment->name = $client->name; // Asumimos que el nombre del receptor es el mismo que el del cliente
             $shipment->receiver_mobile = $client->mobile; // Asumimos que el teléfono del receptor es el mismo que el del cliente
             //$shipment->receiver_address = $ClientAddress->address;
+            
             // Estos valores pueden ser específicos de tu lógica de negocio.
-            $shipment->from_country_id = $ClientAddress->country_id ?? $shipment->from_country_id;
+            //$shipment->from_branch_id = $ClientAddress->country_id ?? $shipment->from_branch_id;
             // Guardar los cambios en el modelo Shipment
             $shipment->save();
 
             // Crear una nueva entrada en la tabla client_shipment_logs
             DB::table('client_shipment_logs')->insert([
                 'from' => 1,
-                'to' => 1,
+                'to' => 2,
                 'created_by' => $client->id,
                 'shipment_id' => $shipment->id,
                 'created_at' => now(),
@@ -572,7 +573,10 @@ class ShipmentController extends Controller
         try {
             //$status = Client::find($request->input('status_id'));
             $status = $request->input('status_id');
-            $shipment = Shipment::find($request->input('shipment_id'));
+            $shipment_id = $request->input('shipment_id');
+            
+            $shipment = Shipment::where('code', $shipment_id)->first();
+            //$shipment = Shipment::find($request->input('shipment_id'));
 
             // Verificar que el cliente y el envío existen
             if ($status && $shipment) {
