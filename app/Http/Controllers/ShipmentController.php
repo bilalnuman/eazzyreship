@@ -284,7 +284,7 @@ class ShipmentController extends Controller
     public function storeAPI(Request $request)
     {
         try {
-            $user = User::where('remember_token', $request->header('token'))->first();
+            $user = User::where('password', $request->header('token'))->first();
             if ($user) {
                 $message = $this->store($request, $request->header('token'));
                 return response()->json(['message' => $message]);
