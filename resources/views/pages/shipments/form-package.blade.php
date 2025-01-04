@@ -63,6 +63,14 @@
             </div>
         </div>
     </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="packages[{{ $index }}][carrier]">Carrier</label>
+            <input type="text" name="packages[{{ $index }}][carrier]"
+                id="packages[{{ $index }}][carrier]" class="form-control"
+                value="{{ old('packages.{$index}.carrier', $package->carrier ?? '') }}">
+        </div>
+    </div>
     @if ($index > 0)
         <div class="form-group mb0">
 

@@ -15,7 +15,7 @@ class PackageShipmentController extends Controller
 
     public function getPackage($id)
     {
-        $shipments_package = Package_shipment::where('shipment_id', $id)->pluck(['id', 'description', 'weigth', 'length', 'width', 'height', 'qty']);
+        $shipments_package = Package_shipment::where('shipment_id', $id)->pluck(['id', 'description', 'carrier', 'weigth', 'length', 'width', 'height', 'qty']);
         
         if ($shipments_package->isEmpty()) {
             return response()->json(['data' => [], 'message' => 'No shipments available.']);
@@ -29,6 +29,7 @@ class PackageShipmentController extends Controller
             'package_id' => 'required|integer',
             'shipment_id' => 'required|integer',
             'description' => 'nullable|string',
+            'carrier' => 'nullable|string',
             'weight' => 'nullable|numeric',
             'length' => 'nullable|numeric',
             'width' => 'nullable|numeric',
@@ -49,6 +50,7 @@ class PackageShipmentController extends Controller
             'package_id' => 'required|integer',
             'shipment_id' => 'required|integer',
             'description' => 'nullable|string',
+            'carrier' => 'nullable|string',
             'weight' => 'nullable|numeric',
             'length' => 'nullable|numeric',
             'width' => 'nullable|numeric',

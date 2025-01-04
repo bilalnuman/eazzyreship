@@ -209,28 +209,28 @@
     <div class="col-md-6">
         <div class="form-group">
             <label for="tax">Tax & Duty:</label>
-            <input type="number" name="tax" id="tax" class="form-control" step="0.10" min="0"
+            <input type="number" name="tax" id="tax" class="form-control" step="0.01" min="0"
                 value="{{ old('tax', $shipment->tax ?? '0.00') }}">
         </div>
     </div>
     <div class="col-md-6">
         <div class="form-group">
             <label for="insurance">Insurance:</label>
-            <input type="number" name="insurance" id="insurance" class="form-control" step="0.10"
+            <input type="number" name="insurance" id="insurance" class="form-control" step="0.01"
                 min="0" value="{{ old('insurance', $shipment->insurance ?? '0.00') }}">
         </div>
     </div>
     <div class="col-md-6">
         <div class="form-group">
             <label for="shipping_cost">Shipping Cost:</label>
-            <input type="number" name="shipping_cost" id="shipping_cost" class="form-control" step="0.10"
+            <input type="number" name="shipping_cost" id="shipping_cost" class="form-control" step="0.01"
                 min="0" value="{{ old('shipping_cost', $shipment->shipping_cost ?? '0.00') }}">
         </div>
     </div>
     <div class="col-md-6">
         <div class="form-group">
             <label for="return_cost">Delivery Cost:</label>
-            <input type="number" name="return_cost" id="return_cost" class="form-control" step="0.10"
+            <input type="number" name="return_cost" id="return_cost" class="form-control" step="0.01"
                 min="0" value="{{ old('return_cost', $shipment->return_cost ?? '0.00') }}">
         </div>
     </div>
