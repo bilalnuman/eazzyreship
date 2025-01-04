@@ -36,11 +36,11 @@
         <div class="form-group">
             <label for="packages[{{ $index }}][weight]">Weight</label>
             <input type="number" name="packages[{{ $index }}][weight]"
-                id="packages[{{ $index }}][weight]" class="form-control weight-listener" step="0.10" min="0.5"
+                id="packages[{{ $index }}][weight]" class="form-control weight-listener" step="0.01" min="0.0"
                 value="{{ old('packages.{ $index }.weight', $package->weight ?? '') }}">
         </div>
     </div>
-
+s
     <div class="col-md-6 package-group mb-3">
         <div class="d-flex justify-content-between">
             <div class="form-group mr-2">

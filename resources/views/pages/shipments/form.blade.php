@@ -250,8 +250,8 @@
     <div class="col-md-6">
         <div class="form-group">
             <label for="total_weight">Total Weight</label>
-            <input type="number" name="total_weight" id="total_weight" class="form-control" step="0.10"
-                min="0.5" value="{{ old('total_weight', $shipment->total_weight ?? '0.00') }}">
+            <input type="number" name="total_weight" id="total_weight" class="form-control" step="0.01"
+                min="0.0" value="{{ old('total_weight', $shipment->total_weight ?? '0.00') }}">
             <span name="volumetric_weight" id="volumetric_weight"></span>
         </div>
     </div>
