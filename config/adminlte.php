@@ -399,15 +399,15 @@ return [
             'can' => 'users',
             'submenu' => [
                         [
-                            'text' => 'New Mission',
-                            'url' => '/mission/create',
-                            'can' => 'users',
-                        ],
-                        [
                             'text' => 'all Missions',
                             'url' => '/mission',
                             'can' => 'users',
                         ],
+                        [
+                            'text' => 'New Mission',
+                            'url' => '/mission/create',
+                            'can' => 'users',
+                        ],                     
                         [
                             'text' => 'Active Missions',
                             'url' => '/mission/show/active',

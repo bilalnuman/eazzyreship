@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Mission;
+use App\Models\Shipment;
 use App\Models\Branch;
 use App\Models\Shipment_setting;
 use App\Models\Status;
@@ -30,6 +31,65 @@ class MissionController extends Controller
     {
         $missionsData = $this->getMissions($var);
         return view('pages.missions.index', compact('missionsData'));
+    }
+
+    public function manifest($id)
+    {
+        // Obtén la misión específica
+        $mission = Mission::with('shipment')->findOrFail($id);
+
+        $shipmentsData = $mission->shipment->map(function ($shipment) {
+            return [
+                'id' => $shipment->id,
+                'code' => $shipment->code,
+                'client' => $shipment->client->name,
+                'status' => $shipment->status->name,
+                'to_branch' => $shipment->toBranch->name,
+                'receiver' => $shipment->receiver->name,
+                'actions' => ''
+            ];
+        });
+
+        // Obtén la lista de envíos que no están asignados a esta misión
+        $availableShipments = Shipment::whereNull('mission_id')                                       
+                                        ->where('to_branch_id', $mission->to_branch_id)
+                                        ->get();                             
+                                    
+
+        return view('pages.missions.manifest', compact('mission', 'availableShipments','shipmentsData'));
+    }
+
+    public function addShipments(Request $request, $id)
+    {
+        $mission = Mission::findOrFail($id);
+
+        // Validar los IDs de los envíos
+        $request->validate([
+            'shipment_ids' => 'required|array',
+            'shipment_ids.*' => 'exists:shipments,id',
+        ]);
+
+        // Asignar los envíos a la misión
+        Shipment::whereIn('id', $request->shipment_ids)->update(['mission_id' => $mission->id]);
+
+        return redirect()->route('pages.missions.manifest', $id)
+        ->with('message', 'Shipment added successfully.')
+        ->with('icon','success');
+    }
+
+
+    public function removeShipment($missionId, $shipmentId)
+    {
+        $shipment = Shipment::where('id', $shipmentId)->where('mission_id', $missionId)->firstOrFail();
+
+        // Quitar la misión del envío
+        $shipment->update(['mission_id' => null]);
+
+        //return redirect()->back()->with('success', 'Shipment removed successfully.');
+
+        return redirect()->route('pages.missions.manifest', $missionId)
+        ->with('message', 'Shipment removed successfully.')
+        ->with('icon','success');
     }
 
 
@@ -111,16 +171,16 @@ class MissionController extends Controller
 
         if (!$mission) {
             return redirect()->back()
-            ->with('message', 'Mission not found.')
-            ->with('icon', 'error');
+                ->with('message', 'Mission not found.')
+                ->with('icon', 'error');
         }
 
         $mission->status_id = $mission->status_id == 1 ? 0 : 0; // 1 = Activo, 0 = Inactivo
         $mission->save();
 
         return redirect()->route('pages.missions.index')
-                        ->with('message', 'Mission closed successfully.')
-                        ->with('icon','success');
+            ->with('message', 'Mission closed successfully.')
+            ->with('icon', 'success');
     }
 
     public function destroy($id)

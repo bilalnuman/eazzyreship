@@ -195,7 +195,7 @@ class ShipmentController extends Controller
             'return_cost' => 'nullable|numeric|min:0',
             'total_weight' => 'nullable|numeric',
             'order_id' => 'nullable|string',
-            'amount_to_be_collected' => 'nullable|numeric',
+            'amount_to_be_collected' => 'nullable|numeric|min:0.1',
 
             'packages.*.package_id' => 'required|integer',
             'packages.*.description' => 'nullable|string',

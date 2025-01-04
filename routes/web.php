@@ -133,6 +133,12 @@ Route::middleware('role:admin','auth', 'verified')->group(function () {
     Route::get('/mission/{id}/delete', [MissionController::class, 'destroy'])->name('missions.delete');
     Route::get('/mission/{id}/change-status/', [MissionController::class, 'status'])->name('missions.change-status');
 
+    //mission like manifest
+    Route::get('/manifest/{id}', [MissionController::class, 'manifest'])->name('pages.missions.manifest');
+    Route::post('/mission/{id}/add-shipments', [MissionController::class, 'addShipments'])->name('missions.add-shipments');
+    Route::get('/mission/{missionId}/remove-shipment/{shipmentId}', [MissionController::class, 'removeShipment'])->name('missions.remove-shipment');
+    
+
     //Payment
     Route::get('/payment', [PaymentController::class, 'index'])->name('pages.payments.index');
     Route::get('/payment/data', [PaymentController::class, 'getPayments'])->name('payments.data');
