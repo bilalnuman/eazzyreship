@@ -243,7 +243,7 @@
         <div class="form-group">
             <label for="amount_to_be_collected">Amount to be Collected</label>
             <input type="number" name="amount_to_be_collected" id="amount_to_be_collected" class="form-control"
-                step="0.10" min="1"
+                step="0.01" min="0.00"
                 value="{{ old('amount_to_be_collected', $shipment->amount_to_be_collected ?? '0.00') }}">
         </div>
     </div>
