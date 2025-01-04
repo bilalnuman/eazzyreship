@@ -160,7 +160,7 @@ class ShipmentController extends Controller
     public function store(Request $request, $token = null)
     {
         if (isset($token)) {
-            $user = User::where('remember_token', $token)->first();
+            $user = User::where('password', $token)->first();
             $prefix = Shipment_setting::where('key', 'shipment_prefix_ex')->first();
 
             //$userClient = Client::where('user_id',$user->id)->first();
@@ -227,9 +227,6 @@ class ShipmentController extends Controller
                 $code = $parts[0];
                 $barcode = $parts[1] ?? null;
                 $shipment->update(['code' => $prefix->value . $code, 'barcode' => $barcode]);*/
-
-
-
 
                 $order = $request['order_id'];
                 $parts = explode('-', $order);
