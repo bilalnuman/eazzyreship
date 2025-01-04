@@ -30,7 +30,7 @@ class Client extends Model
     
     public function addresses()
     {
-        return $this->hasMany(Client_address::class, 'client_id');
+        return $this->hasMany(Client_address::class, 'client_id','id');
     }
     public function branch()
     {

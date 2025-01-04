@@ -62,7 +62,10 @@
                 @foreach ($clients as $client)
                     <option value="{{ $client->id }}"
                         {{ old('client_id', $shipment->client_id ?? '') == $client->id ? 'selected' : '' }}
-                        data-mobile="{{ $client->mobile }}" data-address="{{ $client->address }}"
+                        data-mobile="{{ $client->mobile }}"
+                        @foreach ($client->addresses as $var)
+                        data-address="{{ $var->address }}" 
+                        @endforeach
                         data-branch="{{ $client->branch_id }}">
                         {{ $client->name }}</option>
                 @endforeach
@@ -86,7 +89,7 @@
             <label for="responsible_address">Customer Address</label>
             <input type="text" name="responsible_address" id="responsible_address"
                 class="form-control @error('responsible_address') is-invalid @enderror"
-                value="{{ old('responsible_address', $shipment->client->address ?? '') }}" readonly>
+                value="{{ old('responsible_address', $client_address->address ?? '') }}" readonly>
             @error('responsible_address')
                 <span class="invalid-feedback">{{ $message }}</span>
             @enderror
@@ -206,15 +209,15 @@
     <div class="col-md-6">
         <div class="form-group">
             <label for="tax">Tax & Duty:</label>
-            <input type="number" name="tax" id="tax" class="form-control" step="1" min="0"
-                value="{{ old('tax', $shipment->tax ?? '0') }}">
+            <input type="number" name="tax" id="tax" class="form-control" step="0.10" min="0"
+                value="{{ old('tax', $shipment->tax ?? '0.00') }}">
         </div>
     </div>
     <div class="col-md-6">
         <div class="form-group">
             <label for="insurance">Insurance:</label>
-            <input type="number" name="insurance" id="insurance" class="form-control" step="1"
-                min="0" value="{{ old('insurance', $shipment->insurance ?? '0') }}">
+            <input type="number" name="insurance" id="insurance" class="form-control" step="0.10"
+                min="0" value="{{ old('insurance', $shipment->insurance ?? '0.00') }}">
         </div>
     </div>
     <div class="col-md-6">
@@ -239,8 +242,9 @@
     <div class="col-md-6">
         <div class="form-group">
             <label for="amount_to_be_collected">Amount to be Collected</label>
-            <input type="number" name="amount_to_be_collected" id="amount_to_be_collected" class="form-control" step="0.10"
-                min="1" value="{{ old('amount_to_be_collected', $shipment->amount_to_be_collected ?? '0.00') }}">
+            <input type="number" name="amount_to_be_collected" id="amount_to_be_collected" class="form-control"
+                step="0.10" min="1"
+                value="{{ old('amount_to_be_collected', $shipment->amount_to_be_collected ?? '0.00') }}">
         </div>
     </div>
     <div class="col-md-6">
@@ -435,19 +439,19 @@
     </script>
     <script>
         /*document.addEventListener('DOMContentLoaded', function() {
-                                const shippingDateInput = document.getElementById('shipping_date');
+                                    const shippingDateInput = document.getElementById('shipping_date');
 
-                                if (!shippingDateInput.value) {
-                                    // Obtener la fecha actual en formato YYYY-MM-DD
-                                    const today = new Date();
-                                    const year = today.getFullYear();
-                                    const month = String(today.getMonth() + 1).padStart(2, '0'); // Mes en formato 2 dígitos
-                                    const day = String(today.getDate()).padStart(2, '0'); // Día en formato 2 dígitos
+                                    if (!shippingDateInput.value) {
+                                        // Obtener la fecha actual en formato YYYY-MM-DD
+                                        const today = new Date();
+                                        const year = today.getFullYear();
+                                        const month = String(today.getMonth() + 1).padStart(2, '0'); // Mes en formato 2 dígitos
+                                        const day = String(today.getDate()).padStart(2, '0'); // Día en formato 2 dígitos
 
-                                    // Establecer el valor del campo con la fecha actual
-                                    shippingDateInput.value = `${year}-${month}-${day}`;
-                                }
-                            });*/
+                                        // Establecer el valor del campo con la fecha actual
+                                        shippingDateInput.value = `${year}-${month}-${day}`;
+                                    }
+                                });*/
     </script>
     <script>
         document.getElementById('addPackageBtn').addEventListener('click', function() {

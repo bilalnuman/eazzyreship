@@ -139,7 +139,9 @@ class ShipmentController extends Controller
     public function create()
     {
         //$clients = Client::pluck('name', 'id', 'address', 'mobile', );
-        $clients = Client::select('name', 'id', 'address', 'mobile', 'branch_id')->get();
+        $clients = Client::with('addresses:client_id,address')
+        ->select('name', 'id', 'mobile', 'branch_id')->get();
+
         $excludedBranchIds1 = [1,2,3,4,5]; // IDs a excluir
         $branches0 = Branch::whereNotIn('id', $excludedBranchIds1)->pluck('name', 'id');
         $excludedBranchIds2 = [6];
@@ -385,7 +387,9 @@ class ShipmentController extends Controller
      */
     public function edit($id)
     {
-        $clients = Client::select('name', 'id', 'address', 'mobile', 'branch_id')->get();
+        $clients = Client::with('addresses:client_id,address')
+        ->select('name', 'id', 'mobile', 'branch_id')->get();
+
         $excludedBranchIds1 = [1,2,3,4,5]; // IDs a excluir
         $branches0 = Branch::whereNotIn('id', $excludedBranchIds1)->pluck('name', 'id');
         $excludedBranchIds2 = [6]; // IDs a excluir
@@ -395,9 +399,13 @@ class ShipmentController extends Controller
         $receivers = Receiver::all();
         //$shipment = Shipment::findOrFail($id);
         $shipment = Shipment::with('client')->findOrFail($id);
+        $client_address = Client_address::where('client_id', $shipment->client_id)
+        ->orderBy('id', 'desc')
+        ->first();
+
         $package_shipments = Package_shipment::where('shipment_id', $id)->get();
 
-        return view('pages.shipments.edit', compact('shipment', 'branches0', 'branches', 'clients', 'receivers', 'packages', 'package_shipments', 'missions'));
+        return view('pages.shipments.edit', compact('shipment', 'branches0', 'branches', 'clients', 'receivers', 'packages', 'package_shipments', 'missions','client_address'));
     }
 
     /**

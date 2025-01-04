@@ -44,6 +44,14 @@
             <input type="hidden" name="branch_code" id="branch_code">
         </div>
     </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="national_id">National ID / Passport / Drivers license</label>
+            <input type="text" name="national_id" id="national_id" class="form-control"
+                value="{{ old('national_id', $client->national_id ?? '') }}">
+        </div>
+    </div>
+
 </div>
 
 <h4>Address</h4>

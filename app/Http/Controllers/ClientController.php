@@ -63,6 +63,7 @@ class ClientController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'nullable|email|max:255',
             'mobile' => 'nullable|string|max:15',
+            'national_id' => 'nullable|string',
             'branch_id' => 'required|integer',
             'addresses.*.address' => 'nullable|string',
             'addresses.*.country_id' => 'required|exists:countries,id',
@@ -132,6 +133,7 @@ class ClientController extends Controller
     {
         $validated = $request->validate([
             'mobile' => 'nullable|string|max:15',
+            'national_id' => 'nullable|string',
             'addresses.*.address' => 'nullable|string',
             'addresses.*.country_id' => 'required|exists:countries,id',
             'addresses.*.state_id' => 'required|exists:states,id',
