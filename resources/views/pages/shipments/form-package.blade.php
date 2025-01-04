@@ -36,29 +36,29 @@
         <div class="form-group">
             <label for="packages[{{ $index }}][weight]">Weight</label>
             <input type="number" name="packages[{{ $index }}][weight]"
-                id="packages[{{ $index }}][weight]" class="form-control weight-listener" step="0.01" min="0.0"
+                id="packages[{{ $index }}][weight]" class="form-control weight-listener" step="0.01" min="0"
                 value="{{ old('packages.{ $index }.weight', $package->weight ?? '') }}">
         </div>
     </div>
-s
+
     <div class="col-md-6 package-group mb-3">
         <div class="d-flex justify-content-between">
             <div class="form-group mr-2">
                 <label for="packages[{{ $index }}][length]">Length</label>
                 <input type="number" name="packages[{{ $index }}][length]"
-                    id="packages[{{ $index }}][length]" class="form-control" step="0.10" min="1"
+                    id="packages[{{ $index }}][length]" class="form-control" step="0.01" min="0"
                     value="{{ old('packages.{ $index }.length', $package->length ?? '') }}">
             </div>
             <div class="form-group mr-2">
                 <label for="packages[{{ $index }}][width]">Width</label>
                 <input type="number" name="packages[{{ $index }}][width]"
-                    id="packages[{{ $index }}][width]" class="form-control" step="0.10" min="1"
+                    id="packages[{{ $index }}][width]" class="form-control" step="0.01" min="0"
                     value="{{ old('packages.{ $index }.width', $package->width ?? '') }}">
             </div>
             <div class="form-group mr-2">
                 <label for="packages[{{ $index }}][height]">Height</label>
                 <input type="number" name="packages[{{ $index }}][height]"
-                    id="packages[{{ $index }}][height]" class="form-control" step="0.10" min="1"
+                    id="packages[{{ $index }}][height]" class="form-control" step="0.01" min="0"
                     value="{{ old('packages.{ $index }.height', $package->height ?? '') }}">
             </div>
         </div>
