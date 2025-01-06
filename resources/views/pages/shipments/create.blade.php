@@ -11,7 +11,7 @@
                 <h3 class="card-title">New Shipment</h3>
             </div>
             <div class="card-body">
-                <form action="{{ route('shipments.store') }}" method="POST">
+                <form action="{{ route('shipments.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @include('pages.shipments.form')
 
@@ -29,4 +29,17 @@
             </div>
         </div>
     @stop
+    @push('js')
+    @if (($message = Session::get('message')) && ($icon = Session::get('icon')))
+            <script>
+                Swal.fire({
+                    position: "top-end",
+                    icon: "{{ $icon }}",
+                    title: "{{ $message }}",
+                    showConfirmButton: false,
+                    timer: 6500
+                });
+            </script>
+        @endif
+    @endpush
 </x-app-layout>

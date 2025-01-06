@@ -25,6 +25,8 @@ return new class extends Migration
             $table->string('receiver_address')->nullable();           
             $table->integer('from_branch_id')->unsigned();
             $table->integer('to_branch_id')->unsigned();
+            $table->string('carrier')->nullable();
+            $table->string('carrier_doc')->nullable();
             $table->tinyInteger('payment_type')->nullable();
             $table->tinyInteger('paid')->default(0);
             $table->text('payment_integration_id')->nullable();

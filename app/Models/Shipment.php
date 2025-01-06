@@ -22,6 +22,8 @@ class Shipment extends Model
         'receiver_address',
         'from_branch_id',
         'to_branch_id',
+        'carrier',
+        'carrier_doc',
         'payment_type',
         'paid',
         'payment_integration_id',
@@ -103,4 +105,8 @@ class Shipment extends Model
         return $this->belongsTo(Mission::class, 'mission_id', 'id');
     }
 
+    public function attachments()
+    {
+        return $this->hasMany(ShipmentAttachment::class);
+    }
 }

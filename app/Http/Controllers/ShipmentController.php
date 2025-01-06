@@ -20,6 +20,9 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ShipmentCreatedMail;
+use App\Models\ShipmentAttachment;
+use Illuminate\Support\Facades\Storage;
+
 use Auth;
 
 class ShipmentController extends Controller
@@ -140,9 +143,9 @@ class ShipmentController extends Controller
     {
         //$clients = Client::pluck('name', 'id', 'address', 'mobile', );
         $clients = Client::with('addresses:client_id,address')
-        ->select('name', 'id', 'mobile', 'branch_id')->get();
+            ->select('name', 'id', 'mobile', 'branch_id')->get();
 
-        $excludedBranchIds1 = [1,2,3,4,5]; // IDs a excluir
+        $excludedBranchIds1 = [1, 2, 3, 4, 5]; // IDs a excluir
         $branches0 = Branch::whereNotIn('id', $excludedBranchIds1)->pluck('name', 'id');
         $excludedBranchIds2 = [6];
         $branches = Branch::whereNotIn('id', $excludedBranchIds2)->pluck('name', 'id');
@@ -150,7 +153,7 @@ class ShipmentController extends Controller
         $missions = Mission::where('status_id', 1)->pluck('code', 'id');
         $receivers = Receiver::all();
 
-        return view('pages.shipments.create', compact('clients','branches0', 'branches', 'receivers', 'packages', 'missions'));
+        return view('pages.shipments.create', compact('clients', 'branches0', 'branches', 'receivers', 'packages', 'missions'));
     }
 
     /**
@@ -178,6 +181,11 @@ class ShipmentController extends Controller
                     ->with('icon', 'error');
             }
         }
+        if ($request->has('attachments_before_shipping')) {
+            $request->validate([
+                'attachments_before_shipping.*' => 'nullable|mimes:jpg,jpeg,png,pdf|max:2048',
+            ]);
+        }
 
         $validated = $request->validate([
             'code' => 'nullable|string',
@@ -196,6 +204,8 @@ class ShipmentController extends Controller
             'total_weight' => 'nullable|numeric',
             'order_id' => 'nullable|string',
             'amount_to_be_collected' => 'nullable|numeric|min:0.1',
+            'carrier' => 'nullable|string',
+            'carrier_doc' => 'nullable||mimes:jpg,jpeg,png,pdf|max:2048',
 
             'packages.*.package_id' => 'required|integer',
             'packages.*.description' => 'nullable|string',
@@ -207,11 +217,12 @@ class ShipmentController extends Controller
         ]);
 
         //$prefix = Shipment_setting::where('key', 'shipment_prefix_lo')->first();
+        $request->offsetUnset('attachments_before_shipping.*');
 
         DB::beginTransaction();
         try {
-            // Create shipment
             $shipment = Shipment::create($validated);
+
             if ($token) {
 
                 /*$order = $request->Shipment['order_id'];
@@ -241,10 +252,27 @@ class ShipmentController extends Controller
                 $code = $parts[0];
                 $barcode = $parts[1] ?? null;
                 $shipment->update(['code' => $prefix->value . $code, 'barcode' => $barcode]);
-            }else{
+            } else {
                 $shipment->update(['code' => $prefix->value . $shipment->id]);
             }
-            // Log client shipment
+
+            if ($request->hasFile('carrier_doc')) {
+                $path = $request->file('carrier_doc')->store('attachments', 'public');
+                $shipment->update(['carrier_doc' => $path]);  
+            }
+
+            if ($request->hasFile('attachments_before_shipping')) {
+                foreach ($request->file('attachments_before_shipping') as $file) {
+                    $path = $file->store('attachments', 'public'); // Guardar archivo
+
+                    // Guardar la ruta en la tabla de adjuntos
+                    ShipmentAttachment::create([
+                        'shipment_id' => $shipment->id,
+                        'file_path' => $path,
+                    ]);
+                }
+            }
+
             Client_shipment_log::create([
                 'from' => 1,
                 'to' => 1,
@@ -384,9 +412,9 @@ class ShipmentController extends Controller
     public function edit($id)
     {
         $clients = Client::with('addresses:client_id,address')
-        ->select('name', 'id', 'mobile', 'branch_id')->get();
+            ->select('name', 'id', 'mobile', 'branch_id')->get();
 
-        $excludedBranchIds1 = [1,2,3,4,5]; // IDs a excluir
+        $excludedBranchIds1 = [1, 2, 3, 4, 5]; // IDs a excluir
         $branches0 = Branch::whereNotIn('id', $excludedBranchIds1)->pluck('name', 'id');
         $excludedBranchIds2 = [6]; // IDs a excluir
         $branches = Branch::whereNotIn('id', $excludedBranchIds2)->pluck('name', 'id');
@@ -396,12 +424,12 @@ class ShipmentController extends Controller
         //$shipment = Shipment::findOrFail($id);
         $shipment = Shipment::with('client')->findOrFail($id);
         $client_address = Client_address::where('client_id', $shipment->client_id)
-        ->orderBy('id', 'desc')
-        ->first();
+            ->orderBy('id', 'desc')
+            ->first();
 
         $package_shipments = Package_shipment::where('shipment_id', $id)->get();
 
-        return view('pages.shipments.edit', compact('shipment', 'branches0', 'branches', 'clients', 'receivers', 'packages', 'package_shipments', 'missions','client_address'));
+        return view('pages.shipments.edit', compact('shipment', 'branches0', 'branches', 'clients', 'receivers', 'packages', 'package_shipments', 'missions', 'client_address'));
     }
 
     /**
@@ -409,6 +437,17 @@ class ShipmentController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if ($request->has('attachments_before_shipping')) {
+            $request->validate([
+                'attachments_before_shipping.*' => 'nullable|mimes:jpg,jpeg,png,pdf|max:2048',
+            ]);
+        }
+        if ($request->has('carrier_doc')) {
+            $request->validate([
+                'carrier_doc' => 'nullable|mimes:jpg,jpeg,png,pdf|max:2048',
+            ]);
+        }
+
         $validated = $request->validate([
             'code' => 'nullable|string',
             'type' => 'required|in:1,2',
@@ -426,6 +465,8 @@ class ShipmentController extends Controller
             'total_weight' => 'nullable|numeric',
             'order_id' => 'nullable|string',
             'amount_to_be_collected' => 'nullable|numeric',
+            'carrier' => 'nullable|string',
+
 
             'packages.*.package_id' => 'required|integer',
             'packages.*.description' => 'nullable|string',
@@ -440,7 +481,6 @@ class ShipmentController extends Controller
         try {
             // Find shipment by ID
             $shipment = Shipment::findOrFail($id);
-
             // Update shipment
             $shipment->update($validated);
 
@@ -451,6 +491,27 @@ class ShipmentController extends Controller
 
                 foreach ($request->packages as $package) {
                     $shipment->packages()->create($package); // Asociamos los paquetes con el envío
+                }
+            }
+
+            if ($request->hasFile('carrier_doc')) {
+                if(isset($shipment->carrier_doc) && !empty($shipment->carrier_doc)){
+                    Storage::disk('public')->delete($shipment->carrier_doc);
+                }
+                
+                $path = $request->file('carrier_doc')->store('attachments', 'public');
+                $shipment->update(['carrier_doc' => $path]);  
+            }
+
+            if ($request->hasFile('attachments_before_shipping')) {
+                foreach ($request->file('attachments_before_shipping') as $file) {
+                    $path = $file->store('attachments', 'public'); // Guardar archivo
+
+                    // Guardar la ruta en la tabla de adjuntos
+                    ShipmentAttachment::create([
+                        'shipment_id' => $shipment->id,
+                        'file_path' => $path,
+                    ]);
                 }
             }
 
@@ -532,7 +593,7 @@ class ShipmentController extends Controller
             $shipment->name = $client->name; // Asumimos que el nombre del receptor es el mismo que el del cliente
             $shipment->receiver_mobile = $client->mobile; // Asumimos que el teléfono del receptor es el mismo que el del cliente
             //$shipment->receiver_address = $ClientAddress->address;
-            
+
             // Estos valores pueden ser específicos de tu lógica de negocio.
             //$shipment->from_branch_id = $ClientAddress->country_id ?? $shipment->from_branch_id;
             // Guardar los cambios en el modelo Shipment
@@ -574,7 +635,7 @@ class ShipmentController extends Controller
             //$status = Client::find($request->input('status_id'));
             $status = $request->input('status_id');
             $shipment_id = $request->input('shipment_id');
-            
+
             $shipment = Shipment::where('code', $shipment_id)->first();
             //$shipment = Shipment::find($request->input('shipment_id'));
 
@@ -620,15 +681,15 @@ class ShipmentController extends Controller
 
         try {
 
-            $shipment = Shipment::with('fromBranch:id,name','toBranch:id,name','status:id,name')
-            ->where('code', $code)
-            ->orWhere('order_id', $code)
-            ->orWhere('barcode', $code)->first();
+            $shipment = Shipment::with('fromBranch:id,name', 'toBranch:id,name', 'status:id,name')
+                ->where('code', $code)
+                ->orWhere('order_id', $code)
+                ->orWhere('barcode', $code)->first();
 
             $shipmentLogs = Client_shipment_log::with('status:id,name,description')
-                            ->where('shipment_id', $shipment->id)
-                            ->orderBy('id', 'desc')
-                            ->get();
+                ->where('shipment_id', $shipment->id)
+                ->orderBy('id', 'desc')
+                ->get();
             if ($shipment) {
                 return view('web.view-tracking', compact('shipment', 'shipmentLogs'));
             } else {
@@ -652,5 +713,22 @@ class ShipmentController extends Controller
             ],
         ];
         return view('web.view-tracking', compact('shipment'));*/
+    }
+
+    public function removeAttachment($shipment_id, $attachment_id)
+    {
+        $attach = ShipmentAttachment::where('id', $attachment_id)->where('shipment_id',$shipment_id)->first();
+
+        if ($attach->shipment_id != $shipment_id) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        // Eliminar archivo físico
+       Storage::disk('public')->delete($attach->file_path);
+
+        // Eliminar de la base de datos
+        $attach->delete();
+
+        return response()->json(['message' => 'Attachment removed successfully']);
     }
 }

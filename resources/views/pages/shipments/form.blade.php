@@ -64,8 +64,7 @@
                         {{ old('client_id', $shipment->client_id ?? '') == $client->id ? 'selected' : '' }}
                         data-mobile="{{ $client->mobile }}"
                         @foreach ($client->addresses as $var)
-                        data-address="{{ $var->address }}" 
-                        @endforeach
+                        data-address="{{ $var->address }}" @endforeach
                         data-branch="{{ $client->branch_id }}">
                         {{ $client->name }}</option>
                 @endforeach
@@ -148,7 +147,7 @@
         </div>
     </div>
 
-    <div class="col-12">
+    <div class="col-md-6">
         <div class="form-group">
             <label for="receiver_address">Receiver Address</label>
             <input type="text" name="receiver_address" id="receiver_address"
@@ -159,7 +158,9 @@
             @enderror
         </div>
     </div>
+</div>
 
+<div class="row">
     <div class="col-md-6">
         <div class="form-group">
             <label for="order_id">Shipment Order ID (Barcode)</label>
@@ -172,17 +173,68 @@
         </div>
     </div>
 
+    <div class="col-md-3">
+        <div class="form-group">
+            <div class="form-group md-3">
+                <label for="carrier">Carrier</label>
+                <input type="text" name="carrier" id="carrier" class="form-control" value="{{ old('carrier', $shipment->carrier ?? '') }}">
+            </div>
+        </div>
+        @error('carrier_doc')
+            <span class="invalid-feedback">{{ $message }}</span>
+        @enderror
+    </div>
+
+    <div class="col-md-3">
+        <div class="form-group">
+
+            <label for="carrier_doc">Shipper Document</label>
+            <input type="file" name="carrier_doc" id="carrier_doc" class="form-control" accept=".jpg,.jpeg,.png,.pdf">
+
+            @if (isset($shipment->carrier_doc))
+            <p>Attached File:</p>
+            @if (Str::endsWith($shipment->carrier_doc, ['.jpg', '.jpeg', '.png', '.pdf']))
+                <img src="{{ asset('storage/' . $shipment->carrier_doc) }}" alt="Attachment" style="max-width: 200px;">
+            @elseif (Str::endsWith($shipment->carrier_doc, ['.pdf']))
+                <a href="{{ asset('storage/' . $shipment->carrier_doc) }}" target="_blank">View PDF</a>
+            @endif
+        @endif
+        </div>
+    </div>
+
     <div class="col-12">
         <div class="form-group">
-            <label for="attachments">Attachments</label>
-            <input type="file" name="attachments[]" id="attachments"
-                class="form-control @error('attachments') is-invalid @enderror" multiple>
-            <small class="form-text text-muted">You can upload multiple files (e.g., images,
-                documents).</small>
-            @error('attachments')
+            <label for="attachments_before_shipping">Attachments</label>
+            <input type="file" name="attachments_before_shipping[]" id="attachments_before_shipping"
+                accept=".jpg,.jpeg,.png,.pdf"
+                class="form-control @error('attachments_before_shipping') is-invalid @enderror" multiple>
+            <small class="form-text text-muted">You can upload files (.jpg, .jpeg, .png, .pdf).</small>
+            @error('attachments_before_shipping')
                 <span class="invalid-feedback">{{ $message }}</span>
             @enderror
         </div>
+
+        @if (isset($shipment->attachments) && $shipment->attachments->isNotEmpty())
+            <h3>Attached files:</h3>
+            <div class="container">
+                <div class="row">
+                    @foreach ($shipment->attachments as $attachment)
+                        <div class="col-6 col-sm-4 col-md-2 text-center mb-4">
+                            @if (Str::endsWith($attachment->file_path, ['.jpg', '.jpeg', '.png']))
+                                <img src="{{ asset('storage/' . $attachment->file_path) }}" alt="Attachment"
+                                    class="img-fluid" style="max-width: 100px;">
+                            @elseif (Str::endsWith($attachment->file_path, ['.pdf']))
+                                <a href="{{ asset('storage/' . $attachment->file_path) }}" target="_blank"
+                                    class="d-block">View PDF</a>
+                            @endif
+                            <a href="#" class="btn btn-warning btn-sm remove-attachment mt-2"
+                                data-id="{{ $attachment->id }}"><i class="fas fa-trash"></i></a>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+
     </div>
 </div>
 
@@ -439,19 +491,19 @@
     </script>
     <script>
         /*document.addEventListener('DOMContentLoaded', function() {
-                                    const shippingDateInput = document.getElementById('shipping_date');
+                                                const shippingDateInput = document.getElementById('shipping_date');
 
-                                    if (!shippingDateInput.value) {
-                                        // Obtener la fecha actual en formato YYYY-MM-DD
-                                        const today = new Date();
-                                        const year = today.getFullYear();
-                                        const month = String(today.getMonth() + 1).padStart(2, '0'); // Mes en formato 2 dígitos
-                                        const day = String(today.getDate()).padStart(2, '0'); // Día en formato 2 dígitos
+                                                if (!shippingDateInput.value) {
+                                                    // Obtener la fecha actual en formato YYYY-MM-DD
+                                                    const today = new Date();
+                                                    const year = today.getFullYear();
+                                                    const month = String(today.getMonth() + 1).padStart(2, '0'); // Mes en formato 2 dígitos
+                                                    const day = String(today.getDate()).padStart(2, '0'); // Día en formato 2 dígitos
 
-                                        // Establecer el valor del campo con la fecha actual
-                                        shippingDateInput.value = `${year}-${month}-${day}`;
-                                    }
-                                });*/
+                                                    // Establecer el valor del campo con la fecha actual
+                                                    shippingDateInput.value = `${year}-${month}-${day}`;
+                                                }
+                                            });*/
     </script>
     <script>
         document.getElementById('addPackageBtn').addEventListener('click', function() {

@@ -8,6 +8,7 @@ use App\Models\Shipment;
 use App\Models\Branch;
 use App\Models\Shipment_setting;
 use App\Models\Status;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class MissionController extends Controller
 {
@@ -51,12 +52,12 @@ class MissionController extends Controller
         });
 
         // Obtén la lista de envíos que no están asignados a esta misión
-        $availableShipments = Shipment::whereNull('mission_id')                                       
-                                        ->where('to_branch_id', $mission->to_branch_id)
-                                        ->get();                             
-                                    
+        $availableShipments = Shipment::whereNull('mission_id')
+            ->where('to_branch_id', $mission->to_branch_id)
+            ->get();
 
-        return view('pages.missions.manifest', compact('mission', 'availableShipments','shipmentsData'));
+
+        return view('pages.missions.manifest', compact('mission', 'availableShipments', 'shipmentsData'));
     }
 
     public function addShipments(Request $request, $id)
@@ -73,8 +74,8 @@ class MissionController extends Controller
         Shipment::whereIn('id', $request->shipment_ids)->update(['mission_id' => $mission->id]);
 
         return redirect()->route('pages.missions.manifest', $id)
-        ->with('message', 'Shipment added successfully.')
-        ->with('icon','success');
+            ->with('message', 'Shipment added successfully.')
+            ->with('icon', 'success');
     }
 
 
@@ -88,8 +89,25 @@ class MissionController extends Controller
         //return redirect()->back()->with('success', 'Shipment removed successfully.');
 
         return redirect()->route('pages.missions.manifest', $missionId)
-        ->with('message', 'Shipment removed successfully.')
-        ->with('icon','success');
+            ->with('message', 'Shipment removed successfully.')
+            ->with('icon', 'success');
+    }
+
+    public function manifestPDF($id)
+    {
+        // Obtén la misión por ID
+        $mission = Mission::with(['shipment.client', 'shipment.receiver', 'shipment.fromBranch', 'shipment.toBranch'])
+            ->where('id', $id)
+            ->firstOrFail();
+
+        // Obtén la información adicional si es necesario
+        //$company = Branch::where('id', 1)->first();
+
+        // Genera el PDF utilizando una vista
+        $manifest = PDF::loadView('pages.missions.manifest-report', compact('mission'));
+
+        // Devuelve el PDF para ser descargado o visualizado en el navegador
+        return $manifest->stream('mission_manifest.pdf');
     }
 
 

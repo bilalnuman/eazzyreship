@@ -11,7 +11,7 @@
                 <h3 class="card-title">Edit Shipment</h3>
             </div>
             <div class="card-body">
-                <form action="{{ route('shipments.update', $shipment->id) }}" method="POST">
+                <form action="{{ route('shipments.update', $shipment->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     @include('pages.shipments.form')
@@ -30,15 +30,39 @@
             </div>
         </div>
     @stop
-    @if (($message = Session::get('message')) && ($icon = Session::get('icon')))
+
+    @push('js')
         <script>
-            Swal.fire({
-                position: "top-end",
-                icon: "{{ $icon }}",
-                title: "{{ $message }}",
-                showConfirmButton: false,
-                timer: 1500
+            $('.remove-attachment').on('click', function() {
+                const attachmentId = $(this).data('id');
+                const url = `/shipment/{{ $shipment->id }}/attachments/${attachmentId}`;
+
+                $.ajax({
+                    url: url,
+                    type: 'DELETE',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        alert(response.message);
+                        location.reload(); // O actualiza la lista de archivos dinámicamente
+                    },
+                    error: function(error) {
+                        alert('An error occurred.');
+                    }
+                });
             });
         </script>
-    @endif
+        @if (($message = Session::get('message')) && ($icon = Session::get('icon')))
+            <script>
+                Swal.fire({
+                    position: "top-end",
+                    icon: "{{ $icon }}",
+                    title: "{{ $message }}",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            </script>
+        @endif
+    @endpush
 </x-app-layout>

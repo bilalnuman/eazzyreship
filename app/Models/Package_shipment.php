@@ -13,7 +13,7 @@ class Package_shipment extends Model
         'package_id',
         'shipment_id',
         'description',
-        'carrier',
+        'image',
         'weight',
         'length',
         'width',

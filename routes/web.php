@@ -92,6 +92,8 @@ Route::middleware('role:admin','auth', 'verified')->group(function () {
     Route::get('/shipment/show/{id}', [ShipmentController::class, 'show'])->name('pages.shipments.show');
     Route::get('/shipment/invoice/{id}', [ShipmentController::class, 'invoice'])->name('pages.shipments.invoice');
     Route::get('/shipment/{id}/delete', [ShipmentController::class, 'destroy'])->name('shipment.delete');
+    
+    Route::delete('/shipment/{shipment}/attachments/{attachment}', [ShipmentController::class, 'removeAttachment'])->name('shipments.remove-attachment');
 
 
     //packages
@@ -137,6 +139,8 @@ Route::middleware('role:admin','auth', 'verified')->group(function () {
     Route::get('/manifest/{id}', [MissionController::class, 'manifest'])->name('pages.missions.manifest');
     Route::post('/mission/{id}/add-shipments', [MissionController::class, 'addShipments'])->name('missions.add-shipments');
     Route::get('/mission/{missionId}/remove-shipment/{shipmentId}', [MissionController::class, 'removeShipment'])->name('missions.remove-shipment');
+    Route::get('/mission/{id}/manifest-report', [MissionController::class, 'manifestPDF'])->name('mission.manifest-report');
+
     
 
     //Payment
