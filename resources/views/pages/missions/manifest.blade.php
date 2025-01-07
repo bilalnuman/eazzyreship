@@ -40,6 +40,7 @@
                     <div class="form-group">
                         <label for="shipments">Available Shipments:</label>
                         <select name="shipment_ids[]" id="shipments" class="form-control" multiple>
+                            
                             @foreach ($availableShipments as $shipment)
                                 <option value="{{ $shipment['id'] }}">
                                     {{ $shipment['code'] }},
@@ -50,6 +51,7 @@
                                     total weight: {{ $shipment['total_weight'] }}
                                 </option>
                             @endforeach
+                            
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary mt-2">Add Shipments</button>
