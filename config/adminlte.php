@@ -388,7 +388,7 @@ return [
                     ],
         ],
         [
-            'text' => 'Missions',
+            'text' => 'Manifest',
             'icon' => 'fas fa-fw fa-shipping-fast',
             'can' => 'users',
             'submenu' => [
