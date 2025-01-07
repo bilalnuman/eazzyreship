@@ -38,9 +38,10 @@ class MissionController extends Controller
     {
 
         // Obtén la misión específica
-        $mission = Mission::with('shipment')->findOrFail($id);
-
-        $shipmentsData = $mission->shipment->map(function ($shipment) {
+        $mission = Mission::findOrFail($id);
+        $shipmentsData = Shipment::where('mission_id', $id)
+        ->get()
+        ->map(function ($shipment) {
             return [
                 'id' => $shipment->id,
                 'code' => $shipment->code,
@@ -51,6 +52,18 @@ class MissionController extends Controller
                 'actions' => ''
             ];
         });
+
+        /*$shipmentsData = $mission->shipment->map(function ($shipment) {
+            return [
+                'id' => $shipment->id,
+                'code' => $shipment->code,
+                'client' => $shipment->client->name,
+                'status' => $shipment->status->name,
+                'to_branch' => $shipment->toBranch->name,
+                'receiver' => $shipment->receiver->name,
+                'actions' => ''
+            ];
+        });*/
 
         // Obtén la lista de envíos que no están asignados a esta misión
         $availableShipments = Shipment::whereNull('mission_id')

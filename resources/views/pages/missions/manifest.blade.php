@@ -43,11 +43,11 @@
                             @foreach ($availableShipments as $shipment)
                                 <option value="{{ $shipment['id'] }}">
                                     {{ $shipment['code'] }},
-                                    client name1: {{ $shipment['client_id'] }},
-                                    from2: {{ $shipment['from_branch_id'] }},
-                                    to3: {{ $shipment['to_branch_id'] }},
-                                    receiver name4: {{ $shipment['receiver_name'] }},
-                                    total weight:5 {{ $shipment['total_weight'] }}
+                                    client name: {{ $shipment['client_id'] }},
+                                    from: {{ $shipment['from_branch_id'] }},
+                                    to: {{ $shipment['to_branch_id'] }},
+                                    receiver name: {{ $shipment['receiver_name'] }},
+                                    total weight: {{ $shipment['total_weight'] }}
                                 </option>
                             @endforeach
                         </select>
