@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Payment;
 use App\Models\Shipment;
 use App\Models\User;
-use App\models\Setting;
+use App\Models\Setting;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
