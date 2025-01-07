@@ -45,7 +45,8 @@ class ShipmentController extends Controller
             'status:id,name',
             'mission:id,code'
         ])
-            ->select(['id', 'code', 'status_id', 'client_id', 'receiver_name', 'from_branch_id', 'to_branch_id', 'shipping_date', 'mission_id', 'paid'])
+            ->select(['id', 'code', 'status_id', 'client_id', 'receiver_name', 'from_branch_id', 'to_branch_id', 'shipping_date',
+             'mission_id', 'paid', 'type', 'carrier', 'amount_to_be_collected', 'barcode', 'created_at'])
             ->orderBy('id', 'desc')
             ->get()
             ->map(function ($shipment) {
@@ -59,6 +60,11 @@ class ShipmentController extends Controller
                     'receiver_name' => optional($shipment->receiver)->name ?? 'N/A',
                     'client_id' => optional($shipment->client)->name ?? 'N/A',
                     'mission_id' => optional($shipment->mission)->code ?? '',
+                    'carrier' => $shipment->carrier,
+                    'barcode' => $shipment->barcode,
+                    'total_cost' => $shipment->amount_to_be_collected,
+                    'created_at' => $shipment->created_at ? Carbon::parse($shipment->created_at)->format('d-m-Y') : 'N/A',
+                    'type' => $shipment->type == 1 ? 'Air' : 'Ocean',
                     'paid' => $shipment->paid,
                 ];
             });
@@ -82,6 +88,8 @@ class ShipmentController extends Controller
                 'shipping_date',
                 'collection_time',
                 'payment_type',
+                'barcode',
+                'order_id',
                 'paid',
                 'tax',
                 'insurance',
@@ -111,6 +119,8 @@ class ShipmentController extends Controller
             'from_branch_id' => optional($shipment->fromBranch)->name ?? 'N/A',
             'to_branch_id' => optional($shipment->toBranch)->name ?? 'N/A',
             'payment_type' => $shipment->payment_type ?? 'N/A',
+            'barcode' => $shipment->barcode ?? '',
+            'order_id' => $shipment->order_id ?? '',
             'paid' => $shipment->paid ?? '',
             'tax' => $shipment->tax ?? '0',
             'insurance' => $shipment->insurance ?? '0',
@@ -347,10 +357,13 @@ class ShipmentController extends Controller
                 'receiver_address',
                 'from_branch_id',
                 'to_branch_id',
+                'carrier',
                 'shipping_date',
                 'collection_time',
                 'payment_type',
                 'payment_method_id',
+                'barcode',
+                'order_id',
                 'paid',
                 'tax',
                 'insurance',
@@ -361,9 +374,13 @@ class ShipmentController extends Controller
                 'created_at'
             ])
             ->find($id); // Busca un solo envío por su ID
-
+            $attachments = $shipments->attachments ?? '';
         if (!$shipments) {
-            return response()->json(['message' => 'Shipment not found'], 404);
+            return redirect()->route('dashboard')
+                ->with('message', 'Shipment not found')
+                ->with('icon', 'error')
+                ->withInput();
+            //return response()->json(['message' => 'Shipment not found'], 404);
         }
 
         // Formatear el objeto obtenido
@@ -384,8 +401,11 @@ class ShipmentController extends Controller
             'to_branch_id' => optional($shipments->toBranch)->name ?? 'N/A',
             'to_branch_state' => optional($shipments->toBranch->state)->name ?? 'N/A',
             'to_branch_country' => optional($shipments->toBranch->state->country)->name ?? 'N/A',
+            'carrier' => $shipments->carrier,
             'payment_type' => $shipments->payment_type ?? 'N/A',
             'payment_method_id' => $shipments->payment_method_id ?? '',
+            'barcode' => $shipments->barcode ?? '',
+            'order_id' => $shipments->order_id ?? '',
             'paid' => $shipments->paid ?? '',
             'tax' => $shipments->tax ?? '0',
             'insurance' => $shipments->insurance ?? '0',
@@ -403,7 +423,7 @@ class ShipmentController extends Controller
             ->where('shipment_id', $id)
             ->get();
 
-        return view('pages.shipments.show', compact('shipment', 'packages'));
+        return view('pages.shipments.show', compact('shipment', 'packages','attachments'));
     }
 
     /**

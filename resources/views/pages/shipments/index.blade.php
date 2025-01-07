@@ -15,14 +15,16 @@
                 <table id="shipments-table" class="table table-bordered table-striped">
                     <thead>
                         <tr>
-                            <th>ID</th>
                             <th>Code</th>
                             <th>Status</th>
                             <th>Customer</th>
-                            <th>Receiver Name</th>
-                            <th>From Branch</th>
                             <th>To Branch</th>
                             <th>Mission</th>
+                            <th>Shipper</th>   
+                            <th>Vendor Tracking</th>
+                            <th>Package Type</th>
+                            <th>Total Cost</th>
+                            <th>Shipment Received</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -39,14 +41,17 @@
                     serverSide: false,
                     ordering: false,
                     ajax: '{{ route('shipments.data') }}',
-                    columns: [{ data: 'id',name: 'id'},
+                    columns: [
                         {data: 'code',name: 'code'},
                         {data: 'status_id',name: 'status_id'},
                         {data: 'client_id',name: 'client_id'},
-                        {data: 'receiver_name',name: 'receiver_name'},
-                        {data: 'from_branch_id',name: 'from_branch'},
                         {data: 'to_branch_id',name: 'to_branch'},
                         {data: 'mission_id',name: 'mission_id'},
+                        {data: 'carrier',name: 'carrier'},
+                        {data: 'barcode',name: 'barcode'},
+                        {data: 'type',name: 'type'},
+                        {data: 'total_cost',name: 'total_cost'},
+                        {data: 'created_at',name: 'create_at'},
                         {
                             data: null,
                             name: 'action',

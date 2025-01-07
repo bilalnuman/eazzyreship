@@ -125,11 +125,12 @@
             <table id="shipments-table" class="table table-bordered table-striped">
                 <thead>
                     <tr>
-                        <th>ID</th>
                         <th>Code</th>
                         <th>Status</th>
                         <th>From Branch</th>
-                        <th>To Branch</th>
+                        <th>Shipment Type</th>
+                        <th>Total Cost</th>
+                        <th>Received</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -147,10 +148,7 @@
                 serverSide: false,
                 ordering: false,
                 ajax: '{{ route('dashboard.data', $client->id) }}',
-                columns: [{
-                        data: 'id',
-                        name: 'id'
-                    },
+                columns: [
                     {
                         data: 'code',
                         name: 'code'
@@ -164,8 +162,16 @@
                         name: 'from_branch'
                     },
                     {
-                        data: 'to_branch_id',
-                        name: 'to_branch'
+                        data: 'type',
+                        name: 'type'
+                    },
+                    {
+                        data: 'amount_to_be_collected',
+                        name: 'amount_to_be_collected'
+                    },
+                    {
+                        data: 'created_at',
+                        name: 'created_at'
                     },
                     {
                         data: null,

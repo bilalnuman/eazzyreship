@@ -12,6 +12,7 @@ use App\Models\State;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 class DashboardController extends Controller
 {
@@ -64,10 +65,13 @@ class DashboardController extends Controller
                 'receiver_address',
                 'from_branch_id',
                 'to_branch_id',
+                'carrier',
                 'shipping_date',
                 'collection_time',
                 'payment_type',
                 'payment_method_id',
+                'barcode',
+                'order_id',
                 'paid',
                 'tax',
                 'insurance',
@@ -78,9 +82,14 @@ class DashboardController extends Controller
                 'created_at'
             ])
             ->find($id); // Busca un solo envío por su ID
+        $attachments = $shipments->attachments ?? '';
 
         if (!$shipments) {
-            return response()->json(['message' => 'Shipment not found'], 404);
+            return redirect()->route('dashboard')
+                ->with('message', 'Shipment not found')
+                ->with('icon', 'error')
+                ->withInput();
+            //return response()->json(['message' => 'Shipment not found'], 404);
         }
 
         // Formatear el objeto obtenido
@@ -101,8 +110,11 @@ class DashboardController extends Controller
             'to_branch_id' => optional($shipments->toBranch)->name ?? 'N/A',
             'to_branch_state' => optional($shipments->toBranch->state)->name ?? 'N/A',
             'to_branch_country' => optional($shipments->toBranch->state->country)->name ?? 'N/A',
+            'carrier' => $shipments->carrier,
             'payment_type' => $shipments->payment_type ?? 'N/A',
             'payment_method_id' => $shipments->payment_method_id ?? '',
+            'barcode' => $shipments->barcode ?? '',
+            'order_id' => $shipments->order_id ?? '',
             'paid' => $shipments->paid ?? '',
             'tax' => $shipments->tax ?? '0',
             'insurance' => $shipments->insurance ?? '0',
@@ -114,13 +126,14 @@ class DashboardController extends Controller
         ];
 
 
+
         //$shipment = Shipment::where('id', $id)->first();
         //$packages = Package_shipment::where('shipment_id', $id)->get();
         $packages = Package_shipment::with('package:id,name') // Asegúrate de seleccionar solo lo necesario
             ->where('shipment_id', $id)
             ->get();
 
-        return view('pages.shipments.show', compact('shipment', 'packages'));
+        return view('pages.shipments.show', compact('shipment', 'packages','attachments'));
     }
 
     public function invoice($id)
@@ -202,7 +215,8 @@ class DashboardController extends Controller
             'status:id,name',
             'mission:id,code'
         ])
-            ->select(['id', 'code', 'status_id', 'client_id', 'receiver_name', 'from_branch_id', 'to_branch_id', 'shipping_date', 'mission_id', 'paid'])
+            ->select(['id', 'code', 'status_id', 'type', 'client_id', 'receiver_name', 'from_branch_id', 
+            'to_branch_id', 'shipping_date', 'mission_id', 'paid', 'amount_to_be_collected', 'created_at'])
             ->where('client_id', $client_id)
             ->orderBy('id', 'desc')
             ->get()
@@ -210,6 +224,7 @@ class DashboardController extends Controller
                 return [
                     'id' => $shipment->id,
                     'code' => $shipment->code,
+                    'type' => $shipment->type == 1 ? 'Air' : 'Ocean',
                     'status_id' => optional($shipment->status)->name ?? 'N/A',
                     'shipping_date' => $shipment->shipping_date ? Carbon::parse($shipment->shipping_date)->format('d-m-Y') : 'N/A',
                     'from_branch_id' => optional($shipment->fromBranch)->name ?? 'N/A',
@@ -218,6 +233,8 @@ class DashboardController extends Controller
                     'client_id' => optional($shipment->client)->name ?? 'N/A',
                     'mission_id' => optional($shipment->mission)->code ?? '',
                     'paid' => $shipment->paid,
+                    'amount_to_be_collected' => $shipment->amount_to_be_collected,
+                    'created_at' => $shipment->created_at ? Carbon::parse($shipment->created_at)->format('d-m-Y') : 'N/A',
                 ];
             });
 

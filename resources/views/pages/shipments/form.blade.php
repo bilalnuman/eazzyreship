@@ -1,3 +1,36 @@
+@push('css')
+    <style>
+        .select2-container .select2-selection--single {
+            height: calc(2.3rem + 2px);
+            /* Tamaño acorde con Bootstrap */
+            padding: 0.375rem 0.75rem;
+            /* Ajuste interno */
+            font-size: 1rem;
+            line-height: 1.5;
+            border: 1px solid #ced4da;
+            /* Borde Bootstrap */
+            border-radius: 0.375rem;
+            /* Borde redondeado */
+        }
+
+        .select2-container--bootstrap-5 .select2-selection--multiple {
+            height: auto;
+            /* Soporta múltiples líneas */
+            border: 1px solid #ced4da;
+            border-radius: 0.375rem;
+        }
+
+        .select2-container--bootstrap-5 .select2-selection__rendered {
+            padding: 0.375rem;
+            /* Espaciado interno */
+        }
+
+        .select2-container--bootstrap-5 .select2-selection__arrow {
+            top: 50%;
+            transform: translateY(-50%);
+        }
+    </style>
+@endpush
 <div class="form-group mb-4">
     <label>Shipment Type</label><br>
     <div class="form-check form-check-inline">
@@ -57,7 +90,8 @@
     <div class="col-md-6">
         <div class="form-group">
             <label for="client_id">Customer/sender</label>
-            <select name="client_id" id="client_id" class="form-control @error('client_id') is-invalid @enderror">
+            <select name="client_id" id="client_id"
+                class="form-control select2 @error('client_id') is-invalid @enderror">
                 <option value="">Select a client</option>
                 @foreach ($clients as $client)
                     <option value="{{ $client->id }}"
@@ -163,7 +197,7 @@
 <div class="row">
     <div class="col-md-6">
         <div class="form-group">
-            <label for="order_id">Shipment Order ID (Barcode)</label>
+            <label for="order_id">Tracking code</label>
             <input type="text" name="order_id" id="order_id"
                 class="form-control @error('order_id') is-invalid @enderror"
                 value="{{ old('order_id', $shipment->order_id ?? '') }}">
@@ -176,8 +210,9 @@
     <div class="col-md-3">
         <div class="form-group">
             <div class="form-group md-3">
-                <label for="carrier">Carrier</label>
-                <input type="text" name="carrier" id="carrier" class="form-control" value="{{ old('carrier', $shipment->carrier ?? '') }}">
+                <label for="carrier">Carrier / Shipper</label>
+                <input type="text" name="carrier" id="carrier" class="form-control"
+                    value="{{ old('carrier', $shipment->carrier ?? '') }}">
             </div>
         </div>
         @error('carrier_doc')
@@ -189,16 +224,18 @@
         <div class="form-group">
 
             <label for="carrier_doc">Shipper Document</label>
-            <input type="file" name="carrier_doc" id="carrier_doc" class="form-control" accept=".jpg,.jpeg,.png,.pdf">
+            <input type="file" name="carrier_doc" id="carrier_doc" class="form-control"
+                accept=".jpg,.jpeg,.png,.pdf">
 
             @if (isset($shipment->carrier_doc))
-            <p>Attached File:</p>
-            @if (Str::endsWith($shipment->carrier_doc, ['.jpg', '.jpeg', '.png', '.pdf']))
-                <img src="{{ asset('storage/' . $shipment->carrier_doc) }}" alt="Attachment" style="max-width: 200px;">
-            @elseif (Str::endsWith($shipment->carrier_doc, ['.pdf']))
-                <a href="{{ asset('storage/' . $shipment->carrier_doc) }}" target="_blank">View PDF</a>
+                <p>Attached File:</p>
+                @if (Str::endsWith($shipment->carrier_doc, ['.jpg', '.jpeg', '.png', '.pdf']))
+                    <img src="{{ asset('storage/' . $shipment->carrier_doc) }}" alt="Attachment"
+                        style="max-width: 200px;">
+                @elseif (Str::endsWith($shipment->carrier_doc, ['.pdf']))
+                    <a href="{{ asset('storage/' . $shipment->carrier_doc) }}" target="_blank">View PDF</a>
+                @endif
             @endif
-        @endif
         </div>
     </div>
 
@@ -424,6 +461,14 @@
                 $('#receiver_mobile').val(receiverMobile);
                 $('#receiver_address').val(receiverAddress);
             });
+
+            //search para campo cliente
+            $('#client_id').select2({
+                placeholder: "Select customer",
+                allowClear: true,
+                width: '100%' // Ajusta el ancho
+            });
+
         });
     </script>
     <script>
@@ -491,19 +536,19 @@
     </script>
     <script>
         /*document.addEventListener('DOMContentLoaded', function() {
-                                                const shippingDateInput = document.getElementById('shipping_date');
+                                                    const shippingDateInput = document.getElementById('shipping_date');
 
-                                                if (!shippingDateInput.value) {
-                                                    // Obtener la fecha actual en formato YYYY-MM-DD
-                                                    const today = new Date();
-                                                    const year = today.getFullYear();
-                                                    const month = String(today.getMonth() + 1).padStart(2, '0'); // Mes en formato 2 dígitos
-                                                    const day = String(today.getDate()).padStart(2, '0'); // Día en formato 2 dígitos
+                                                    if (!shippingDateInput.value) {
+                                                        // Obtener la fecha actual en formato YYYY-MM-DD
+                                                        const today = new Date();
+                                                        const year = today.getFullYear();
+                                                        const month = String(today.getMonth() + 1).padStart(2, '0'); // Mes en formato 2 dígitos
+                                                        const day = String(today.getDate()).padStart(2, '0'); // Día en formato 2 dígitos
 
-                                                    // Establecer el valor del campo con la fecha actual
-                                                    shippingDateInput.value = `${year}-${month}-${day}`;
-                                                }
-                                            });*/
+                                                        // Establecer el valor del campo con la fecha actual
+                                                        shippingDateInput.value = `${year}-${month}-${day}`;
+                                                    }
+                                                });*/
     </script>
     <script>
         document.getElementById('addPackageBtn').addEventListener('click', function() {

@@ -132,8 +132,8 @@
                                 <p class="text-muted">{{ $shipment['to_branch_state'] ?? 'N/A' }}</p>
                             </div>
                             <div class="col-12 col-sm-6 col-md-2">
-                                <h6 class="text-dark font-weight-bold">{{ __('Max Delivery Day') }}</h6>
-                                <p class="text-muted">{{ $shipment['max_delivery_day'] ?? 'N/A' }}</p>
+                                <h6 class="text-dark font-weight-bold">{{ __('Shipper Name') }}</h6>
+                                <p class="text-muted">{{ $shipment['carrier'] ?? 'N/A' }}</p>
                             </div>
                             <div class="col-12 col-sm-6 col-md-2">
                                 <h6 class="text-dark font-weight-bold">{{ __('Collection Time') }}</h6>
@@ -164,6 +164,49 @@
                                                 {{ $package->height }} IN</td>
                                         </tr>
                                     @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+
+                        @if (isset($attachments) && $attachments->isNotEmpty())
+                        <h5>Attached files:</h5>
+                        <div class="container">
+                            <div class="row">
+                                @foreach ($attachments as $attachment)
+                                    <div class="col-6 col-sm-4 col-md-2 text-center mb-4">
+                                        @if (Str::endsWith($attachment->file_path, ['.jpg', '.jpeg', '.png']))
+                                            <img src="{{ asset('storage/' . $attachment->file_path) }}" alt="Attachment"
+                                                class="img-fluid" style="max-width: 100px;">
+                                        @elseif (Str::endsWith($attachment->file_path, ['.pdf']))
+                                            <a href="{{ asset('storage/' . $attachment->file_path) }}" target="_blank"
+                                                class="d-block">View PDF</a>
+                                        @endif
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                        @endif
+
+                        <!-- Tracking codes-->
+                        <div class="table-responsive mt-4">
+                            <table class="table table-bordered">
+                                <thead class="bg-light">
+                                    <tr>
+                                        <th>{{ __('System ID') }}</th>
+                                        <th>{{ __('Local Tracking ID') }}</th>
+                                        <th>{{ __('Vendor Tracking ID') }}</th>
+                                        <th class="text-right">{{ __('Order ID') }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{{ $shipment['id'] }}</td>
+                                        <td>{{ $shipment['code'] }}</td>
+                                        <td>{{ $shipment['barcode'] }}</td>
+                                        <td class="text-right">
+                                            {{ $shipment['order_id'] }}
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
