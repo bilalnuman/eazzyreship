@@ -6,12 +6,12 @@
                 <div class="small-box bg-info">
                     <div class="inner">
                         <h3>{{ $allShipments ?? '0' }}</h3>
-                        <p>{{ __('all_Shipments') }}</p>
+                        <p>{{ __('all Shipments') }}</p>
                     </div>
                     <div class="icon">
                         <i class="fas fa-box-open"></i>
                     </div>
-                    <a href="{{ route('pages.shipments.index', ['client_id' => $client_id ?? '']) }}"
+                    <a href="{{ route('pages.shipments.index')}}"
                         class="small-box-footer">
                         {{ __('more info') }} <i class="fas fa-arrow-circle-right"></i>
                     </a>
@@ -28,7 +28,7 @@
                     <div class="icon">
                         <i class="fas fa-box-open"></i>
                     </div>
-                    <a href="{{ route('pages.shipments.index', ['status' => 1, 'client_id' => $client_id ?? '0']) }}"
+                    <a href="{{ route('pages.shipments.index') }}"
                         class="small-box-footer">
                         {{ __('more info') }} <i class="fas fa-arrow-circle-right"></i>
                     </a>
@@ -45,9 +45,9 @@
                     <div class="icon">
                         <i class="fas fa-box-open"></i>
                     </div>
-                    <a href="{{ route('pages.shipments.index', ['client_status' => 2, 'client_id' => $client_id ?? '']) }}"
+                    <a href="{{ route('pages.shipments.index') }}"
                         class="small-box-footer">
-                        {{ __('view.more info') }} <i class="fas fa-arrow-circle-right"></i>
+                        {{ __('more info') }} <i class="fas fa-arrow-circle-right"></i>
                     </a>
                 </div>
             </div>
@@ -62,7 +62,7 @@
                     <div class="icon">
                         <i class="fas fa-box-open"></i>
                     </div>
-                    <a href="{{ route('pages.shipments.index', ['client_status' => 3, 'client_id' => $client_id ?? '']) }}"
+                    <a href="{{ route('pages.shipments.index') }}"
                         class="small-box-footer">
                         {{ __('more info') }} <i class="fas fa-arrow-circle-right"></i>
                     </a>
