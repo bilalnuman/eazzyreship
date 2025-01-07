@@ -36,6 +36,7 @@ class MissionController extends Controller
 
     public function manifest($id)
     {
+        
         // Obtén la misión específica
         $mission = Mission::with('shipment')->findOrFail($id);
 
@@ -50,6 +51,7 @@ class MissionController extends Controller
                 'actions' => ''
             ];
         });
+
 
         // Obtén la lista de envíos que no están asignados a esta misión
         $availableShipments = Shipment::whereNull('mission_id')

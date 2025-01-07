@@ -207,6 +207,7 @@ class DashboardController extends Controller
 
     public function getShipmentsDash($client_id = null)
     {
+        
         $shipments = Shipment::with([
             'fromBranch:id,name',
             'toBranch:id,name',
