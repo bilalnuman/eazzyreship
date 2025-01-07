@@ -69,16 +69,22 @@ class MissionController extends Controller
         $availableShipments = Shipment::whereNull('mission_id')
             ->where('to_branch_id', $mission->to_branch_id)
             ->select('id', 'code', 'client_id', 'type', 'from_branch_id','to_branch_id','receiver_name','total_weight')
+            ->with([
+                'client:id,name', 
+                'fromBranch:id,name', 
+                'toBranch:id,name', 
+                'receiver:id,name'
+            ])
             ->get()
             ->map(function ($shipment) {
                 return [
                     'id' => $shipment->id,
                     'code' => $shipment->code,
-                    'client_id' => optional($shipment->client)->name ?? 'N/A',
+                    'client_id' => $shipment->client->name ?? 'N/A',
                     'type' => $shipment->type == 1 ? 'Air' : 'Ocean',
-                    'from_branch_id' => optional($shipment->fromBranch)->name ?? 'N/A',
-                    'to_branch_id' => optional($shipment->toBranch)->name ?? 'N/A',
-                    'receiver_name' => optional($shipment->receiver)->name ?? 'N/A',
+                    'from_branch_id' => $shipment->fromBranch->name ?? 'N/A',
+                    'to_branch_id' => $shipment->toBranch->name ?? 'N/A',
+                    'receiver_name' => $shipment->receiver->name ?? 'N/A',
                     'total_weight' => $shipment->total_weight ?? 'N/A',
                 ];
             });
