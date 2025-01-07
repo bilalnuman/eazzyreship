@@ -87,7 +87,7 @@
                         <th>Receiver Name</th>
                         <th>From Branch</th>
                         <th>To Branch</th>
-                        <th>Mission</th>
+                        <th>Shipment Received</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -111,7 +111,7 @@
                         {data: 'receiver_name',name: 'receiver_name'},
                         {data: 'from_branch_id',name: 'from_branch'},
                         {data: 'to_branch_id',name: 'to_branch'},
-                        {data: 'mission_id',name: 'mission_id'},
+                        {data: 'created_at',name: 'created_at'},
                         {
                         data: null,
                         name: 'action',
