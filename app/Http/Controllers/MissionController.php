@@ -54,7 +54,21 @@ class MissionController extends Controller
         // Obtén la lista de envíos que no están asignados a esta misión
         $availableShipments = Shipment::whereNull('mission_id')
             ->where('to_branch_id', $mission->to_branch_id)
-            ->get();
+            ->select('id', 'code', 'client_id', 'type', 'from_branch_id','to_branch_id','receiver_name','total_weight')
+            ->get()
+            ->map(function ($shipment) {
+                return [
+                    'id' => $shipment->id,
+                    'code' => $shipment->code,
+                    'client_id' => optional($shipment->client)->name ?? 'N/A',
+                    'type' => $shipment->type == 1 ? 'Air' : 'Ocean',
+                    'from_branch_id' => optional($shipment->fromBranch)->name ?? 'N/A',
+                    'to_branch_id' => optional($shipment->toBranch)->name ?? 'N/A',
+                    'receiver_name' => optional($shipment->receiver)->name ?? 'N/A',
+                    'total_weight' => $shipment->total_weight ?? 'N/A',
+                ];
+            });
+            
 
 
         return view('pages.missions.manifest', compact('mission', 'availableShipments', 'shipmentsData'));

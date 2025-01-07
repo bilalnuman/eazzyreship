@@ -17,7 +17,7 @@
 
             <!-- Lista de envíos asignados -->
             <h2>Assigned Shipments</h2>
-            <table id="missions-table"  class="table table-striped">
+            <table id="missions-table" class="table table-striped">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -32,30 +32,29 @@
             </table>
 
             <!-- Lista de envíos disponibles para asignar -->
-         @if ($mission->status_id == 1)
-            <br>   
-            <h2>Add Shipments</h2>
-            <form action="{{ route('missions.add-shipments', $mission->id) }}" method="POST">
-                @csrf
-                <div class="form-group">
-                    <label for="shipments">Available Shipments:</label>
-                    <select name="shipment_ids[]" id="shipments" class="form-control" multiple>
-                        @foreach ($availableShipments as $shipment)
-                            <option value="{{ $shipment->id }}">
-                                {{ $shipment->code }}, 
-                                 client code:  {{ $shipment->client->code }},
-                                 client name: {{ $shipment->client->name }},
-                                 from: {{ $shipment->fromBranch->name }},
-                                 to: {{ $shipment->toBranch->name }},
-                                 receiver name: {{ $shipment->receiver->name }},
-                                 total weight: {{ $shipment->total_weight}}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary mt-2">Add Shipments</button>
-            </form>
-            <br>
+            @if ($mission->status_id == 1)
+                <br>
+                <h2>Add Shipments</h2>
+                <form action="{{ route('missions.add-shipments', $mission->id) }}" method="POST">
+                    @csrf
+                    <div class="form-group">
+                        <label for="shipments">Available Shipments:</label>
+                        <select name="shipment_ids[]" id="shipments" class="form-control" multiple>
+                            @foreach ($availableShipments as $shipment)
+                                <option value="{{ $shipment['id'] }}">
+                                    {{ $shipment['code'] }},
+                                    client name: {{ $shipment['client_id'] }},
+                                    from: {{ $shipment['from_branch_id'] }},
+                                    to: {{ $shipment['to_branch_id'] }},
+                                    receiver name: {{ $shipment['receiver_name'] }},
+                                    total weight: {{ $shipment['total_weight'] }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-2">Add Shipments</button>
+                </form>
+                <br>
             @endif
         </div>
     @stop
@@ -83,8 +82,14 @@
                             data: 'client',
                             name: 'client'
                         },
-                        {data: 'to_branch',name:'to_branch'},
-                        {data: 'receiver',name:'receiver'},
+                        {
+                            data: 'to_branch',
+                            name: 'to_branch'
+                        },
+                        {
+                            data: 'receiver',
+                            name: 'receiver'
+                        },
                         {
                             data: 'status',
                             name: 'status'
