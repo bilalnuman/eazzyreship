@@ -16,6 +16,7 @@ class Client extends Model
         'email',
         'mobile',
         'national_id',
+        'picture',
         'address',
         'branch_id',
         'is_archived',

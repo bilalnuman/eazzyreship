@@ -8,7 +8,7 @@
 
     @section('content')
     
-        <form action="{{ auth()->user()->hasRole('user') ? route('dashboard.updateclient') : route('clients.update', $client->id) }}"  method="POST">
+        <form action="{{ auth()->user()->hasRole('user') ? route('dashboard.updateclient') : route('clients.update', $client->id) }}"  method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             @include('pages.clients.form', ['client' => $client])

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('email');
             $table->string('mobile')->nullable();
             $table->string('national_id')->nullable();
+            $table->string('picture')->nullable();
             $table->string('address')->nullable();
             $table->integer('branch_id')->unsigned()->nullable();
             $table->tinyInteger('is_archived')->default(0);

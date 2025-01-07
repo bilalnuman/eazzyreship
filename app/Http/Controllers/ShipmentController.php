@@ -217,7 +217,7 @@ class ShipmentController extends Controller
         ]);
 
         //$prefix = Shipment_setting::where('key', 'shipment_prefix_lo')->first();
-        $request->offsetUnset('attachments_before_shipping.*');
+        //$request->offsetUnset('attachments_before_shipping.*');
 
         DB::beginTransaction();
         try {
@@ -257,7 +257,7 @@ class ShipmentController extends Controller
             }
 
             if ($request->hasFile('carrier_doc')) {
-                $path = $request->file('carrier_doc')->store('attachments', 'public');
+                $path = $request->file('carrier_doc')->store('shippers', 'public');
                 $shipment->update(['carrier_doc' => $path]);  
             }
 
@@ -499,7 +499,7 @@ class ShipmentController extends Controller
                     Storage::disk('public')->delete($shipment->carrier_doc);
                 }
                 
-                $path = $request->file('carrier_doc')->store('attachments', 'public');
+                $path = $request->file('carrier_doc')->store('shippers', 'public');
                 $shipment->update(['carrier_doc' => $path]);  
             }
 

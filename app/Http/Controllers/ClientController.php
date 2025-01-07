@@ -9,7 +9,7 @@ use App\Models\ClientAddress;
 use App\Models\Country;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
-
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Http;
 
 use App\Models\State;
@@ -64,6 +64,7 @@ class ClientController extends Controller
             'email' => 'nullable|email|max:255',
             'mobile' => 'nullable|string|max:15',
             'national_id' => 'nullable|string',
+            'picture' => 'nullable|mimes:jpg,jpeg,png,pdf|max:2048',
             'branch_id' => 'required|integer',
             'addresses.*.address' => 'nullable|string',
             'addresses.*.country_id' => 'required|exists:countries,id',
@@ -96,6 +97,11 @@ class ClientController extends Controller
         ]);
 
         $client->update(['code' => $request->branch_code . $client->id]);
+
+        if ($request->hasFile('picture')) {
+            $path = $request->file('picture')->store('customers', 'public');
+            $client->update(['picture' => $path]);
+        }
 
         foreach ($request->addresses as $address) {
             $client->addresses()->create($address);
@@ -131,6 +137,13 @@ class ClientController extends Controller
     // Update the specified client in storage
     public function update(Request $request, $id)
     {
+
+        if ($request->has('picture')) {
+            $request->validate([
+                'picture' => 'nullable|mimes:jpg,jpeg,png,pdf|max:2048',
+            ]);
+        }
+
         $validated = $request->validate([
             'mobile' => 'nullable|string|max:15',
             'national_id' => 'nullable|string',
@@ -141,6 +154,16 @@ class ClientController extends Controller
 
         $client = Client::findOrFail($id);
         $client->update($validated);
+
+        if ($request->hasFile('picture')) {
+            if(isset($client->picture) && !empty($client->picture)){
+                Storage::disk('public')->delete($client->picture);
+            }
+            
+            $path = $request->file('picture')->store('customers', 'public');
+            $client->update(['picture' => $path]);  
+        }
+
 
         $client->addresses()->delete();
         foreach ($request->addresses as $address) {

@@ -44,11 +44,38 @@
             <input type="hidden" name="branch_code" id="branch_code">
         </div>
     </div>
+
     <div class="col-md-6">
         <div class="form-group">
             <label for="national_id">National ID / Passport / Drivers license</label>
             <input type="text" name="national_id" id="national_id" class="form-control"
                 value="{{ old('national_id', $client->national_id ?? '') }}">
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="form-group">
+            <div class="form-group md-3">
+                <label for="picture">Attach Document</label>
+                <input type="file" name="picture" id="picture" class="form-control" accept=".jpg,.jpeg,.png,.pdf">
+            </div>
+        </div>
+        @error('picture')
+            <span class="invalid-feedback">{{ $message }}</span>
+        @enderror
+    </div>
+
+    <div class="col-md-3">
+        <div class="form-group">
+
+            @if (isset($client->picture))
+            <p>Attached File:</p>
+            @if (Str::endsWith($client->picture, ['.jpg', '.jpeg', '.png', '.pdf']))
+                <img src="{{ asset('storage/' . $client->picture) }}" alt="Attachment" style="max-width: 200px;">
+            @elseif (Str::endsWith($client->picture, ['.pdf']))
+                <a href="{{ asset('storage/' . $client->picture) }}" target="_blank">View PDF</a>
+            @endif
+        @endif
         </div>
     </div>
 

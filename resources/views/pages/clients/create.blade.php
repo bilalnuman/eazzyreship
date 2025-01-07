@@ -7,7 +7,7 @@
     @stop
 
     @section('content')
-        <form action="{{ route('clients.store') }}" method="POST">
+        <form action="{{ route('clients.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             @include('pages.clients.form')
             <div class="col-12 text-right">
@@ -15,4 +15,17 @@
             </div>
         </form>
     @stop
+    @push('js')
+    @if (($message = Session::get('message')) && ($icon = Session::get('icon')))
+            <script>
+                Swal.fire({
+                    position: "top-end",
+                    icon: "{{ $icon }}",
+                    title: "{{ $message }}",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            </script>
+        @endif
+    @endpush
 </x-app-layout>

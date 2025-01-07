@@ -20,7 +20,7 @@
                                 </a>
 
                                 <p class="m-0 text-dark text-xs"><br>
-                                    {{ __('If you have any questions, feel free to contact us at info@eazzyship.com') }}
+                                    {{ __('If you have any questions, feel free to contact us at ') }}<a href="/#contact">info@eazzyreship.com</a> 
                                 </p>
                             </div>
                         </div>

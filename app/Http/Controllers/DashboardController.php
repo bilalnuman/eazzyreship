@@ -10,6 +10,7 @@ use App\Models\Branch;
 use App\Models\Country;
 use App\Models\State;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 
 class DashboardController extends Controller
@@ -151,6 +152,11 @@ class DashboardController extends Controller
     public function updateClient(Request $request)
     {
         $client = Client::where('user_id', auth()->id())->firstOrFail();
+        if ($request->has('picture')) {
+            $request->validate([
+                'picture' => 'nullable|mimes:jpg,jpeg,png,pdf|max:2048',
+            ]);
+        }
 
         if (!isset($client)) {
             abort(403, 'Unauthorized action.');
@@ -158,6 +164,7 @@ class DashboardController extends Controller
 
         $validated = $request->validate([
             'mobile' => 'nullable|string|max:15',
+            'national_id' => 'nullable|string',
             'addresses.*.address' => 'nullable|string',
             'addresses.*.country_id' => 'required|exists:countries,id',
             'addresses.*.state_id' => 'required|exists:states,id',
@@ -165,6 +172,15 @@ class DashboardController extends Controller
 
         //$client = Client::findOrFail($id);
         $client->update($validated);
+
+        if ($request->hasFile('picture')) {
+            if(isset($client->picture) && !empty($client->picture)){
+                Storage::disk('public')->delete($client->picture);
+            }
+            
+            $path = $request->file('picture')->store('customers', 'public');
+            $client->update(['picture' => $path]);  
+        }
 
         $client->addresses()->delete();
         foreach ($request->addresses as $address) {
