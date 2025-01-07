@@ -40,18 +40,16 @@
                     <div class="form-group">
                         <label for="shipments">Available Shipments:</label>
                         <select name="shipment_ids[]" id="shipments" class="form-control" multiple>
-                            
                             @foreach ($availableShipments as $shipment)
                                 <option value="{{ $shipment['id'] }}">
                                     {{ $shipment['code'] }},
-                                    client name: {{ $shipment['client_id'] }},
-                                    from: {{ $shipment['from_branch_id'] }},
-                                    to: {{ $shipment['to_branch_id'] }},
-                                    receiver name: {{ $shipment['receiver_name'] }},
-                                    total weight: {{ $shipment['total_weight'] }}
+                                    client name1: {{ $shipment['client_id'] }},
+                                    from2: {{ $shipment['from_branch_id'] }},
+                                    to3: {{ $shipment['to_branch_id'] }},
+                                    receiver name4: {{ $shipment['receiver_name'] }},
+                                    total weight:5 {{ $shipment['total_weight'] }}
                                 </option>
                             @endforeach
-                            
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary mt-2">Add Shipments</button>
