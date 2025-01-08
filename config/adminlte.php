@@ -393,22 +393,22 @@ return [
             'can' => 'users',
             'submenu' => [
                         [
-                            'text' => 'all Missions',
+                            'text' => 'all Manifest',
                             'url' => '/mission',
                             'can' => 'users',
                         ],
                         [
-                            'text' => 'New Mission',
+                            'text' => 'New Manifest',
                             'url' => '/mission/create',
                             'can' => 'users',
                         ],                     
                         [
-                            'text' => 'Active Missions',
+                            'text' => 'Active Manifest',
                             'url' => '/mission/show/active',
                             'can' => 'users',
                         ],
                         [
-                            'text' => 'Closed Missions',
+                            'text' => 'Closed Manifest',
                             'url' => '/mission/show/close',
                             'can' => 'users',
                         ],
@@ -435,17 +435,17 @@ return [
         [
             'text' => 'Receivers',
             'icon' => 'fas fa-fw fa-clipboard-check',
-            'can' => 'users',
+            'can' => 'disable',
             'submenu' => [
                         [
                             'text' => 'all Receivers',
                             'url' => '/receiver',
-                            'can' => 'users',
+                            'can' => 'disable',
                         ],
                         [
                             'text' => 'New Receiver',
                             'url' => '/receiver/create',
-                            'can' => 'users',
+                            'can' => 'disable',
                         ],
                     ],
         ],

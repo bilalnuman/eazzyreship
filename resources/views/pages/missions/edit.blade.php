@@ -2,7 +2,7 @@
     @section('title', 'Edit Mission')
 
     @section('content_header')
-        <h1>Edit Mission</h1>
+        <h1>Edit Manifest</h1>
     @stop
 
     @section('content')

@@ -140,10 +140,9 @@ class ShipmentController extends Controller
 
     public function invoice($id)
     {
-
         $shipment = Shipment::where('id', $id)->first();
         $packages = Package_shipment::where('shipment_id', $id)->get();
-        $company = Branch::where('id', 1)->first();
+        $company = Branch::where('id', 6)->first();
         $inv = PDF::loadView('pages.shipments.invoice', compact('shipment', 'packages', 'company'));
         return $inv->stream();
     }
@@ -158,7 +157,8 @@ class ShipmentController extends Controller
         $excludedBranchIds1 = [1, 2, 3, 4, 5]; // IDs a excluir
         $branches0 = Branch::whereNotIn('id', $excludedBranchIds1)->pluck('name', 'id');
         $excludedBranchIds2 = [6];
-        $branches = Branch::whereNotIn('id', $excludedBranchIds2)->pluck('name', 'id');
+        //$branches = Branch::whereNotIn('id', $excludedBranchIds2)->pluck('name', 'id');
+        $branches = Branch::whereNotIn('id', $excludedBranchIds2)->get();
         $packages = Package::pluck('name', 'id');
         $missions = Mission::where('status_id', 1)->pluck('code', 'id');
         $receivers = Receiver::all();
@@ -393,7 +393,7 @@ class ShipmentController extends Controller
             'shipping_date' => $shipments->shipping_date,
             'collection_time' => $shipments->collection_time ?? '',
             'client_id' => optional($shipments->client)->name ?? 'N/A',
-            'receiver_name' => optional($shipments->receiver)->name ?? 'N/A',
+            'receiver_name' => optional($shipments->toBranch)->address ?? 'N/A',
             'receiver_address' => $shipments->receiver_address ?? 'N/A',
             'from_branch_id' => optional($shipments->fromBranch)->name ?? 'N/A',
             'from_branch_state' => optional($shipments->fromBranch->state)->name ?? 'N/A',
@@ -437,7 +437,8 @@ class ShipmentController extends Controller
         $excludedBranchIds1 = [1, 2, 3, 4, 5]; // IDs a excluir
         $branches0 = Branch::whereNotIn('id', $excludedBranchIds1)->pluck('name', 'id');
         $excludedBranchIds2 = [6]; // IDs a excluir
-        $branches = Branch::whereNotIn('id', $excludedBranchIds2)->pluck('name', 'id');
+        //$branches = Branch::whereNotIn('id', $excludedBranchIds2)->pluck('name', 'id');
+        $branches = Branch::whereNotIn('id', $excludedBranchIds2)->get();
         $packages = Package::pluck('name', 'id');
         $missions = Mission::where('status_id', 1)->pluck('code', 'id');
         $receivers = Receiver::all();

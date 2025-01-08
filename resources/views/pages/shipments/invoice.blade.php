@@ -71,8 +71,8 @@
 
     <table width="100%">
         <tr>
-            <td><strong>From:</strong> <?php echo $shipment->from_branch_id; ?></td>
-            <td><strong>To:</strong> <?php echo $shipment->to_branch_id; ?></td>
+            <td><strong>From:</strong> <?php echo $shipment->fromBranch->name; ?></td>
+            <td><strong>To:</strong> <?php echo $shipment->toBranch->name . " / ". $shipment->toBranch->address ?></td>
         </tr>
 
     </table>

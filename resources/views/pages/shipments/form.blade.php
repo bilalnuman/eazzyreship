@@ -96,10 +96,10 @@
                 @foreach ($clients as $client)
                     <option value="{{ $client->id }}"
                         {{ old('client_id', $shipment->client_id ?? '') == $client->id ? 'selected' : '' }}
-                        data-mobile="{{ $client->mobile }}"
+                        data-mobilec="{{ $client->mobile }}"
                         @foreach ($client->addresses as $var)
-                        data-address="{{ $var->address }}" @endforeach
-                        data-branch="{{ $client->branch_id }}">
+                        data-addressc="{{ $var->address }}" @endforeach
+                        data-branchc="{{ $client->branch_id }}">
                         {{ $client->name }}</option>
                 @endforeach
             </select>
@@ -130,6 +130,27 @@
     </div>
 </div>
 
+<!--div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="to_branch_id">To Branch</label>
+            <select name="to_branch_id" id="to_branch_id"
+                class="form-control @/error('to_branch_id') is-invalid @/enderror" required>
+                <option value="">Select a branch</option>
+                @/foreach ($branches as $id => $name)
+                    <option value="{/{ $id }}"
+                        {/{ old('to_branch_id', $shipment->to_branch_id ?? '') == $id ? 'selected' : '' }} >
+                        {/{ $name }}
+                    </option>
+                @/endforeach
+            </select>
+            @/error('to_branch_id')
+                <span class="invalid-feedback">{/{ $message }}</span>
+            @/enderror
+        </div>
+    </div>
+</div-->
+
 <div class="row">
     <div class="col-md-6">
         <div class="form-group">
@@ -137,10 +158,11 @@
             <select name="to_branch_id" id="to_branch_id"
                 class="form-control @error('to_branch_id') is-invalid @enderror" required>
                 <option value="">Select a branch</option>
-                @foreach ($branches as $id => $name)
-                    <option value="{{ $id }}"
-                        {{ old('to_branch_id', $shipment->to_branch_id ?? '') == $id ? 'selected' : '' }}>
-                        {{ $name }}
+                @foreach ($branches as $branch)
+                    <option value="{{ $branch->id }}"
+                        {{ old('to_branch_id', $shipment->to_branch_id ?? '') == $branch->id ? 'selected' : '' }}
+                        data-address="{{ $branch->address }}" data-mobile="{{ $branch->responsible_mobile }}">
+                        {{ $branch->name }}
                     </option>
                 @endforeach
             </select>
@@ -152,46 +174,46 @@
 </div>
 
 <div class="row">
-    <div class="col-md-6">
+    <!--div class="col-md-6">
         <div class="form-group">
             <label for="receiver_name">Receiver Name</label>
 
             <select name="receiver_name" id="receiver_name"
-                class="form-control @error('receiver_name') is-invalid @enderror">
+                class="form-control @/error('receiver_name') is-invalid @/enderror">
                 <option value="">Select Receiver</option>
-                @foreach ($receivers as $receiver)
-                    <option value="{{ $receiver->id }}"
-                        {{ old('receiver_name', $shipment->receiver_name ?? '') == $receiver->id ? 'selected' : '' }}>
-                        {{ $receiver->name }}
+                @/foreach ($receivers as $receiver)
+                    <option value="{/{ $receiver->id }}"
+                        {/{ old('receiver_name', $shipment->receiver_name ?? '') == $receiver->id ? 'selected' : '' }}>
+                        {/{ $receiver->name }}
                     </option>
-                @endforeach
+                @/endforeach
             </select>
 
-            @error('receiver_name')
-                <span class="invalid-feedback">{{ $message }}</span>
-            @enderror
+            @/error('receiver_name')
+                <span class="invalid-feedback">{/{ $message }}</span>
+            @/enderror
         </div>
-    </div>
+    </div-->
 
-    <div class="col-md-6">
-        <div class="form-group">
-            <label for="receiver_mobile">Receiver phone</label>
-            <input type="text" name="receiver_mobile" id="receiver_mobile" class="form-control"
-                value="{{ old('receiver_mobile', $shipment->receiver_mobile ?? '') }}">
-        </div>
+<div class="col-md-6">
+    <div class="form-group">
+        <label for="receiver_mobile">Branch phone</label>
+        <input type="text" name="receiver_mobile" id="receiver_mobile" class="form-control"
+            value="{{ old('receiver_mobile', $shipment->receiver_mobile ?? '') }}" readonly>
     </div>
+</div>
 
-    <div class="col-md-6">
-        <div class="form-group">
-            <label for="receiver_address">Receiver Address</label>
-            <input type="text" name="receiver_address" id="receiver_address"
-                class="form-control @error('receiver_address') is-invalid @enderror"
-                value="{{ old('receiver_address', $shipment->receiver_address ?? '') }}">
-            @error('receiver_address')
-                <span class="invalid-feedback">{{ $message }}</span>
-            @enderror
-        </div>
+<div class="col-md-6">
+    <div class="form-group">
+        <label for="receiver_address">Branch Address</label>
+        <input type="text" name="receiver_address" id="receiver_address"
+            class="form-control @error('receiver_address') is-invalid @enderror"
+            value="{{ old('receiver_address', $shipment->receiver_address ?? '') }}" readonly>
+        @error('receiver_address')
+            <span class="invalid-feedback">{{ $message }}</span>
+        @enderror
     </div>
+</div>
 </div>
 
 <div class="row">
@@ -420,7 +442,33 @@
     </script>
     <script>
         $(document).ready(function() {
-            $('#to_branch_id').on('change', function() {
+            // Inicializar Select2
+            $('.select2').select2();
+            const mobileInput = document.getElementById('responsible_mobile');
+            const addressInput = document.getElementById('responsible_address');
+            // Manejar el cambio de selección
+            $('#client_id').on('change', function() {
+                // Obtener el valor seleccionado
+                const selectedOption = $(this).find(':selected');
+
+                // Acceder a los datos personalizados
+                const mobile = selectedOption.data('mobilec');
+                const branch = selectedOption.data('branchc');
+                const address = selectedOption.data('addressc');
+
+                // Mostrar los datos en la consola o usarlos en tu lógica
+                mobileInput.value = mobile;
+                addressInput.value = address;
+
+                //console.log('Mobile:', mobile);
+                //console.log('Branch:', branch);
+                //console.log('Address:', address);
+            });
+
+
+
+
+            /*$('#to_branch_id').on('change', function() {
                 let branchId = $(this).val();
                 let stateSelect = $('#receiver_name');
 
@@ -437,10 +485,10 @@
                             $.each(response.data, function(index, receiver) {
                                 stateSelect.append(
                                     `<option value="${receiver.id}" 
-                                     data-mobile="${receiver.receiver_mobile}" 
-                                     data-address="${receiver.receiver_address}">
-                                ${receiver.name}
-                            </option>`
+                                 data-mobile="${receiver.receiver_mobile}" 
+                                 data-address="${receiver.receiver_address}">
+                            ${receiver.name}
+                        </option>`
                                 );
                             });
                         },
@@ -449,10 +497,10 @@
                         }
                     });
                 }
-            });
+            });*/
 
             // Evento para capturar datos adicionales al seleccionar un receptor
-            $('#receiver_name').on('change', function() {
+            $('#to_branch_id').on('change', function() {
                 let selectedOption = $(this).find(':selected');
                 let receiverMobile = selectedOption.data('mobile'); // Obtiene el móvil
                 let receiverAddress = selectedOption.data('address'); // Obtiene la dirección
@@ -490,21 +538,21 @@
         });
     </script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const clientSelect = document.getElementById('client_id');
-            const mobileInput = document.getElementById('responsible_mobile');
-            const addressInput = document.getElementById('responsible_address');
+        /*document.addEventListener('DOMContentLoaded', function() {
+            //const clientSelect = document.getElementById('client_id');
+            //const mobileInput = document.getElementById('responsible_mobile');
+            //const addressInput = document.getElementById('responsible_address');
             const branchSelect = document.getElementById('to_branch_id');
 
-            const receiverSelect = document.getElementById('receiver_name');
-            const receiverMobile = document.getElementById('receiver_mobile');
-            const receiverAddress = document.getElementById('receiver_address');
+            //const receiverSelect = document.getElementById('receiver_name');
+            //const receiverMobile = document.getElementById('receiver_mobile');
+            //const receiverAddress = document.getElementById('receiver_address');
 
 
             clientSelect.addEventListener('change', function() {
                 const selectedOption = clientSelect.options[clientSelect.selectedIndex];
 
-                // Si no hay selección válida, limpiar todo
+                /* Si no hay selección válida, limpiar todo
                 if (!selectedOption.value) {
                     mobileInput.value = '';
                     addressInput.value = '';
@@ -516,13 +564,13 @@
                 }
 
                 // Obtener datos del cliente desde los atributos del <option>
-                const mobile = selectedOption.getAttribute('data-mobile') || '';
-                const address = selectedOption.getAttribute('data-address') || '';
-                const branchId = selectedOption.getAttribute('data-branch') || '';
+                const mobilec = selectedOption.getAttribute('data-mobilec') || '';
+                const addressc = selectedOption.getAttribute('data-addressc') || '';
+                const branchId = selectedOption.getAttribute('data-branchc') || '';
 
                 // Asignar valores a los campos
-                mobileInput.value = mobile;
-                addressInput.value = address;
+                mobileInput.value = mobilec;
+                addressInput.value = addressc;
 
                 if (branchId) {
                     branchSelect.value = branchId; // Seleccionar la opción que coincide con branchId
@@ -532,23 +580,23 @@
                     $('#to_branch_id').trigger('change');
                 }
             });
-        });
+        });*/
     </script>
     <script>
         /*document.addEventListener('DOMContentLoaded', function() {
-                                                    const shippingDateInput = document.getElementById('shipping_date');
+                                                        const shippingDateInput = document.getElementById('shipping_date');
 
-                                                    if (!shippingDateInput.value) {
-                                                        // Obtener la fecha actual en formato YYYY-MM-DD
-                                                        const today = new Date();
-                                                        const year = today.getFullYear();
-                                                        const month = String(today.getMonth() + 1).padStart(2, '0'); // Mes en formato 2 dígitos
-                                                        const day = String(today.getDate()).padStart(2, '0'); // Día en formato 2 dígitos
+                                                        if (!shippingDateInput.value) {
+                                                            // Obtener la fecha actual en formato YYYY-MM-DD
+                                                            const today = new Date();
+                                                            const year = today.getFullYear();
+                                                            const month = String(today.getMonth() + 1).padStart(2, '0'); // Mes en formato 2 dígitos
+                                                            const day = String(today.getDate()).padStart(2, '0'); // Día en formato 2 dígitos
 
-                                                        // Establecer el valor del campo con la fecha actual
-                                                        shippingDateInput.value = `${year}-${month}-${day}`;
-                                                    }
-                                                });*/
+                                                            // Establecer el valor del campo con la fecha actual
+                                                            shippingDateInput.value = `${year}-${month}-${day}`;
+                                                        }
+                                                    });*/
     </script>
     <script>
         document.getElementById('addPackageBtn').addEventListener('click', function() {

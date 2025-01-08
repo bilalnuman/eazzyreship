@@ -2,15 +2,15 @@
     @section('title', 'Missions')
 
     @section('content_header')
-        <h1>Missions</h1>
+        <h1>Manifest</h1>
     @stop
 
     @section('content')
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Mission List</h3>
+                <h3 class="card-title">Manifest List</h3>
                 <div class="card-tools">
-                    <a href="{{ route('pages.missions.create') }}" class="btn btn-success btn-sm">Create Mission</a>
+                    <a href="{{ route('pages.missions.create') }}" class="btn btn-success btn-sm">Create Manifest</a>
                 </div>
             </div>
             <div class="card-body">

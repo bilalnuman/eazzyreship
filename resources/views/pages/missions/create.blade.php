@@ -2,7 +2,7 @@
     @section('title', 'Create Mission')
 
     @section('content_header')
-        <h1>Create Mission</h1>
+        <h1>Create Manifest</h1>
     @stop
 
     @section('content')

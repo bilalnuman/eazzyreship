@@ -19,7 +19,7 @@
                             <th>Status</th>
                             <th>Customer</th>
                             <th>To Branch</th>
-                            <th>Mission</th>
+                            <th>Manifest</th>
                             <th>Shipper</th>   
                             <th>Vendor Tracking</th>
                             <th>Package Type</th>
