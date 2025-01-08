@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Shipment created</title>
+    <title>Shipment Received</title>
     <style>
         /* Agrega tus estilos CSS personalizados aquí */
         body {
@@ -22,10 +22,10 @@
     </style>
 </head>
 <body>
-    <h1>Eazzyreship Notification</h1>
+    <h1>Shipment Notification</h1>
     <p>One or more package(s) with tracking</p>
     <p>Warehouse ID: {{ $shipment->code ?? ''}} <br/></p>
-    <p>Barcode: {{ $shipment->barcode ?? ''}} <br/></p>
+    <p>Tacking: {{ $shipment->barcode ?? ''}} <br/></p>
     <p>Have been received for you at Miami warehouse. We will email you when you package is shipped to destination city.<br/></p>
     <p>Thank you,<br/>
     Eazzyreship Team.</P>

@@ -29,7 +29,7 @@ class ShipmentCreatedMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Shipment Created',
+            subject: 'Shipment Received',
         );
     }
 
