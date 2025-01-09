@@ -141,7 +141,7 @@
             </tr>
             <tr>
                 <td colspan="3"></td>
-                <td align="right">Return Cost $</td>
+                <td align="right">Delivery $</td>
                 <?php echo "<td align='right'>" . $shipment->return_cost . '</td>'; ?>
             </tr>
             <tr>
