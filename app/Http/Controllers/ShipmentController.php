@@ -141,7 +141,9 @@ class ShipmentController extends Controller
     public function invoice($id)
     {
         $shipment = Shipment::where('id', $id)->first();
-        $client = Client::with('addresses:client_id,address')->select('name', 'id', 'mobile', 'national_id')->first();
+        $client = Client::select('name', 'id', 'mobile', 'national_id')
+                ->with('addresses:address,client_id')
+                ->find($shipment->client_id);
         $packages = Package_shipment::where('shipment_id', $id)->get();
         $company = Branch::where('id', 6)->first();
         $inv = PDF::loadView('pages.shipments.invoice', compact('shipment', 'packages', 'company', 'client'));

@@ -141,7 +141,9 @@ class DashboardController extends Controller
 
         $shipment = Shipment::where('id', $id)->first();
         $packages = Package_shipment::where('shipment_id', $id)->get();
-        $client = Client::with('addresses:client_id,address')->select('name', 'id', 'mobile', 'national_id')->first();
+        $client = Client::select('name', 'id', 'mobile', 'national_id')
+                ->with('addresses:address,client_id')
+                ->find($shipment->client_id);
         $company = Branch::where('id', 1)->first();
         $inv = PDF::loadView('pages.shipments.invoice', compact('shipment', 'packages', 'company','client'));
         return $inv->stream();
