@@ -47,12 +47,26 @@
 </head>
 
 <body>
+    <?php foreach ($client->addresses as $var){
+        $address= $var->address;
+    }
+    ?>
 
     <table width="100%">
         <tr>
-            <td valign="top"><img src="{{ public_path('img/logoea2.png') }}" width="200px"/></td>
+            <td valign="top"><img src="{{ public_path('img/logoea2.png') }}" width="200px"/>
+                <pre>
+                    <?php
+                    echo '<br>' . $client->name;
+                    echo '<br>' . $address;                   
+                    echo '<br>' . "Tel: " . $client->mobile;
+                    echo '<br>' . "ID : ". $client->national_id;
+                    echo '<br>';
+                    ?>
+                </pre>
+            </td>
             <td align="right">
-                <h3>Eazzyreship company N.V.</h3>
+                <h3>EazzyReship</h3>
                 <pre>
                 <?php
                 if ($shipment->code) {
@@ -83,6 +97,7 @@
         <thead style="background-color: lightgray;">
             <tr>
                 <th>#</th>
+                <th>ID</th>
                 <th>Description</th>
                 <th>Quantity</th>
                 <th>Weight</th>
@@ -95,6 +110,7 @@
             foreach ($packages as $package) {
                 echo '<tr>';
                 echo "<th scope='row'>" . $counter . '</th>';
+                echo '<td>' . $shipment->code . '</td>';
                 echo '<td>' . $package->description . '</td>';
                 echo "<td align='right'>" . $package->qty . '</td>';
                 echo "<td align='right'>" . $package->weight . ' LB' . '</td>';
