@@ -20,10 +20,14 @@ class Package_shipment extends Model
         'height',
         'qty',
     ];
-    
+
     public function package()
     {
         return $this->belongsTo(Package::class, 'package_id', 'id');
     }
-    
+
+    public function shipment()
+    {
+        return $this->belongsTo(Shipment::class);
+    }
 }

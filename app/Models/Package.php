@@ -13,4 +13,9 @@ class Package extends Model
         'name',
         'cost'
     ];
+
+    public function package_shipments()
+    {
+        return $this->hasMany(Package_shipment::class);
+    }
 }

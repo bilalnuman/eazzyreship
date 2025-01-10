@@ -61,8 +61,7 @@
                                     ${row.status_id != 'Close' ? `<a href="/mission/${row.id}/edit" class="btn btn-sm btn-primary">Edit</a>
                                     <a href="/mission/${row.id}/change-status" class="btn btn-sm btn-warning">Close</a>
                                     <!--a href="#" onclick="confirmDelete(${row.id})" class="btn btn-sm btn-danger">Delete</a-->` : 
-                                    `<a href="/mission/${row.id}/manifest-report" class="btn btn-sm btn-secondary">PDF</a>`}
-                                    
+                                    `<a href="/mission/export-manifest2?mission_id=${row.id}" class="btn btn-sm btn-secondary">Excel</a>`}  
                                 `;
                             },
                             className: 'text-right'

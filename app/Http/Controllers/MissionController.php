@@ -6,9 +6,13 @@ use Illuminate\Http\Request;
 use App\Models\Mission;
 use App\Models\Shipment;
 use App\Models\Branch;
+use App\Models\Package_shipment;
 use App\Models\Shipment_setting;
 use App\Models\Status;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Exports\ManifestExport;
+use App\Exports\ShipmentsExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class MissionController extends Controller
 {
@@ -40,18 +44,18 @@ class MissionController extends Controller
         // Obtén la misión específica
         $mission = Mission::findOrFail($id);
         $shipmentsData = Shipment::where('mission_id', $id)
-        ->get()
-        ->map(function ($shipment) {
-            return [
-                'id' => $shipment->id,
-                'code' => $shipment->code,
-                'client' => $shipment->client->name,
-                'status' => $shipment->status->name,
-                'to_branch' => $shipment->toBranch->name,
-                'receiver' => $shipment->receiver->name,
-                'actions' => ''
-            ];
-        });
+            ->get()
+            ->map(function ($shipment) {
+                return [
+                    'id' => $shipment->id,
+                    'code' => $shipment->code,
+                    'client' => $shipment->client->name,
+                    'status' => $shipment->status->name,
+                    'to_branch' => $shipment->toBranch->name,
+                    'receiver' => $shipment->receiver->name,
+                    'actions' => ''
+                ];
+            });
 
         /*$shipmentsData = $mission->shipment->map(function ($shipment) {
             return [
@@ -68,11 +72,11 @@ class MissionController extends Controller
         // Obtén la lista de envíos que no están asignados a esta misión
         $availableShipments = Shipment::whereNull('mission_id')
             ->where('to_branch_id', $mission->to_branch_id)
-            ->select('id', 'code', 'client_id', 'type', 'from_branch_id','to_branch_id','receiver_name','total_weight')
+            ->select('id', 'code', 'client_id', 'type', 'from_branch_id', 'to_branch_id', 'receiver_name', 'total_weight')
             ->with([
-                'client:id,name', 
-                'fromBranch:id,name', 
-                'toBranch:id,name', 
+                'client:id,name',
+                'fromBranch:id,name',
+                'toBranch:id,name',
                 'receiver:id,name'
             ])
             ->get()
@@ -282,5 +286,143 @@ class MissionController extends Controller
         }
         //return response()->json(['data' => $missions]);
         return $missions;
+    }
+
+    /*public function exportManifest(Request $request)
+    {
+        $mission_id = $request->input('mission_id');
+        if($mission_id > 0){
+            return Excel::download(new ManifestExport($mission_id), 'manifest.xlsx');
+        }
+        return "no records";
+    }*/
+
+    public function exportManifest(Request $request)
+    {
+        $mission_id = $request->input('mission_id');
+
+        $shipments = Shipment::with([
+            'fromBranch.state.country:id,name',
+            'toBranch.state.country:id,name',
+            'client:id,name',
+            'receiver:id,name',
+            'status:id,name',
+            'packages'
+        ])
+            ->where('mission_id', $mission_id)
+            ->select([
+                'id',
+                'code',
+                'order_id',
+                'status_id',
+                'type',
+                'client_id',
+                'receiver_name',
+                'receiver_address',
+                'from_branch_id',
+                'to_branch_id',
+                'carrier',
+                'shipping_date',
+                'collection_time',
+                'payment_type',
+                'payment_method_id',
+                'barcode',
+                'order_id',
+                'paid',
+                'tax',
+                'insurance',
+                'shipping_cost',
+                'return_cost',
+                'total_weight',
+                'amount_to_be_collected',
+                'created_at'
+            ])
+            ->get()
+            ->map(function ($shipment) {
+                return [
+                    'id' => $shipment->id,
+                    'code' => $shipment->code,
+                    'status' => optional($shipment->status)->name ?? 'N/A',
+                    'type' => $shipment->type == 1 ? 'Air' : 'Ocean',
+                    'client' => optional($shipment->client)->name ?? 'N/A',
+                    'receiver_name' => $shipment->receiver_name ?? 'N/A',
+                    'receiver_address' => $shipment->receiver_address ?? 'N/A',
+                    'from_branch' => optional($shipment->fromBranch)->name ?? 'N/A',
+                    'to_branch' => optional($shipment->toBranch)->name ?? 'N/A',
+                    'carrier' => $shipment->carrier,
+                    'shipping_date' => $shipment->shipping_date,
+                    'total_weight' => $shipment->total_weight ?? '1',
+                    'amount_to_be_collected' => $shipment->amount_to_be_collected ?? '',
+                    'created_at' => $shipment->created_at ?? '',
+                    'packages' => $shipment->packages->map(function ($package) {
+                        return [
+                            'id' => $package->id,
+                            'weight' => $package->weight,
+                            'dimensions' => $package->dimensions,
+                            'description' => $package->description,
+                        ];
+                    }),
+                ];
+            });
+
+        return Excel::download(new ManifestExport($shipments), 'shipments.xlsx');
+    }
+
+
+    public function packagesManifest(Request $request)
+    {
+        $missionId = $request->input('mission_id');
+
+        if ($missionId > 0) {
+            $packages = Package_shipment::whereHas('shipment', function ($query) use ($missionId) {
+                $query->where('mission_id', $missionId); // Filtrar por misión
+            })
+                ->with([
+                    'package:id,name',
+                    'shipment' => function ($query) {
+                        $query->with([
+                            'toBranch:id,name',
+                            'mission:id,code,due_date',
+                            'client:id,name',
+                        ]);
+                    },
+                ])
+                ->select([
+                    'id', // ID del paquete
+                    'shipment_id', // ID del envío relacionado
+                    'qty', // Cantidad
+                    'description', // Descripción
+                    'package_id',
+                ])
+                ->get();
+
+            // Formatear los datos para exportar
+            $formattedPackages = $packages->map(function ($package) {
+                $shipment = $package->shipment;
+                return [
+                    'mission_code' => optional($shipment->mission)->code?? '',
+                    'mission_date' => optional($shipment->mission)->due_date ?? '',
+                    'shipment_id' => optional($shipment)->id ?? '',
+                    'code' => optional($shipment)->code ?? '',
+                    'sender' => optional($shipment)->carrier ?? '',
+                    'receiver' => optional($shipment->client)->name ?? '',
+                    'vendor_tracking' => optional($shipment)->barcode ?? '',
+                    'qty' => $package->qty,
+                    'type' => $package->package->name ?? '',
+                    'invoice' => optional($shipment)->otp ?? '',
+                    'contents' => $package->description ?? '',
+                    'value' => optional($shipment)->otp ?? '',
+                    'LBS' => optional($shipment)->otp ?? '',
+                    'weight' => optional($shipment)->total_weight ?? '0',
+                    'freight' => optional($shipment)->shipping_cost ?? '0',
+                    'total_charges' => optional($shipment)->amount_to_be_collected ?? '0',
+                ];
+            });
+
+
+            return Excel::download(new ShipmentsExport($formattedPackages), 'packages_manifest.xlsx');
+        } else {
+            return "no records";
+        }
     }
 }

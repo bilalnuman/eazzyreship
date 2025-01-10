@@ -140,7 +140,9 @@ Route::middleware('role:admin','auth', 'verified')->group(function () {
     Route::post('/mission/{id}/add-shipments', [MissionController::class, 'addShipments'])->name('missions.add-shipments');
     Route::get('/mission/{missionId}/remove-shipment/{shipmentId}', [MissionController::class, 'removeShipment'])->name('missions.remove-shipment');
     Route::get('/mission/{id}/manifest-report', [MissionController::class, 'manifestPDF'])->name('mission.manifest-report');
-
+   //export excel
+    Route::get('/mission/export-manifest1', [MissionController::class, 'exportManifest'])->name('export.manifest');
+    Route::get('/mission/export-manifest2', [MissionController::class, 'packagesManifest'])->name('export.packages');
     
 
     //Payment
