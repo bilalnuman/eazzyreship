@@ -222,6 +222,8 @@ class ShipmentController extends Controller
 
             'packages.*.package_id' => 'required|integer',
             'packages.*.description' => 'nullable|string',
+            'packages.*.notes' => 'nullable|string',
+            'packages.*.value' => 'nullable|numeric|min:0.1',
             'packages.*.weight' => 'required|numeric|min:0.1',
             'packages.*.length' => 'required|numeric|min:0.1',
             'packages.*.width' => 'required|numeric|min:0.1',
@@ -340,6 +342,7 @@ class ShipmentController extends Controller
     /**
      * Display the specified shipment.
      */
+
     public function show($id)
     {
         $shipments = Shipment::with(
@@ -494,6 +497,8 @@ class ShipmentController extends Controller
 
             'packages.*.package_id' => 'required|integer',
             'packages.*.description' => 'nullable|string',
+            'packages.*.notes' => 'nullable|string',
+            'packages.*.value' => 'nullable|numeric|min:0.1',
             'packages.*.weight' => 'required|numeric|min:0.1',
             'packages.*.length' => 'required|numeric|min:0.1',
             'packages.*.width' => 'required|numeric|min:0.1',

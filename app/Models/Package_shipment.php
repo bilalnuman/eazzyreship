@@ -14,6 +14,8 @@ class Package_shipment extends Model
         'shipment_id',
         'description',
         'image',
+        'notes',
+        'value',
         'weight',
         'length',
         'width',

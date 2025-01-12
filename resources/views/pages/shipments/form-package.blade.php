@@ -63,6 +63,24 @@
             </div>
         </div>
     </div>
+
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="packages[{{ $index }}][notes]">Notes</label>
+            <input type="text" name="packages[{{ $index }}][notes]" id="packages[{{ $index }}][notes]"
+                class="form-control" value="{{ old('packages.{ $index }.notes', $package->notes ?? '') }}">
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="packages[{{ $index }}][value]">Value</label>
+            <input type="number" name="packages[{{ $index }}][value]"
+                id="packages[{{ $index }}][value]" class="form-control weight-listener" step="0.01" min="0"
+                value="{{ old('packages.{ $index }.value', $package->value ?? '') }}">
+        </div>
+    </div>
+
     @if ($index > 0)
         <div class="form-group mb0">
 

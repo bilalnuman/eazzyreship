@@ -17,6 +17,8 @@ return new class extends Migration
             $table->integer('shipment_id')->unsigned();
             $table->text('description')->nullable();
             $table->string('image')->nullable();
+            $table->string('notes')->nullable();
+            $table->double('value')->nullable();
             $table->double('weight')->nullable();
             $table->double('length')->nullable();
             $table->double('width')->nullable();
