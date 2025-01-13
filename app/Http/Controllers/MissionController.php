@@ -52,7 +52,7 @@ class MissionController extends Controller
                     'client' => $shipment->client->name,
                     'status' => $shipment->status->name,
                     'to_branch' => $shipment->toBranch->name,
-                    'receiver' => $shipment->receiver->name,
+                    'receiver' => $shipment->toBranch->address?? '',
                     'actions' => ''
                 ];
             });
@@ -392,6 +392,8 @@ class MissionController extends Controller
                     'shipment_id', // ID del envío relacionado
                     'qty', // Cantidad
                     'description', // Descripción
+                    'value',
+                    'notes',
                     'package_id',
                 ])
                 ->get();
@@ -410,8 +412,9 @@ class MissionController extends Controller
                     'qty' => $package->qty,
                     'type' => $package->package->name ?? '',
                     'invoice' => optional($shipment)->otp ?? '',
+                    'notes' => $package->notes ?? '',
                     'contents' => $package->description ?? '',
-                    'value' => optional($shipment)->otp ?? '',
+                    'value' => $package->value ?? '',
                     'LBS' => optional($shipment)->otp ?? '',
                     'weight' => optional($shipment)->total_weight ?? '0',
                     'freight' => optional($shipment)->shipping_cost ?? '0',

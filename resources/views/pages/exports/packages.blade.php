@@ -12,6 +12,7 @@
             <th># of Pcs</th>
             <th>Package Type</th>
             <th>Invoice #</th>
+            <th>Notes</th>
             <th>Package Contents</th>
             <th>Invoice Value</th>
             <th>LBS</th>
@@ -31,6 +32,7 @@
                 <td>{{ $package['qty'] }}</td>
                 <td>{{ $package['type'] }}</td>
                 <td>{{ $package['invoice'] }}</td>
+                <td>{{ $package['notes'] }}</td>
                 <td>{{ $package['contents'] }}</td>
                 <td>{{ $package['value'] }}</td>
                 <td>{{ $package['LBS'] }}</td>
