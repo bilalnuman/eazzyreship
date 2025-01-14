@@ -68,52 +68,52 @@
     </style>
 </head>
 <div class="index-page" style="background-color:#212529">
-<header id="header" class="header d-flex align-items-center white-bg">
-    <div class="container-fluid container-xl position-relative d-flex align-items-center">
+    <header id="header" class="header d-flex align-items-center white-bg">
+        <div class="container-fluid container-xl position-relative d-flex align-items-center">
 
-        <a href="index.html" class="logo d-flex align-items-center me-auto">
-            <!-- Uncomment the line below if you also wish to use an image logo -->
-            <!-- <img src="assets/img/logo.png" alt=""> -->
-            <h1 class="sitename">EazzyReship</h1>
-        </a>
-        @if (Route::has('login'))
-            <nav id="navmenu" class="navmenu">
-                <ul>
-                    <li><a href="{{ url('/') }}" >Home</a></li>
+            <a href="index.html" class="logo d-flex align-items-center me-auto">
+                <!-- Uncomment the line below if you also wish to use an image logo -->
+                <!-- <img src="assets/img/logo.png" alt=""> -->
+                <h1 class="sitename">EazzyReship</h1>
+            </a>
+            @if (Route::has('login'))
+                <nav id="navmenu" class="navmenu">
+                    <ul>
+                        <li><a href="{{ url('/') }}">Home</a></li>
 
-                    <li><a href="/tracking">Tracking</a></li>
-                    <li><a href="/terms">Terms and conditions</a></li>
-                    @auth
-                        <li><a href="{{ url('/dashboard') }}">Dashboard</a></li>
-                    @else
-                        @if (Route::has('register'))
-                            <li><a href="{{ route('register') }}">Register</a></li>
-                        @endif
-                    @endauth
-                </ul>
-                <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
-            </nav>
-            @auth
-                <form action="{{ route('logout') }}" method="POST" class="d-inline">
-                    @csrf
-                    <button type="submit" class="btn btn-default btn-flat float-right cta-btn">Sign out</button>
-                </form>
-            @else
-            <a class="cta-btn" href="{{route('login') }}">Log in</a>
-            @endauth
-        @endif
-    </div>
-</header>
+                        <li><a href="/tracking">Tracking</a></li>
+                        <li><a href="/terms">Terms and conditions</a></li>
+                        @auth
+                            <li><a href="{{ url('/dashboard') }}">Dashboard</a></li>
+                        @else
+                            @if (Route::has('register'))
+                                <li><a href="{{ route('register') }}">Register</a></li>
+                            @endif
+                        @endauth
+                    </ul>
+                    <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+                </nav>
+                @auth
+                    <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                        @csrf
+                        <button type="submit" class="btn btn-default btn-flat float-right cta-btn">Sign out</button>
+                    </form>
+                @else
+                    <a class="cta-btn" href="{{ route('login') }}">Log in</a>
+                @endauth
+            @endif
+        </div>
+    </header>
 </div>
 <x-guest-layout>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
-    <form method="POST" action="{{ route('register') }}">
+    <form id="exampleForm" method="POST" action="{{ route('register') }}">
         @csrf
         <!-- Name -->
         <div>
             <x-input-label for="name" :value="__('First Name and Last Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required
-                autofocus autocomplete="name" />
+            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')"
+                required autofocus autocomplete="name" />
             <x-input-error :messages="$errors->get('name')" class="mt-2" />
         </div>
 
@@ -148,9 +148,9 @@
         <!-- Phone -->
         <div class="mt-4">
             <x-input-label for="mobile" :value="__('mobile')" />
-            <x-text-input id="mobile" class="block mt-1 w-full" type="text" name="mobile" :value="old('mobile')"/>
+            <x-text-input id="mobile" class="block mt-1 w-full" type="text" name="mobile" :value="old('mobile')" />
             <x-input-error :messages="$errors->get('mobile')" class="mt-2" />
-
+            <x-text-input type="hidden" id="dialCode" name="dialCode" />
         </div>
 
         <!-- Country -->
@@ -175,13 +175,15 @@
 
         <div class="mt-4">
             <label class="form-check form-check-custom form-check-solid form-check-inline">
-                <input class="form-check-input" type="checkbox" name="tnc" id="tnc" value="1" required />
+                <input class="form-check-input" type="checkbox" name="tnc" id="tnc" value="1"
+                    required />
                 <span class="form-check-label fw-bold text-gray-700 fs-6">
-                    {!! __('I Agree to the') !!} 
-                    <a href="{{ route('dashboard') }}" target="_blank" class="ms-1 link-primary">{{ __('Terms and Conditions') }}</a>.
+                    {!! __('I Agree to the') !!}
+                    <a href="{{ route('dashboard') }}" target="_blank"
+                        class="ms-1 link-primary">{{ __('Terms and Conditions') }}</a>.
                 </span>
             </label>
-        </div>        
+        </div>
 
         <div class="flex items-center justify-end mt-4">
             <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -189,7 +191,7 @@
                 {{ __('Already registered?') }}
             </a>
 
-            <x-primary-button class="ms-4">
+            <x-primary-button class="ms-4" id="submitButton">
                 {{ __('Register') }}
             </x-primary-button>
         </div>
@@ -215,13 +217,55 @@
         });
         //Inicializar el plugin intl-tel-input
         const input = document.querySelector("#mobile");
+        const hiddenInput = document.querySelector("#dialCode");
 
-        window.intlTelInput(input, {
+        const iti = window.intlTelInput(input, {
             initialCountry: "sx", // Configurar manualmente el país predeterminado (ejemplo: Estados Unidos)
             onlyCountries: ["sx", "mf", "ai", "kn", "bl"], // Opcional: Países preferidos en la lista
-            separateDialCode: false,
-            nationalMode: false,
+            separateDialCode: true,
+            nationalMode: true,
             utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js" // Para formateo adicional
+        });
+
+
+        function updateFullNumber() {
+            let enteredNumber = input.value.trim(); // Número ingresado por el usuario
+            let fullNumber = iti.getNumber(); // Obtener número completo (con prefijo)
+
+            // Verificar si el número ingresado ya incluye un código de país
+            if (enteredNumber.startsWith("+")) {
+                hiddenInput.value = enteredNumber; // Usar directamente el número ingresado
+            } else {
+                hiddenInput.value = fullNumber; // Usar el número completo generado por intl-tel-input
+            }
+        }
+
+
+        input.addEventListener("countrychange", function() {
+            //const dialCode = iti.getSelectedCountryData().dialCode; // Obtener el código de área
+            //hiddenInput.value = dialCode; // Guardarlo en un campo oculto
+            updateFullNumber();
+        });
+
+        input.addEventListener("input", function() {
+            //const dialCode = iti.getSelectedCountryData().dialCode; // Código de área
+            //hiddenInput.value = dialCode; // Asegurarse de que siempre esté actualizado
+            updateFullNumber();
+        });
+
+    </script>
+    <script>
+        document.getElementById("exampleForm").addEventListener("submit", function(event) {
+            const submitButton = document.getElementById("submitButton");
+    
+            // Deshabilitar el botón
+            submitButton.disabled = true;
+    
+            // Cambiar el texto o estilo (opcional)
+            submitButton.innerText = "Sending...";
+            submitButton.style.cursor = "not-allowed";
+            
+            // Permitir que el formulario se envíe
         });
     </script>
     <style>
@@ -229,7 +273,7 @@
         .iti {
             width: 100%;
         }
-    
+
         .iti__flag-container {
             height: 100%;
         }

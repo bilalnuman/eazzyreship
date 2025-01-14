@@ -48,7 +48,8 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'mobile' => ['required', 'string', 'regex:/^\+\d{1,4}[-.\s]?\(?\d{1,4}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/'],
+            'mobile' => ['required', 'string'],
+            'dialCode' => ['required', 'string'],
             'branch_id' => ['required', 'integer'], 
             'branch_code' => ['required', 'string'],
         ]);
@@ -72,7 +73,7 @@ class RegisteredUserController extends Controller
             'user_id' => $user->id,
             'name' => $request->name,
             'email' => $request->email,
-            'mobile' => $request->mobile,
+            'mobile' => $request->dialCode,
             'branch_id' => $request->branch_id,
         ]);
 
