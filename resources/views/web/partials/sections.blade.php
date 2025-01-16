@@ -141,7 +141,7 @@
 
             <div class="col-lg-6">
                 <form class="" data-aos="fade-up" data-aos-delay="500" id="contactForm">
-                    @csrf
+    
                     <div class="row gy-4">
 
                         <div class="col-md-6">
