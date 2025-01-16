@@ -19,8 +19,8 @@ class ContactController extends Controller
         // Opcional: Lógica para enviar correo o guardar en la base de datos
         // Aquí mostramos cómo enviar un correo simple
         Mail::raw($request->message, function ($mail) use ($request) {
-            $mail->to('info@eazzyreship.com') // Cambia esto a tu correo
-                 ->from('no-reply@eazzyreship.com', 'client') // Remitente genérico
+            $mail->to('jcarlosfv3@gmailcom') // Cambia esto a tu correo
+                 ->from('infoy@eazzyreship.com', 'client') // Remitente genérico
                  ->replyTo($request->email, $request->name) // Permite responder al usuario
                  ->subject($request->subject);
         });
