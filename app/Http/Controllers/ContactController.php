@@ -20,8 +20,7 @@ class ContactController extends Controller
         // Aquí mostramos cómo enviar un correo simple
         Mail::raw($request->message, function ($mail) use ($request) {
             $mail->to('info@eazzyreship.com') // Cambia esto a tu correo
-                 ->from('info@eazzyreship.com', 'client') // Remitente genérico
-                 ->replyTo($request->email, $request->name) // Permite responder al usuario
+                 ->from($request->email, $request->name) // Permite responder al usuario
                  ->subject($request->subject);
         });
 
