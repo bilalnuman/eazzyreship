@@ -95,7 +95,8 @@
                                 <li><a href="{{ route('register') }}">Register</a></li>
                             @endif
                         @endauth
-                        <li class="dropdown"><a href="#"><span>More</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+                        <li class="dropdown"><a href="#"><span>More</span> <i
+                                    class="bi bi-chevron-down toggle-dropdown"></i></a>
                             <ul>
                                 <li><a href="#buy_for_me">Buy For Me</a></li>
                                 <li><a href="#rates">Rates</a></li>
@@ -107,7 +108,7 @@
                                 <li><a href="#where_to_shop">Where To Shop</a></li>
                                 <li><a href="#contact">Contact Us</a></li>
                                 <li><a href="#faqs">FAQS</a></li>
-                                
+
                             </ul>
                         </li>
                     </ul>
@@ -153,20 +154,25 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
-        $(document).ready(function () {
-            $('#contactForm').on('submit', function (e) {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $(document).ready(function() {
+            $('#contactForm').on('submit', function(e) {
                 e.preventDefault(); // Evita el envío por defecto
                 const formData = $(this).serialize();
-   
+
                 $.ajax({
                     url: '{{ route('contact.store') }}',
                     type: 'POST',
                     data: formData,
-                    success: function (response) {
+                    success: function(response) {
                         $('#formMessage').text(response.success).css('color', 'green');
                         $('#contactForm')[0].reset(); // Limpia el formulario
                     },
-                    error: function (xhr) {
+                    error: function(xhr) {
                         const errors = xhr.responseJSON.errors;
                         let errorMessage = 'Error: ';
                         for (const key in errors) {
@@ -179,4 +185,5 @@
         });
     </script>
 </body>
+
 </html>
