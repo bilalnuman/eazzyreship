@@ -221,7 +221,7 @@
 
         const iti = window.intlTelInput(input, {
             initialCountry: "sx", // Configurar manualmente el país predeterminado (ejemplo: Estados Unidos)
-            onlyCountries: ["sx", "mf", "ai", "kn", "bl"], // Opcional: Países preferidos en la lista
+            onlyCountries: ["sx", "mf", "ai", "kn", "bl","bq"], // Opcional: Países preferidos en la lista
             separateDialCode: true,
             nationalMode: true,
             utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js" // Para formateo adicional
