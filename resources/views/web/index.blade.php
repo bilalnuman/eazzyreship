@@ -150,5 +150,33 @@
 
     <!-- Main JS File -->
     <script src="{{ asset('web/js/main.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#contactForm').on('submit', function (e) {
+                e.preventDefault(); // Evita el envío por defecto
+                const formData = $(this).serialize();
+   
+                $.ajax({
+                    url: '{{ route('contact.store') }}',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        $('#formMessage').text(response.success).css('color', 'green');
+                        $('#contactForm')[0].reset(); // Limpia el formulario
+                    },
+                    error: function (xhr) {
+                        const errors = xhr.responseJSON.errors;
+                        let errorMessage = 'Error: ';
+                        for (const key in errors) {
+                            errorMessage += errors[key] + ' ';
+                        }
+                        $('#formMessage').text(errorMessage).css('color', 'red');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

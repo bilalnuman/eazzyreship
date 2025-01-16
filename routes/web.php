@@ -14,6 +14,7 @@ use App\Http\Controllers\ReceiverController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ManifestController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ContactController;
 use App\Models\Client;
 use App\Models\Package;
 use App\Models\Package_shipment;
@@ -33,6 +34,9 @@ Route::get('/tracking', function () {
 });
 
 Route::get('/tracking/view/{id}', [ShipmentController::class, 'track'])->name('pages.shipments.tracking'); 
+
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+
 
 /*Route::get('/dashboard', function () {
 
