@@ -140,7 +140,7 @@
             </div>
 
             <div class="col-lg-6">
-                <form class="php-email-form" data-aos="fade-up" data-aos-delay="500" id="contactForm">
+                <form class="" data-aos="fade-up" data-aos-delay="500" id="contactForm">
                     @csrf
                     <div class="row gy-4">
 
@@ -164,9 +164,9 @@
                         </div>
 
                         <div class="col-md-12 text-center">
-                            <!--div class="loading">Loading</div>
+                            <div class="loading">Loading</div>
                             <div class="error-message"></div>
-                            <div class="sent-message">Your message has been sent. Thank you!</div-->
+                            <div class="sent-message">Your message has been sent. Thank you!</div>
 
                             <button type="submit">Send Message</button>
                         </div>
