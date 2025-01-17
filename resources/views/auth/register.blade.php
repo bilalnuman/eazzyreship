@@ -179,7 +179,7 @@
                     required />
                 <span class="form-check-label fw-bold text-gray-700 fs-6">
                     {!! __('I Agree to the') !!}
-                    <a href="{{ route('dashboard') }}" target="_blank"
+                    <a href="/terms" target="_blank"
                         class="ms-1 link-primary">{{ __('Terms and Conditions') }}</a>.
                 </span>
             </label>
