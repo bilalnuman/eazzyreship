@@ -707,27 +707,36 @@ class ShipmentController extends Controller
     public function track($code)
     {
         //$shipment = Shipment::with(['history'])->where('tracking_number', $code)->firstOrFail();
-
+        if (empty($code)) {
+            $error = __('Tracking code cannot be empty.');
+            return view('web.tracking')->with(['error' => $error]);
+        }
+    
         try {
-
-            $shipment = Shipment::with('fromBranch:id,name', 'toBranch:id,name', 'status:id,name')
-                ->where('code', $code)
-                ->orWhere('order_id', $code)
-                ->orWhere('barcode', $code)->first();
-
-            $shipmentLogs = Client_shipment_log::with('status:id,name,description')
-                ->where('shipment_id', $shipment->id)
-                ->orderBy('id', 'desc')
-                ->get();
+            // Buscar el envío por código, ID de pedido o código de barras
+            $shipment = Shipment::with(['fromBranch:id,name', 'toBranch:id,name', 'status:id,name'])
+                ->where('order_id', $code)
+                ->orWhere('code', $code)
+                ->orWhere('barcode', $code)
+                ->first();
+    
             if ($shipment) {
+                // Obtener los registros de seguimiento asociados al envío
+                $shipmentLogs = Client_shipment_log::with('status:id,name,description')
+                    ->where('shipment_id', $shipment->id)
+                    ->orderBy('id', 'desc')
+                    ->get();
+    
                 return view('web.view-tracking', compact('shipment', 'shipmentLogs'));
             } else {
+                // Envío no encontrado
                 $error = __('Invalid Tracking code');
-                return view('web.tracking', compact('shipment'))->with(['error' => $error]);
+                return view('web.tracking')->with(['error' => $error]);
             }
         } catch (\Exception $e) {
-            $error = __('Invalid Tracking codes');
-            return view('web.tracking', compact('shipment'))->with(['error' => $error]);
+            // Manejo de excepciones generales
+            $error = __('An error occurred while tracking. Please try again.');
+            return view('web.tracking')->with(['error' => $error]);
         }
 
         /*$shipment = (object) [
