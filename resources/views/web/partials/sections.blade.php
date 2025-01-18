@@ -165,10 +165,10 @@
 
                         <div class="col-md-12 text-center">
                             <!--div class="loading">Loading</div>
-                            <div class="error-message"></div-->
-                            <div class="sent-message" id="formMessage">Your message has been sent. Thank you!</div>
-
+                            <div class="error-message"></div>
+                            <div class="sent-message" id="formMessage">Your message has been sent. Thank you!</div-->
                             <button type="submit">Send Message</button>
+                            <div id="formMessage"></div>
                         </div>
 
                     </div>
