@@ -141,7 +141,7 @@
 
     <!-- Vendor JS Files -->
     <script src="{{ asset('web/vendor/bootstrap/js/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('web/vendor/php-email-form/validate.js') }}"></script>
+    <!--script src="{/{ asset('web/vendor/php-email-form/validate.js') }}"></script-->
     <script src="{{ asset('web/vendor/aos/aos.js') }}"></script>
     <script src="{{ asset('web/vendor/glightbox/js/glightbox.min.js') }}"></script>
     <script src="{{ asset('web/vendor/purecounter/purecounter_vanilla.js') }}"></script>
