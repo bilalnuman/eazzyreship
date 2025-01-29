@@ -45,8 +45,23 @@ class ShipmentController extends Controller
             'status:id,name',
             'mission:id,code'
         ])
-            ->select(['id', 'code', 'status_id', 'client_id', 'receiver_name', 'from_branch_id', 'to_branch_id', 'shipping_date',
-             'mission_id', 'paid', 'type', 'carrier', 'amount_to_be_collected', 'barcode', 'created_at'])
+            ->select([
+                'id',
+                'code',
+                'status_id',
+                'client_id',
+                'receiver_name',
+                'from_branch_id',
+                'to_branch_id',
+                'shipping_date',
+                'mission_id',
+                'paid',
+                'type',
+                'carrier',
+                'amount_to_be_collected',
+                'barcode',
+                'created_at'
+            ])
             ->orderBy('id', 'desc')
             ->get()
             ->map(function ($shipment) {
@@ -142,8 +157,8 @@ class ShipmentController extends Controller
     {
         $shipment = Shipment::where('id', $id)->first();
         $client = Client::select('name', 'id', 'mobile', 'national_id')
-                ->with('addresses:address,client_id')
-                ->find($shipment->client_id);
+            ->with('addresses:address,client_id')
+            ->find($shipment->client_id);
         $packages = Package_shipment::where('shipment_id', $id)->get();
         $company = Branch::where('id', 6)->first();
         $inv = PDF::loadView('pages.shipments.invoice', compact('shipment', 'packages', 'company', 'client'));
@@ -273,7 +288,7 @@ class ShipmentController extends Controller
 
             if ($request->hasFile('carrier_doc')) {
                 $path = $request->file('carrier_doc')->store('shippers', 'public');
-                $shipment->update(['carrier_doc' => $path]);  
+                $shipment->update(['carrier_doc' => $path]);
             }
 
             if ($request->hasFile('attachments_before_shipping')) {
@@ -380,7 +395,7 @@ class ShipmentController extends Controller
                 'created_at'
             ])
             ->find($id); // Busca un solo envío por su ID
-            $attachments = $shipments->attachments ?? '';
+        $attachments = $shipments->attachments ?? '';
         if (!$shipments) {
             return redirect()->route('dashboard')
                 ->with('message', 'Shipment not found')
@@ -429,7 +444,7 @@ class ShipmentController extends Controller
             ->where('shipment_id', $id)
             ->get();
 
-        return view('pages.shipments.show', compact('shipment', 'packages','attachments'));
+        return view('pages.shipments.show', compact('shipment', 'packages', 'attachments'));
     }
 
     /**
@@ -524,12 +539,12 @@ class ShipmentController extends Controller
             }
 
             if ($request->hasFile('carrier_doc')) {
-                if(isset($shipment->carrier_doc) && !empty($shipment->carrier_doc)){
+                if (isset($shipment->carrier_doc) && !empty($shipment->carrier_doc)) {
                     Storage::disk('public')->delete($shipment->carrier_doc);
                 }
-                
+
                 $path = $request->file('carrier_doc')->store('shippers', 'public');
-                $shipment->update(['carrier_doc' => $path]);  
+                $shipment->update(['carrier_doc' => $path]);
             }
 
             if ($request->hasFile('attachments_before_shipping')) {
@@ -557,7 +572,6 @@ class ShipmentController extends Controller
                 ->withInput();
         }
     }
-
 
     /**
      * Remove the specified shipment from storage.
@@ -711,7 +725,7 @@ class ShipmentController extends Controller
             $error = __('Tracking code cannot be empty.');
             return view('web.tracking')->with(['error' => $error]);
         }
-    
+
         try {
             // Buscar el envío por código, ID de pedido o código de barras
             $shipment = Shipment::with(['fromBranch:id,name', 'toBranch:id,name', 'status:id,name'])
@@ -719,14 +733,14 @@ class ShipmentController extends Controller
                 ->orWhere('code', $code)
                 ->orWhere('barcode', $code)
                 ->first();
-    
+
             if ($shipment) {
                 // Obtener los registros de seguimiento asociados al envío
                 $shipmentLogs = Client_shipment_log::with('status:id,name,description')
                     ->where('shipment_id', $shipment->id)
                     ->orderBy('id', 'desc')
                     ->get();
-    
+
                 return view('web.view-tracking', compact('shipment', 'shipmentLogs'));
             } else {
                 // Envío no encontrado
@@ -755,18 +769,82 @@ class ShipmentController extends Controller
 
     public function removeAttachment($shipment_id, $attachment_id)
     {
-        $attach = ShipmentAttachment::where('id', $attachment_id)->where('shipment_id',$shipment_id)->first();
+        $attach = ShipmentAttachment::where('id', $attachment_id)->where('shipment_id', $shipment_id)->first();
 
         if ($attach->shipment_id != $shipment_id) {
             abort(403, 'Unauthorized action.');
         }
 
         // Eliminar archivo físico
-       Storage::disk('public')->delete($attach->file_path);
+        Storage::disk('public')->delete($attach->file_path);
 
         // Eliminar de la base de datos
         $attach->delete();
 
         return response()->json(['message' => 'Attachment removed successfully']);
+    }
+
+    public function getShipmentInfo(Request $request)
+    {
+        $shipment_id = $request->input('shipment_id'); // Obtén el ID del envío desde el cuerpo de la solicitud
+
+        $shipment = Shipment::with('fromBranch:id,name', 'toBranch:id,name', 'client:id,name', 'receiver:id,name')
+            ->select([
+                'id',
+                'code',
+                'status_id',
+                'type',
+                'client_id',
+                'receiver_name',
+                'receiver_address',
+                'from_branch_id',
+                'to_branch_id',
+                'shipping_date',
+                'collection_time',
+                'payment_type',
+                'barcode',
+                'order_id',
+                'paid',
+                'tax',
+                'insurance',
+                'shipping_cost',
+                'return_cost',
+                'total_weight',
+                'amount_to_be_collected',
+                'created_at'
+            ])
+            ->find($shipment_id); // Busca un solo envío por su ID
+
+        if (!$shipment) {
+            return response()->json(['message' => 'Shipment not found'], 404);
+        }
+
+        // Formatear el objeto obtenido
+        $formattedShipment = [
+            'id' => $shipment->id,
+            'code' => $shipment->code,
+            'status_id' => $shipment->status_id,
+            'type' => $shipment->type == 1 ? 'Air' : 'Ocean',
+            'shipping_date' => $shipment->shipping_date,
+            'collection_time' => $shipment->collection_time ?? '',
+            'client_id' => optional($shipment->client)->name ?? 'N/A',
+            'receiver_name' => optional($shipment->receiver)->name ?? 'N/A',
+            'receiver_address' => $shipment->receiver_address ?? 'N/A',
+            'from_branch_id' => optional($shipment->fromBranch)->name ?? 'N/A',
+            'to_branch_id' => optional($shipment->toBranch)->name ?? 'N/A',
+            'payment_type' => $shipment->payment_type ?? 'N/A',
+            'barcode' => $shipment->barcode ?? '',
+            'order_id' => $shipment->order_id ?? '',
+            'paid' => $shipment->paid ?? '',
+            'tax' => $shipment->tax ?? '0',
+            'insurance' => $shipment->insurance ?? '0',
+            'shipping_cost' => $shipment->shipping_cost ?? '0',
+            'return_cost' => $shipment->return_cost ?? '0',
+            'total_weight' => $shipment->total_weight ?? '1',
+            'amount_to_be_collected' => $shipment->amount_to_be_collected ?? '',
+            'created_at' => $shipment->created_at ?? '',
+        ];
+
+        return response()->json(['data' => $formattedShipment]);
     }
 }
