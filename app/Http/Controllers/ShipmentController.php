@@ -784,6 +784,8 @@ class ShipmentController extends Controller
         return response()->json(['message' => 'Attachment removed successfully']);
     }
 
+
+    //metodos para el consumo del api
     public function getShipmentInfo(Request $request)
     {
         $shipment_id = $request->input('shipment_id'); // Obtén el ID del envío desde el cuerpo de la solicitud
@@ -846,5 +848,20 @@ class ShipmentController extends Controller
         ];
 
         return response()->json(['data' => $formattedShipment]);
+    }
+    
+    public function searchShipments(Request $request)
+    {
+        $query = $request->input('query');
+
+        if (!$query) {
+            return response()->json(['message' => 'Query parameter is required'], 400);
+        }
+
+        $shipments = Shipment::where('code', 'LIKE', "%{$query}%")
+            ->limit(10) // Limita a 10 resultados
+            ->get(['id', 'code']);
+
+        return response()->json(['data' => $shipments]);
     }
 }

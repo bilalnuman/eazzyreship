@@ -19,4 +19,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('admin/shipments/client-update', [ShipmentController::class, 'clientUpdate']);
     Route::post('admin/shipments/client-status', [ShipmentController::class, 'clientStatus']);
     Route::post('admin/shipments/shipment-info', [ShipmentController::class, 'getShipmentInfo']);
+     Route::get('admin/shipments/search-shipments', [ShipmentController::class, 'searchShipments']);
+
 });
