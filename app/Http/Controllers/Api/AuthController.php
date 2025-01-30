@@ -17,7 +17,12 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        $user = User::where('email', $credentials['email'])->first();
+        //$user = User::where('email', $credentials['email'])->first();
+
+        $user = User::join('statuses', 'users.role', '=', 'statuses.code')
+                ->where('users.email', $credentials['email'])
+                ->select('users.*', 'statuses.name as role_name')
+                ->first();
 
         if (!$user || !Hash::check($credentials['password'], $user->password)) {
             return response()->json(['message' => 'Invalid credentials'], 401);
