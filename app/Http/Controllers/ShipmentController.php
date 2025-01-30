@@ -865,9 +865,15 @@ class ShipmentController extends Controller
         return response()->json(['data' => $shipments]);
     }
 
-    public function getAllShipments()
+    public function getAllShipments(Request $request)
     {
-        $shipments = Shipment::where('status_id', '!=', 5) 
+        $query = $request->input('status');
+
+        if (!$query) {
+            return response()->json(['message' => 'Query parameter is required'], 400);
+        }
+
+        $shipments = Shipment::whereNotIn('status_id', [$query, 5])
             ->get(['id', 'code']);
 
         return response()->json(['data' => $shipments]);
