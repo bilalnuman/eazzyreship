@@ -831,7 +831,7 @@ class ShipmentController extends Controller
             'receiver_address' => $shipment->receiver_address ?? 'N/A',
             'from_branch_id' => optional($shipment->fromBranch)->name ?? 'N/A',
             'to_branch_id' => optional($shipment->toBranch)->name ?? 'N/A',
-            'shipping_date' => Carbon::parse(($shipment->mission)->due_date)->format('d-m-Y') ?? "N/A",
+            'shipping_date' => optional($shipment->mission)->due_date ?? "N/A",
             'collection_time' => $shipment->collection_time ?? '',
             'payment_type' => $shipment->payment_type ?? 'N/A',
             'barcode' => $shipment->barcode ?? '',
