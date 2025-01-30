@@ -868,7 +868,6 @@ class ShipmentController extends Controller
     public function getAllShipments()
     {
         $shipments = Shipment::where('status_id', '!=', 5) 
-            ->limit(10) // Limita a 10 resultados
             ->get(['id', 'code']);
 
         return response()->json(['data' => $shipments]);
