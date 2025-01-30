@@ -789,7 +789,7 @@ class ShipmentController extends Controller
     {
         $shipment_id = $request->input('shipment_id'); // Obtén el ID del envío desde el cuerpo de la solicitud
 
-        $shipment = Shipment::with('fromBranch:id,name', 'toBranch:id,name', 'client:id,name', 'receiver:id,name','mission:code,due_date')
+        $shipment = Shipment::with('fromBranch:id,name', 'toBranch:id,name', 'client:id,name', 'receiver:id,name','mission:id,due_date')
             ->select([
                 'id',
                 'code',
