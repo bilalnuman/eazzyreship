@@ -826,7 +826,7 @@ class ShipmentController extends Controller
             'code' => $shipment->code,
             'status_id' => $shipment->status_id,
             'type' => $shipment->type == 1 ? 'Air' : 'Ocean',
-            'shipping_date' => optional($shipment->mission->due_date) ?? 'N/A',
+            'shipping_date' => optional($shipment->mission)->id ?? 'N/A',
             'collection_time' => $shipment->collection_time ?? '',
             'client_id' => optional($shipment->client)->name ?? 'N/A',
             'receiver_name' => optional($shipment->receiver)->name ?? 'N/A',
