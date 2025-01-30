@@ -693,20 +693,23 @@ class ShipmentController extends Controller
                     'updated_at' => now(),
                 ]);
 
+                $shipment->status_id = $status;
+                $shipment->save();
+
                 // Devolver una respuesta exitosa
                 return response()->json([
-                    'message' => 'Log actualizado exitosamente.',
+                    'message' => 'Log updated successfully.',
                 ], 200);
             } else {
                 // Manejar el caso de cliente o envío no encontrados
                 return response()->json([
-                    'error' => 'Cliente o envío no encontrado.',
+                    'error' => 'Customer or shipment not found.',
                 ], 404);
             }
         } catch (\Exception $e) {
             // Manejar cualquier excepción
             return response()->json([
-                'error' => 'Error al actualizar el log: ' . $e->getMessage(),
+                'error' => 'Error updating log:' . $e->getMessage(),
             ], 500);
         }
     }
