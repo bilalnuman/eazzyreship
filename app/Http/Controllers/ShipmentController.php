@@ -817,7 +817,8 @@ class ShipmentController extends Controller
                 'amount_to_be_collected',
                 'created_at'
             ])
-            ->find($shipment_id); // Busca un solo envío por su ID
+            ->where('code', $shipment_id) // Filtrar por code
+            ->first(); 
 
         if (!$shipment) {
             return response()->json(['message' => 'Shipment not found'], 404);
