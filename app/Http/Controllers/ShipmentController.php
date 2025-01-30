@@ -165,7 +165,6 @@ class ShipmentController extends Controller
         return $inv->stream();
     }
 
-
     public function create()
     {
         //$clients = Client::pluck('name', 'id', 'address', 'mobile', );
@@ -849,7 +848,7 @@ class ShipmentController extends Controller
 
         return response()->json(['data' => $formattedShipment]);
     }
-    
+
     public function searchShipments(Request $request)
     {
         $query = $request->input('query');
@@ -859,6 +858,17 @@ class ShipmentController extends Controller
         }
 
         $shipments = Shipment::where('code', 'LIKE', "%{$query}%")
+            ->where('status_id', '!=', 5) 
+            ->limit(10) // Limita a 10 resultados
+            ->get(['id', 'code']);
+
+        return response()->json(['data' => $shipments]);
+    }
+
+    public function getAllShipments()
+    {
+
+        $shipments = Shipment::where('status_id', '!=', 5) 
             ->limit(10) // Limita a 10 resultados
             ->get(['id', 'code']);
 
