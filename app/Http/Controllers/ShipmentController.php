@@ -872,8 +872,8 @@ class ShipmentController extends Controller
         if (!$query) {
             return response()->json(['message' => 'Query parameter is required'], 400);
         }
-
-        $shipments = Shipment::whereNotIn('status_id', [$query, 5])
+        
+        $shipments = Shipment::where('status_id', '=', $query - 1)
             ->get(['id', 'code']);
 
         return response()->json(['data' => $shipments]);
