@@ -913,6 +913,7 @@ class ShipmentController extends Controller
             } catch (\Exception $e) {
                 return response()->json(['message' => 'something went wrong', 'error' => $e->getMessage()], 500);
             }*/
+            return response()->json(['message' => 'Image uploaded successfully']);
         } else {
             return response()->json(['message' => 'No file uploaded'], 400);
         }     
