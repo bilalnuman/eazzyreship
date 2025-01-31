@@ -894,15 +894,16 @@ class ShipmentController extends Controller
         $shipment = Shipment::find($request->shipment_id);
 
         if ($request->hasFile('file')) {
-            $path = $request->file('file')->store('attachments', 'public');
+            /*$path = $request->file('file')->store('attachments', 'public');
 
                     ShipmentAttachment::create([
                         'shipment_id' => $shipment->id,
                         'file_path' => $path,
-                    ]);
+                    ]);*/
+                    return response()->json(['message' => 'Image uploaded successfully']);
         }else{
             return response()->json(['message' => 'something went wrong']);
         }
-        return response()->json(['message' => 'Image uploaded successfully']);
+        
     }
 }
