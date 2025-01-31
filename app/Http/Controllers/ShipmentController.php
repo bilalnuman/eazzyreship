@@ -818,7 +818,7 @@ class ShipmentController extends Controller
                 'created_at'
             ])
             ->where('code', $shipment_id) // Filtrar por code
-            ->first(); 
+            ->first();
 
         if (!$shipment) {
             return response()->json(['message' => 'Shipment not found'], 404);
@@ -862,7 +862,7 @@ class ShipmentController extends Controller
         }
 
         $shipments = Shipment::where('code', 'LIKE', "%{$query}%")
-            ->where('status_id', '!=', 5) 
+            ->where('status_id', '!=', 5)
             ->limit(10) // Limita a 10 resultados
             ->get(['id', 'code']);
 
@@ -877,10 +877,32 @@ class ShipmentController extends Controller
         if (!$query) {
             return response()->json(['message' => 'Query parameter is required'], 400);
         }
-        
+
         $shipments = Shipment::where('status_id', '<=', $query - 1)
             ->get(['id', 'code']);
 
         return response()->json(['data' => $shipments]);
+    }
+
+    public function uploadImage(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'shipment_id' => 'required|integer|exists:shipments,id',
+        ]);
+
+        $shipment = Shipment::find($request->shipment_id);
+
+        if ($request->hasFile('file')) {
+            $path = $request->file('file')->store('attachments', 'public');
+
+                    ShipmentAttachment::create([
+                        'shipment_id' => $shipment->id,
+                        'file_path' => $path,
+                    ]);
+        }else{
+            return response()->json(['message' => 'something went wrong']);
+        }
+        return response()->json(['message' => 'Image uploaded successfully']);
     }
 }

@@ -21,5 +21,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('admin/shipments/shipment-info', [ShipmentController::class, 'getShipmentInfo']);
     Route::get('admin/shipments/search-shipments', [ShipmentController::class, 'searchShipments']);
     Route::get('admin/shipments/all-shipments', [ShipmentController::class, 'getAllShipments']);
+    Route::post('admin/shipments/upload-image', [ShipmentController::class, 'uploadImage']);
 
 });
