@@ -890,20 +890,31 @@ class ShipmentController extends Controller
             'file' => 'required|image|mimes:jpeg,png,jpg|max:4096',
             'shipment_id' => 'required|integer|exists:shipments,id',
         ]);
+        $shipment_id = $request->input('shipment_id'); 
 
-        $shipment = Shipment::find($request->shipment_id);
+        $shipment = Shipment::where('code', $shipment_id)->first();
+
+        if (!$shipment) {
+            return response()->json(['message' => 'Shipment not found'], 404);
+        }
 
         if ($request->hasFile('file')) {
-            /*$path = $request->file('file')->store('attachments', 'public');
-
-                    ShipmentAttachment::create([
-                        'shipment_id' => $shipment->id,
-                        'file_path' => $path,
-                    ]);*/
-                    return response()->json(['message' => 'Image uploaded successfully']);
-        }else{
-            return response()->json(['message' => 'something went wrong']);
-        }
-        
+            try {
+                // Almacenar la imagen en el disco público
+                $path = $request->file('file')->store('attachments', 'public');
+    
+                // Usar la relación para crear el attachment
+                ShipmentAttachment::create([
+                    'shipment_id' => $shipment->id,
+                    'file_path' => $path,
+                ]);
+    
+                return response()->json(['message' => 'Image uploaded successfully']);
+            } catch (\Exception $e) {
+                return response()->json(['message' => 'something went wrong', 'error' => $e->getMessage()], 500);
+            }
+        } else {
+            return response()->json(['message' => 'No file uploaded'], 400);
+        }     
     }
 }
