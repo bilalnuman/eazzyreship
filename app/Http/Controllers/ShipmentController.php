@@ -899,7 +899,7 @@ class ShipmentController extends Controller
         }
 
         if ($request->hasFile('file')) {
-            try {
+            /*try {
                 // Almacenar la imagen en el disco público
                 //$path = $request->file('file')->store('attachments', 'public');
                 $path = "gjjkjkkk";
@@ -912,7 +912,7 @@ class ShipmentController extends Controller
                 return response()->json(['message' => 'Image uploaded successfully']);
             } catch (\Exception $e) {
                 return response()->json(['message' => 'something went wrong', 'error' => $e->getMessage()], 500);
-            }
+            }*/
         } else {
             return response()->json(['message' => 'No file uploaded'], 400);
         }     
