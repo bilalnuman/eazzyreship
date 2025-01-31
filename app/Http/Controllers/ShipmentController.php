@@ -871,13 +871,14 @@ class ShipmentController extends Controller
 
     public function getAllShipments(Request $request)
     {
-        $query = $request->input('status');
+        $query = (int) $request->input('status');
+        //$query = $request->input('status');
 
         if (!$query) {
             return response()->json(['message' => 'Query parameter is required'], 400);
         }
         
-        $shipments = Shipment::where('status_id', '=', $query - 1)
+        $shipments = Shipment::where('status_id', '<=', $query - 1)
             ->get(['id', 'code']);
 
         return response()->json(['data' => $shipments]);
