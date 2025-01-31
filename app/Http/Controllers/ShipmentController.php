@@ -894,7 +894,7 @@ class ShipmentController extends Controller
 
         $shipment = Shipment::where('code', $shipment_id)->first();
         $file = $request->file('file');
-        dd($file); 
+        //dd($file); 
 
         if (!$shipment) {
             return response()->json(['message' => 'Shipment not found'], 404);
