@@ -901,9 +901,9 @@ class ShipmentController extends Controller
         if ($request->hasFile('file')) {
             try {
                 // Almacenar la imagen en el disco público
-                $path = $request->file('file')->store('attachments', 'public');
-    
-                // Usar la relación para crear el attachment
+                //$path = $request->file('file')->store('attachments', 'public');
+                $path = "gjjkjkkk";
+
                 ShipmentAttachment::create([
                     'shipment_id' => $shipment->id,
                     'file_path' => $path,
