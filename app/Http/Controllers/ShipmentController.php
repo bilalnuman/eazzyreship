@@ -887,26 +887,20 @@ class ShipmentController extends Controller
     public function uploadImage(Request $request)
     {
         $request->validate([
-            'file' => 'required|image|mimes:jpeg,png,jpg|max:4096',
-            'shipment_id' => 'required|integer|exists:shipments,id',
+            'file' => 'required|mimes:jpg,jpeg,png,pdf|max:2048',
+            'shipment_id' => 'required|string',
         ]);
         $shipment_id = $request->input('shipment_id'); 
-
         $shipment = Shipment::where('code', $shipment_id)->first();
-        $file = $request->file('file');
-        \Log::error('Shipment file error:', ['error' => $file]);
-        //dd($file); 
-        
 
         if (!$shipment) {
             return response()->json(['message' => 'Shipment not found'], 404);
         }
 
         if ($request->hasFile('file')) {
-            /*try {
+            try {
                 // Almacenar la imagen en el disco público
-                //$path = $request->file('file')->store('attachments', 'public');
-                $path = "gjjkjkkk";
+                $path = $request->file('file')->store('attachments', 'public');
 
                 ShipmentAttachment::create([
                     'shipment_id' => $shipment->id,
@@ -916,8 +910,7 @@ class ShipmentController extends Controller
                 return response()->json(['message' => 'Image uploaded successfully']);
             } catch (\Exception $e) {
                 return response()->json(['message' => 'something went wrong', 'error' => $e->getMessage()], 500);
-            }*/
-            return response()->json(['message' => 'Image uploaded successfully']);
+            }
         } else {
             return response()->json(['message' => 'No file uploaded'], 400);
         }     
