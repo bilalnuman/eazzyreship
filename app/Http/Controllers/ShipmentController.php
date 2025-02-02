@@ -708,15 +708,14 @@ class ShipmentController extends Controller
 
             // Devolver una respuesta exitosa
             return response()->json([
-                'message' => "Updated $updatedCount shipments successfully.",
-                'error' => $failedShipments,
+                'message' => "Success: $updatedCount , error: $failedShipments",
             ], 200);
 
         } catch (\Exception $e) {
             // Manejar cualquier excepción
             DB::rollBack();
             return response()->json([
-                'error' => 'Error updating log:' . $e->getMessage(),
+                'message' => 'Error updating log:' . $e->getMessage(),
             ], 500);
         }
     }
