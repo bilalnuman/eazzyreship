@@ -707,8 +707,10 @@ class ShipmentController extends Controller
             DB::commit();
 
             // Devolver una respuesta exitosa
+            $temp = implode(", ", $failedShipments);
             return response()->json([
-                'message' => "Success: $updatedCount , error: $failedShipments",
+                
+                'message' => "Success: $updatedCount , error: $temp",
             ], 200);
 
         } catch (\Exception $e) {
