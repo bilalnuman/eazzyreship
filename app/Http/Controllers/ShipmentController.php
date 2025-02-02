@@ -670,44 +670,51 @@ class ShipmentController extends Controller
         // Validar que client_id y shipment_id están presentes en la solicitud
         $request->validate([
             'status_id' => 'required|integer',
-            'shipment_id' => 'required',
+            'shipment_ids' => 'required|array|min:1',
+            'shipment_ids.*' => 'string',
         ]);
 
         try {
             //$status = Client::find($request->input('status_id'));
             $status = $request->input('status_id');
-            $shipment_id = $request->input('shipment_id');
+            $shipment_ids = $request->input('shipment_ids');
 
-            $shipment = Shipment::where('code', $shipment_id)->first();
-            //$shipment = Shipment::find($request->input('shipment_id'));
+            $updatedCount = 0;
+            $failedShipments = [];
 
-            // Verificar que el cliente y el envío existen
-            if ($status && $shipment) {
-                // Crear una nueva entrada en la tabla client_shipment_logs
-                DB::table('client_shipment_logs')->insert([
-                    'from' => $status - 1, // Cambia según sea necesario
-                    'to' => $status,   // Cambia según sea necesario
-                    'created_by' => $shipment->client_id,
-                    'shipment_id' => $shipment->id,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
+            DB::beginTransaction();
+            foreach ($shipment_ids as $shipmentCode) {
+                $shipment = Shipment::where('code', $shipmentCode)->first();
 
-                $shipment->status_id = $status;
-                $shipment->save();
+                if ($status && $shipment) {
+                    // Crear una nueva entrada en la tabla client_shipment_logs
+                    DB::table('client_shipment_logs')->insert([
+                        'from' => $status - 1, // Cambia según sea necesario
+                        'to' => $status,   // Cambia según sea necesario
+                        'created_by' => $shipment->client_id,
+                        'shipment_id' => $shipment->id,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                    $shipment->status_id = $status;
+                    $shipment->save();
 
-                // Devolver una respuesta exitosa
-                return response()->json([
-                    'message' => 'Log updated successfully.',
-                ], 200);
-            } else {
-                // Manejar el caso de cliente o envío no encontrados
-                return response()->json([
-                    'error' => 'Customer or shipment not found.',
-                ], 404);
+                    $updatedCount++;
+                } else {
+                    $failedShipments[] = $shipmentCode;
+                }
             }
+            DB::commit();
+
+            // Devolver una respuesta exitosa
+            return response()->json([
+                'message' => "Updated $updatedCount shipments successfully.",
+                'error' => $failedShipments,
+            ], 200);
+
         } catch (\Exception $e) {
             // Manejar cualquier excepción
+            DB::rollBack();
             return response()->json([
                 'error' => 'Error updating log:' . $e->getMessage(),
             ], 500);
@@ -890,7 +897,7 @@ class ShipmentController extends Controller
             'file' => 'required|mimes:jpg,jpeg,png,pdf|max:2048',
             'shipment_id' => 'required|string',
         ]);
-        $shipment_id = $request->input('shipment_id'); 
+        $shipment_id = $request->input('shipment_id');
         $shipment = Shipment::where('code', $shipment_id)->first();
 
         if (!$shipment) {
@@ -906,13 +913,13 @@ class ShipmentController extends Controller
                     'shipment_id' => $shipment->id,
                     'file_path' => $path,
                 ]);
-    
+
                 return response()->json(['message' => 'Image uploaded successfully']);
             } catch (\Exception $e) {
                 return response()->json(['message' => 'something went wrong', 'error' => $e->getMessage()], 500);
             }
         } else {
             return response()->json(['message' => 'No file uploaded'], 400);
-        }     
+        }
     }
 }
