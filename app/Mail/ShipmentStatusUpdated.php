@@ -40,7 +40,7 @@ class ShipmentStatusUpdated extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'email.shipment-status',
+            view: 'emails.shipment-status',
         );
     }
 
