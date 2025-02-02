@@ -680,7 +680,8 @@ class ShipmentController extends Controller
             $shipment_ids = $request->input('shipment_ids');
 
             $updatedCount = 0;
-            $failedShipments = [];
+            $errordCount = 0;
+            //$failedShipments = [];
 
             DB::beginTransaction();
             foreach ($shipment_ids as $shipmentCode) {
@@ -701,16 +702,18 @@ class ShipmentController extends Controller
 
                     $updatedCount++;
                 } else {
-                    $failedShipments[] = $shipmentCode;
+                    //$failedShipments[] = $shipmentCode;
+                    $errordCount++;
+
                 }
             }
             DB::commit();
 
             // Devolver una respuesta exitosa
-            $temp = implode(", ", $failedShipments);
+            //$temp = implode(", ", $failedShipments);
             return response()->json([
                 
-                'message' => "Success: $updatedCount , error: $temp",
+                'message' => "Success: $updatedCount , error: $errordCount",
             ], 200);
 
         } catch (\Exception $e) {
