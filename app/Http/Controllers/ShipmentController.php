@@ -20,6 +20,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ShipmentCreatedMail;
+use App\Mail\ShipmentStatusUpdated;
 use App\Models\ShipmentAttachment;
 use Illuminate\Support\Facades\Storage;
 
@@ -699,23 +700,23 @@ class ShipmentController extends Controller
                     ]);
                     $shipment->status_id = $status;
                     $shipment->save();
+                    // Enviar correo al cliente
+                    if ($shipment->client && $shipment->client->email) {
+                        Mail::to($shipment->client->email)->send(new ShipmentStatusUpdated($shipment));
+                    }
 
                     $updatedCount++;
                 } else {
                     //$failedShipments[] = $shipmentCode;
                     $errordCount++;
-
                 }
             }
             DB::commit();
-
             // Devolver una respuesta exitosa
             //$temp = implode(", ", $failedShipments);
             return response()->json([
-                
                 'message' => "Success: $updatedCount , error: $errordCount",
             ], 200);
-
         } catch (\Exception $e) {
             // Manejar cualquier excepción
             DB::rollBack();
@@ -796,7 +797,6 @@ class ShipmentController extends Controller
 
         return response()->json(['message' => 'Attachment removed successfully']);
     }
-
 
     //metodos para el consumo del api
     public function getShipmentInfo(Request $request)
