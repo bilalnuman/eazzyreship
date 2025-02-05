@@ -23,6 +23,7 @@ use App\Mail\ShipmentCreatedMail;
 use App\Mail\ShipmentStatusUpdated;
 use App\Models\ShipmentAttachment;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 use Auth;
 
@@ -255,20 +256,6 @@ class ShipmentController extends Controller
 
             if ($token) {
 
-                /*$order = $request->Shipment['order_id'];
-                $parts = explode('-', $order);
-
-                if (isset($parts[1]) && $parts[1] !== 'NA') {
-                    $subparts = explode("\x1D", $parts[1]);
-                    $shipment->update(['order_id' => $subparts[1] ?? null]);
-                } else {
-                    $shipment->update(['order_id' => null]);
-                }
-
-                $code = $parts[0];
-                $barcode = $parts[1] ?? null;
-                $shipment->update(['code' => $prefix->value . $code, 'barcode' => $barcode]);*/
-
                 $order = $request['order_id'];
                 $parts = explode('-', $order);
 
@@ -338,12 +325,92 @@ class ShipmentController extends Controller
         }
     }
 
+    public function storeFromApi(Request $request, $token = null)
+    {
+        if (isset($token)) {
+            $user = User::where('password', $token)->first();
+            $prefix = Shipment_setting::where('key', 'shipment_prefix_ex')->first();
+        }
+
+        if (!isset($user)) {
+            if (isset($token)) {
+                return response()->json(['message' => new \Exception()]);
+            } 
+        }
+
+        \Log::info("Receiving data from webhook", ['data' => $request->all()]);
+
+        // Validar solo los datos que recibimos del webhook
+        $validated = Validator::make($request->all(), [
+            'Barcode' => 'nullable|string',
+            'id' => 'required|numeric',
+            'height' => 'required|string',
+            'length' => 'required|string',
+            'width' => 'required|string',
+            'volumetricWeight' => 'nullable|string',
+            'actualWeight' => 'nullable|string',
+        ]);
+
+        if ($validated->fails()) {
+            return response()->json([
+                'message' => 'validation error',
+                'errors' => $validated->errors(),
+            ], 422);
+        }
+
+        DB::beginTransaction();
+        try {
+            $shipment = new Shipment();
+            $shipment->type = 1;
+            $shipment->from_branch_id = 6;
+            $shipment->to_branch_id = 1;
+            $shipment->client_id = 1;
+            $shipment->receiver_name = "1";
+            $shipment->receiver_mobile = "7215809210";
+            $shipment->receiver_address = "Pondfill";
+            $shipment->total_weight = floatval($request->actualWeight);
+
+            $shipment->barcode = $request->barcode;
+            $parts1 = explode("\x1D", $request->barcode);
+            $shipment->order_id = $parts1[1] ?? null;
+            $shipment->code = $prefix->value . $request->id;
+
+            $shipment->save(); 
+
+            Client_shipment_log::create([
+                'from' => 1,
+                'to' => 1,
+                'created_by' => $user->id,
+                'shipment_id' => $shipment->id,
+            ]);
+
+            $package = new Package_shipment();
+            $package->package_id = 1; // Asignamos un ID por defecto
+            $package->shipment_id = $shipment->id;
+            $package->height = $request->height;
+            $package->weight = $request->actualWeight;
+            $package->length = $request->length;
+            $package->width = $request->width;
+            $package->qty = 1; // Suponemos que siempre es 1
+            $package->save();
+
+            DB::commit();
+            $message = $shipment->code;
+            return $message;
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::error('Shipment store error:', ['error' => $e->getMessage()]);
+            return 'bad';
+        }
+    }
+
     public function storeAPI(Request $request)
     {
         try {
             $user = User::where('password', $request->header('token'))->first();
             if ($user) {
-                $message = $this->store($request, $request->header('token'));
+                $message = $this->storeFromApi($request, $request->header('token'));
                 return response()->json(['message' => $message]);
             } else {
                 return response()->json(['message' => 'Not Authorized']);
