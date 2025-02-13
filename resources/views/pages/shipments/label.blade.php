@@ -12,52 +12,7 @@
 <head>
     <meta charset="UTF-8">
     <title><?php echo 'Label | ' . $shipment->id; ?></title>
-
-    <style type="text/css">
-        /*.label-page {
-            page-break-after: always;
-            position: relative;
-            padding: 20px;
-            font-family: Arial;
-        }
-
-        .label-footer {
-            /*position: absolute;
-            bottom: 10px;
-            right: 10px;
-            font-size: 12px;
-
-            width: 100%;
-            height: 99vh; 
-            page-break-inside: avoid;
-            position: relative;
-        }*/
-/*
-        .label-container {
-            border: 1px solid #000;
-            padding: 15px;
-            margin: 10px;
-
-            page-break-inside: avoid;
-            page-break-after: auto;
-        }
-
-        .label-container:last-child {
-            page-break-after: auto !important;
-        }
-
-        .barcode {
-            text-align: center;
-            margin: 15px 0;
-        }
-
-        .cut-line {
-            border-top: 1px dashed #000;
-            margin: 2px 0;
-        }*/
-    </style>
 </head>
-
 <body>
 
     @if ($printMode === 'multiple')
