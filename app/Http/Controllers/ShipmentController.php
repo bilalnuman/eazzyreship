@@ -29,9 +29,7 @@ use Auth;
 
 class ShipmentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
         return view('pages.shipments.index');
@@ -151,10 +149,6 @@ class ShipmentController extends Controller
         return response()->json(['data' => $formattedShipment]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-
     public function invoice($id)
     {
         $shipment = Shipment::where('id', $id)->first();
@@ -164,6 +158,20 @@ class ShipmentController extends Controller
         $packages = Package_shipment::where('shipment_id', $id)->get();
         $company = Branch::where('id', 6)->first();
         $inv = PDF::loadView('pages.shipments.invoice', compact('shipment', 'packages', 'company', 'client'));
+        return $inv->stream();
+    }
+
+    public function label($id, $mode = 'single')
+    {
+        $printMode = $mode;
+        $shipment = Shipment::where('id', $id)->first();
+        $client = Client::select('code', 'name', 'id', 'mobile', 'national_id')
+            ->with('addresses:address,client_id')
+            ->find($shipment->client_id);
+        $packages = Package_shipment::where('shipment_id', $id)->get();
+        $company = Branch::where('id', 6)->first();
+        $inv = PDF::loadView('pages.shipments.label', compact('shipment', 'packages', 'company', 'client', 'printMode'));
+        $inv->setPaper([0, 0, 576, 432]); 
         return $inv->stream();
     }
 
@@ -184,10 +192,6 @@ class ShipmentController extends Controller
 
         return view('pages.shipments.create', compact('clients', 'branches0', 'branches', 'receivers', 'packages', 'missions'));
     }
-
-    /**
-     * Store a newly created resource in storage.
-     */
 
     public function store(Request $request, $token = null)
     {

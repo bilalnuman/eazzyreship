@@ -239,10 +239,14 @@
                         <div class="d-flex justify-content-between mt-4">
                             <!--a href="route('pages.shipments.invoice', [$shipment['id'], 'label'])" class="btn btn-outline-primary">('Print Label')</a-->
                             @role('admin')
-                                <a href="#"
+                                <div><a href="{{ route('pages.shipments.label', [$shipment['id'], 'mode' => 'single']) }}"
                                     class="btn btn-outline-primary">
-                                    {{ __('Print Label') }}
+                                    {{ __('Print Label (unique)') }}
                                 </a>
+                                <a href="{{ route('pages.shipments.label', [$shipment['id'], 'mode' => 'multiple']) }}"
+                                    class="btn btn-outline-primary">
+                                    {{ __('Print Label (multiple)') }}
+                                </a></div>
 
                                 <a href="{{ route('pages.shipments.invoice', [$shipment['id'], 'invoice']) }}"
                                     class="btn btn-outline-secondary">

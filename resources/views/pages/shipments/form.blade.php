@@ -195,25 +195,25 @@
         </div>
     </div-->
 
-<div class="col-md-6">
-    <div class="form-group">
-        <label for="receiver_mobile">Branch phone</label>
-        <input type="text" name="receiver_mobile" id="receiver_mobile" class="form-control"
-            value="{{ old('receiver_mobile', $shipment->receiver_mobile ?? '') }}" readonly>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="receiver_mobile">Branch phone</label>
+            <input type="text" name="receiver_mobile" id="receiver_mobile" class="form-control"
+                value="{{ old('receiver_mobile', $shipment->receiver_mobile ?? '') }}" readonly>
+        </div>
     </div>
-</div>
 
-<div class="col-md-6">
-    <div class="form-group">
-        <label for="receiver_address">Branch Address</label>
-        <input type="text" name="receiver_address" id="receiver_address"
-            class="form-control @error('receiver_address') is-invalid @enderror"
-            value="{{ old('receiver_address', $shipment->receiver_address ?? '') }}" readonly>
-        @error('receiver_address')
-            <span class="invalid-feedback">{{ $message }}</span>
-        @enderror
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="receiver_address">Branch Address</label>
+            <input type="text" name="receiver_address" id="receiver_address"
+                class="form-control @error('receiver_address') is-invalid @enderror"
+                value="{{ old('receiver_address', $shipment->receiver_address ?? '') }}" readonly>
+            @error('receiver_address')
+                <span class="invalid-feedback">{{ $message }}</span>
+            @enderror
+        </div>
     </div>
-</div>
 </div>
 
 <div class="row">
@@ -319,14 +319,14 @@
 <div class="row">
     <div class="col-md-6">
         <div class="form-group">
-            <label for="tax">Tax & Duty:</label>
+            <label for="tax">Tax & Duty (%):</label>
             <input type="number" name="tax" id="tax" class="form-control" step="0.01" min="0"
                 value="{{ old('tax', $shipment->tax ?? '0.00') }}">
         </div>
     </div>
     <div class="col-md-6">
         <div class="form-group">
-            <label for="insurance">Insurance:</label>
+            <label for="insurance">Insurance (%):</label>
             <input type="number" name="insurance" id="insurance" class="form-control" step="0.01"
                 min="0" value="{{ old('insurance', $shipment->insurance ?? '0.00') }}">
         </div>
@@ -434,9 +434,8 @@
             let insurance = parseFloat($('#insurance').val()) || 0;
             let returnc = parseFloat($('#return_cost').val()) || 0;
             let shipping = parseFloat($('#shipping_cost').val()) || 0;
-            totalCollected = tax + insurance + returnc + shipping;
+            totalCollected = (shipping * (tax / 100)) + (shipping * (insurance / 100)) + returnc + shipping;
             $('#amount_to_be_collected').val(totalCollected.toFixed(2));
-
 
         }
     </script>
@@ -485,10 +484,10 @@
                             $.each(response.data, function(index, receiver) {
                                 stateSelect.append(
                                     `<option value="${receiver.id}" 
-                                 data-mobile="${receiver.receiver_mobile}" 
-                                 data-address="${receiver.receiver_address}">
-                            ${receiver.name}
-                        </option>`
+                             data-mobile="${receiver.receiver_mobile}" 
+                             data-address="${receiver.receiver_address}">
+                        ${receiver.name}
+                    </option>`
                                 );
                             });
                         },
@@ -539,64 +538,64 @@
     </script>
     <script>
         /*document.addEventListener('DOMContentLoaded', function() {
-            //const clientSelect = document.getElementById('client_id');
-            //const mobileInput = document.getElementById('responsible_mobile');
-            //const addressInput = document.getElementById('responsible_address');
-            const branchSelect = document.getElementById('to_branch_id');
+                //const clientSelect = document.getElementById('client_id');
+                //const mobileInput = document.getElementById('responsible_mobile');
+                //const addressInput = document.getElementById('responsible_address');
+                const branchSelect = document.getElementById('to_branch_id');
 
-            //const receiverSelect = document.getElementById('receiver_name');
-            //const receiverMobile = document.getElementById('receiver_mobile');
-            //const receiverAddress = document.getElementById('receiver_address');
+                //const receiverSelect = document.getElementById('receiver_name');
+                //const receiverMobile = document.getElementById('receiver_mobile');
+                //const receiverAddress = document.getElementById('receiver_address');
 
 
-            clientSelect.addEventListener('change', function() {
-                const selectedOption = clientSelect.options[clientSelect.selectedIndex];
+                clientSelect.addEventListener('change', function() {
+                    const selectedOption = clientSelect.options[clientSelect.selectedIndex];
 
-                /* Si no hay selección válida, limpiar todo
-                if (!selectedOption.value) {
-                    mobileInput.value = '';
-                    addressInput.value = '';
-                    branchSelect.value = '';
-                    receiverSelect.innerHTML = '<option value="">Select Receiver</option>';
-                    receiverMobile.value = '';
-                    receiverAddress.value = '';
-                    return;
-                }
+                    /* Si no hay selección válida, limpiar todo
+                    if (!selectedOption.value) {
+                        mobileInput.value = '';
+                        addressInput.value = '';
+                        branchSelect.value = '';
+                        receiverSelect.innerHTML = '<option value="">Select Receiver</option>';
+                        receiverMobile.value = '';
+                        receiverAddress.value = '';
+                        return;
+                    }
 
-                // Obtener datos del cliente desde los atributos del <option>
-                const mobilec = selectedOption.getAttribute('data-mobilec') || '';
-                const addressc = selectedOption.getAttribute('data-addressc') || '';
-                const branchId = selectedOption.getAttribute('data-branchc') || '';
+                    // Obtener datos del cliente desde los atributos del <option>
+                    const mobilec = selectedOption.getAttribute('data-mobilec') || '';
+                    const addressc = selectedOption.getAttribute('data-addressc') || '';
+                    const branchId = selectedOption.getAttribute('data-branchc') || '';
 
-                // Asignar valores a los campos
-                mobileInput.value = mobilec;
-                addressInput.value = addressc;
+                    // Asignar valores a los campos
+                    mobileInput.value = mobilec;
+                    addressInput.value = addressc;
 
-                if (branchId) {
-                    branchSelect.value = branchId; // Seleccionar la opción que coincide con branchId
-                    $('#to_branch_id').trigger('change');
-                } else {
-                    branchSelect.value = ''; // Restablecer a la opción predeterminada si no hay branchId
-                    $('#to_branch_id').trigger('change');
-                }
-            });
-        });*/
+                    if (branchId) {
+                        branchSelect.value = branchId; // Seleccionar la opción que coincide con branchId
+                        $('#to_branch_id').trigger('change');
+                    } else {
+                        branchSelect.value = ''; // Restablecer a la opción predeterminada si no hay branchId
+                        $('#to_branch_id').trigger('change');
+                    }
+                });
+            });*/
     </script>
     <script>
         /*document.addEventListener('DOMContentLoaded', function() {
-                                                        const shippingDateInput = document.getElementById('shipping_date');
+                                                            const shippingDateInput = document.getElementById('shipping_date');
 
-                                                        if (!shippingDateInput.value) {
-                                                            // Obtener la fecha actual en formato YYYY-MM-DD
-                                                            const today = new Date();
-                                                            const year = today.getFullYear();
-                                                            const month = String(today.getMonth() + 1).padStart(2, '0'); // Mes en formato 2 dígitos
-                                                            const day = String(today.getDate()).padStart(2, '0'); // Día en formato 2 dígitos
+                                                            if (!shippingDateInput.value) {
+                                                                // Obtener la fecha actual en formato YYYY-MM-DD
+                                                                const today = new Date();
+                                                                const year = today.getFullYear();
+                                                                const month = String(today.getMonth() + 1).padStart(2, '0'); // Mes en formato 2 dígitos
+                                                                const day = String(today.getDate()).padStart(2, '0'); // Día en formato 2 dígitos
 
-                                                            // Establecer el valor del campo con la fecha actual
-                                                            shippingDateInput.value = `${year}-${month}-${day}`;
-                                                        }
-                                                    });*/
+                                                                // Establecer el valor del campo con la fecha actual
+                                                                shippingDateInput.value = `${year}-${month}-${day}`;
+                                                            }
+                                                        });*/
     </script>
     <script>
         document.getElementById('addPackageBtn').addEventListener('click', function() {

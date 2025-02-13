@@ -95,6 +95,7 @@ Route::middleware('role:admin','auth', 'verified')->group(function () {
     Route::put('/shipment/update/{id}', [ShipmentController::class, 'update'])->name('shipments.update');
     Route::get('/shipment/show/{id}', [ShipmentController::class, 'show'])->name('pages.shipments.show');
     Route::get('/shipment/invoice/{id}', [ShipmentController::class, 'invoice'])->name('pages.shipments.invoice');
+    Route::get('/shipment/{id}/label/{mode}', [ShipmentController::class, 'label'])->name('pages.shipments.label');
     Route::get('/shipment/{id}/delete', [ShipmentController::class, 'destroy'])->name('shipment.delete');
     
     Route::delete('/shipment/{shipment}/attachments/{attachment}', [ShipmentController::class, 'removeAttachment'])->name('shipments.remove-attachment');
@@ -144,7 +145,8 @@ Route::middleware('role:admin','auth', 'verified')->group(function () {
     Route::post('/mission/{id}/add-shipments', [MissionController::class, 'addShipments'])->name('missions.add-shipments');
     Route::get('/mission/{missionId}/remove-shipment/{shipmentId}', [MissionController::class, 'removeShipment'])->name('missions.remove-shipment');
     Route::get('/mission/{id}/manifest-report', [MissionController::class, 'manifestPDF'])->name('mission.manifest-report');
-   //export excel
+   
+    //export excel
     Route::get('/mission/export-manifest1', [MissionController::class, 'exportManifest'])->name('export.manifest');
     Route::get('/mission/export-manifest2', [MissionController::class, 'packagesManifest'])->name('export.packages');
     
