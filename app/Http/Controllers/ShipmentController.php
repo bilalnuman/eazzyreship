@@ -294,6 +294,49 @@ class ShipmentController extends Controller
                 }
             }
 
+            if ($request->has('capturedImages')) {
+                $images = json_decode($request->input('capturedImages'), true);
+            
+                if (is_array($images)) {
+                    foreach ($images as $key => $imageData) {
+                        try {
+                            // Validar que la imagen tenga el formato base64 correcto
+                            if (preg_match('/^data:image\/png;base64,/', $imageData)) {
+                                $image = str_replace('data:image/png;base64,', '', $imageData);
+                                $image = base64_decode($image); // Decodificar la imagen
+            
+                                if ($image === false) {
+                                    throw new \Exception("Error al decodificar la imagen base64");
+                                }
+            
+                                // Crear un nombre de archivo único
+                                $imageName = 'shipment_' . time() . "_{$key}.png";
+            
+                                // Guardar la imagen utilizando el almacenamiento de Laravel
+                                $path = 'attachments/' . $imageName;
+                                \Storage::disk('public')->put($path, $image); // Guardar el archivo decodificado
+                                \Log::info("Intentando guardar la imagen para el shipment ID: {$shipment->id}");
+
+                                // Verificar si el archivo realmente fue guardado
+                                if (!\Storage::disk('public')->exists($path)) {
+                                    throw new \Exception("No se pudo guardar la imagen en el disco 'public'");
+                                }
+            
+                                // Guardar la ruta en la tabla de adjuntos
+                                ShipmentAttachment::create([
+                                    'shipment_id' => $shipment->id,
+                                    'file_path' => $path,
+                                ]);
+                            }
+                        } catch (\Exception $e) {
+                            \Log::error("Error al guardar imagen capturada: {$e->getMessage()}");
+                        }
+                    }
+                }
+            }
+            
+                    
+
             Client_shipment_log::create([
                 'from' => 1,
                 'to' => 1,
@@ -627,6 +670,47 @@ class ShipmentController extends Controller
                         'shipment_id' => $shipment->id,
                         'file_path' => $path,
                     ]);
+                }
+            }
+
+            if ($request->has('capturedImages')) {
+                $images = json_decode($request->input('capturedImages'), true);
+            
+                if (is_array($images)) {
+                    foreach ($images as $key => $imageData) {
+                        try {
+                            // Validar que la imagen tenga el formato base64 correcto
+                            if (preg_match('/^data:image\/png;base64,/', $imageData)) {
+                                $image = str_replace('data:image/png;base64,', '', $imageData);
+                                $image = base64_decode($image); // Decodificar la imagen
+            
+                                if ($image === false) {
+                                    throw new \Exception("Error al decodificar la imagen base64");
+                                }
+            
+                                // Crear un nombre de archivo único
+                                $imageName = 'shipment_' . time() . "_{$key}.png";
+            
+                                // Guardar la imagen utilizando el almacenamiento de Laravel
+                                $path = 'attachments/' . $imageName;
+                                \Storage::disk('public')->put($path, $image); // Guardar el archivo decodificado
+                                \Log::info("Intentando guardar la imagen para el shipment ID: {$shipment->id}");
+
+                                // Verificar si el archivo realmente fue guardado
+                                if (!\Storage::disk('public')->exists($path)) {
+                                    throw new \Exception("No se pudo guardar la imagen en el disco 'public'");
+                                }
+            
+                                // Guardar la ruta en la tabla de adjuntos
+                                ShipmentAttachment::create([
+                                    'shipment_id' => $shipment->id,
+                                    'file_path' => $path,
+                                ]);
+                            }
+                        } catch (\Exception $e) {
+                            \Log::error("Error al guardar imagen capturada: {$e->getMessage()}");
+                        }
+                    }
                 }
             }
 

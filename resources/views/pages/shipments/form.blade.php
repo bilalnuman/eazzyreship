@@ -261,7 +261,7 @@
         </div>
     </div>
 
-    <div class="col-12">
+    <div class="col-md-8">
         <div class="form-group">
             <label for="attachments_before_shipping">Attachments</label>
             <input type="file" name="attachments_before_shipping[]" id="attachments_before_shipping"
@@ -294,6 +294,23 @@
             </div>
         @endif
 
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            <label for="capturedImages">webcam</label><br/>
+            
+            <button type="button" id="openCameraButton">Open camera</button>
+            <button type="button" id="closeCameraButton" style="display: none;">Close camera</button>
+
+            <div id="cameraContainer" style="display: none;">
+                <video id="video" width="320" height="240" autoplay></video>
+                <button type="button" id="captureButton">Capture</button>
+            </div>
+            <!-- Contenedor para las imágenes capturadas -->
+            <div id="capturedImagesContainer"></div>
+            <!-- Campo oculto para almacenar múltiples imágenes capturadas -->
+            <input type="hidden" id="capturedImages" name="capturedImages">
+        </div>
     </div>
 </div>
 
@@ -468,35 +485,35 @@
 
 
             /*$('#to_branch_id').on('change', function() {
-                let branchId = $(this).val();
-                let stateSelect = $('#receiver_name');
+                    let branchId = $(this).val();
+                    let stateSelect = $('#receiver_name');
 
-                // Limpia los receptores actuales
-                stateSelect.empty();
-                stateSelect.append('<option value="">Select Receiver</option>');
+                    // Limpia los receptores actuales
+                    stateSelect.empty();
+                    stateSelect.append('<option value="">Select Receiver</option>');
 
-                if (branchId) {
-                    $.ajax({
-                        url: `/receiver/${branchId}`,
-                        type: 'GET',
-                        success: function(response) {
-                            // Asegúrate de acceder al array "data" del JSON devuelto
-                            $.each(response.data, function(index, receiver) {
-                                stateSelect.append(
-                                    `<option value="${receiver.id}" 
-                             data-mobile="${receiver.receiver_mobile}" 
-                             data-address="${receiver.receiver_address}">
-                        ${receiver.name}
-                    </option>`
-                                );
-                            });
-                        },
-                        error: function() {
-                            alert('Error fetching branch');
-                        }
-                    });
-                }
-            });*/
+                    if (branchId) {
+                        $.ajax({
+                            url: `/receiver/${branchId}`,
+                            type: 'GET',
+                            success: function(response) {
+                                // Asegúrate de acceder al array "data" del JSON devuelto
+                                $.each(response.data, function(index, receiver) {
+                                    stateSelect.append(
+                                        `<option value="${receiver.id}" 
+                 data-mobile="${receiver.receiver_mobile}" 
+                 data-address="${receiver.receiver_address}">
+            ${receiver.name}
+        </option>`
+                                    );
+                                });
+                            },
+                            error: function() {
+                                alert('Error fetching branch');
+                            }
+                        });
+                    }
+                });*/
 
             // Evento para capturar datos adicionales al seleccionar un receptor
             $('#to_branch_id').on('change', function() {
@@ -538,64 +555,64 @@
     </script>
     <script>
         /*document.addEventListener('DOMContentLoaded', function() {
-                //const clientSelect = document.getElementById('client_id');
-                //const mobileInput = document.getElementById('responsible_mobile');
-                //const addressInput = document.getElementById('responsible_address');
-                const branchSelect = document.getElementById('to_branch_id');
+                                //const clientSelect = document.getElementById('client_id');
+                                //const mobileInput = document.getElementById('responsible_mobile');
+                                //const addressInput = document.getElementById('responsible_address');
+                                const branchSelect = document.getElementById('to_branch_id');
 
-                //const receiverSelect = document.getElementById('receiver_name');
-                //const receiverMobile = document.getElementById('receiver_mobile');
-                //const receiverAddress = document.getElementById('receiver_address');
+                                //const receiverSelect = document.getElementById('receiver_name');
+                                //const receiverMobile = document.getElementById('receiver_mobile');
+                                //const receiverAddress = document.getElementById('receiver_address');
 
 
-                clientSelect.addEventListener('change', function() {
-                    const selectedOption = clientSelect.options[clientSelect.selectedIndex];
+                                clientSelect.addEventListener('change', function() {
+                                    const selectedOption = clientSelect.options[clientSelect.selectedIndex];
 
-                    /* Si no hay selección válida, limpiar todo
-                    if (!selectedOption.value) {
-                        mobileInput.value = '';
-                        addressInput.value = '';
-                        branchSelect.value = '';
-                        receiverSelect.innerHTML = '<option value="">Select Receiver</option>';
-                        receiverMobile.value = '';
-                        receiverAddress.value = '';
-                        return;
-                    }
+                                    /* Si no hay selección válida, limpiar todo
+                                    if (!selectedOption.value) {
+                                        mobileInput.value = '';
+                                        addressInput.value = '';
+                                        branchSelect.value = '';
+                                        receiverSelect.innerHTML = '<option value="">Select Receiver</option>';
+                                        receiverMobile.value = '';
+                                        receiverAddress.value = '';
+                                        return;
+                                    }
 
-                    // Obtener datos del cliente desde los atributos del <option>
-                    const mobilec = selectedOption.getAttribute('data-mobilec') || '';
-                    const addressc = selectedOption.getAttribute('data-addressc') || '';
-                    const branchId = selectedOption.getAttribute('data-branchc') || '';
+                                    // Obtener datos del cliente desde los atributos del <option>
+                                    const mobilec = selectedOption.getAttribute('data-mobilec') || '';
+                                    const addressc = selectedOption.getAttribute('data-addressc') || '';
+                                    const branchId = selectedOption.getAttribute('data-branchc') || '';
 
-                    // Asignar valores a los campos
-                    mobileInput.value = mobilec;
-                    addressInput.value = addressc;
+                                    // Asignar valores a los campos
+                                    mobileInput.value = mobilec;
+                                    addressInput.value = addressc;
 
-                    if (branchId) {
-                        branchSelect.value = branchId; // Seleccionar la opción que coincide con branchId
-                        $('#to_branch_id').trigger('change');
-                    } else {
-                        branchSelect.value = ''; // Restablecer a la opción predeterminada si no hay branchId
-                        $('#to_branch_id').trigger('change');
-                    }
-                });
-            });*/
+                                    if (branchId) {
+                                        branchSelect.value = branchId; // Seleccionar la opción que coincide con branchId
+                                        $('#to_branch_id').trigger('change');
+                                    } else {
+                                        branchSelect.value = ''; // Restablecer a la opción predeterminada si no hay branchId
+                                        $('#to_branch_id').trigger('change');
+                                    }
+                                });
+                            });*/
     </script>
     <script>
         /*document.addEventListener('DOMContentLoaded', function() {
-                                                            const shippingDateInput = document.getElementById('shipping_date');
+                                                                            const shippingDateInput = document.getElementById('shipping_date');
 
-                                                            if (!shippingDateInput.value) {
-                                                                // Obtener la fecha actual en formato YYYY-MM-DD
-                                                                const today = new Date();
-                                                                const year = today.getFullYear();
-                                                                const month = String(today.getMonth() + 1).padStart(2, '0'); // Mes en formato 2 dígitos
-                                                                const day = String(today.getDate()).padStart(2, '0'); // Día en formato 2 dígitos
+                                                                            if (!shippingDateInput.value) {
+                                                                                // Obtener la fecha actual en formato YYYY-MM-DD
+                                                                                const today = new Date();
+                                                                                const year = today.getFullYear();
+                                                                                const month = String(today.getMonth() + 1).padStart(2, '0'); // Mes en formato 2 dígitos
+                                                                                const day = String(today.getDate()).padStart(2, '0'); // Día en formato 2 dígitos
 
-                                                                // Establecer el valor del campo con la fecha actual
-                                                                shippingDateInput.value = `${year}-${month}-${day}`;
-                                                            }
-                                                        });*/
+                                                                                // Establecer el valor del campo con la fecha actual
+                                                                                shippingDateInput.value = `${year}-${month}-${day}`;
+                                                                            }
+                                                                        });*/
     </script>
     <script>
         document.getElementById('addPackageBtn').addEventListener('click', function() {
@@ -648,6 +665,59 @@
                     packageGroup.parentNode.removeChild(packageGroup);
                 }
             }
+        });
+    </script>
+    <script>
+        let capturedImagesArray = [];
+        let videoStream = null;
+
+        document.getElementById('openCameraButton').addEventListener('click', function() {
+            document.getElementById('cameraContainer').style.display = 'block';
+            document.getElementById('closeCameraButton').style.display = 'inline-block';
+
+            navigator.mediaDevices.getUserMedia({
+                    video: true
+                })
+                .then(function(stream) {
+                    videoStream = stream;
+                    document.getElementById('video').srcObject = stream;
+                })
+                .catch(function(err) {
+                    alert("Error al acceder a la cámara: " + err.message);
+                });
+        });
+
+        document.getElementById('captureButton').addEventListener('click', function() {
+            const video = document.getElementById('video');
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            const imageData = canvas.toDataURL('image/png');
+            capturedImagesArray.push(imageData);
+            document.getElementById('capturedImages').value = JSON.stringify(capturedImagesArray);
+
+            const img = document.createElement('img');
+            img.src = imageData;
+            img.style.width = '100px';
+            img.style.margin = '5px';
+            document.getElementById('capturedImagesContainer').appendChild(img);
+
+            alert('Imagen capturada.');
+        });
+
+        document.getElementById('closeCameraButton').addEventListener('click', function() {
+            if (videoStream) {
+                let tracks = videoStream.getTracks();
+                tracks.forEach(track => track.stop()); // Detiene cada pista de la cámara
+                videoStream = null;
+            }
+
+            document.getElementById('cameraContainer').style.display = 'none';
+            document.getElementById('closeCameraButton').style.display = 'none';
         });
     </script>
 @endpush
