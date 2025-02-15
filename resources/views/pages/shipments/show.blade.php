@@ -175,10 +175,10 @@
                                 @foreach ($attachments as $attachment)
                                     <div class="col-6 col-sm-4 col-md-2 text-center mb-4">
                                         @if (Str::endsWith($attachment->file_path, ['.jpg', '.jpeg', '.png']))
-                                            <img src="{{ asset('storage/' . $attachment->file_path) }}" alt="Attachment"
+                                            <img src="{{ Storage::disk('s3')->url($attachment->file_path) }}" alt="Attachment"
                                                 class="img-fluid" style="max-width: 100px;">
                                         @elseif (Str::endsWith($attachment->file_path, ['.pdf']))
-                                            <a href="{{ asset('storage/' . $attachment->file_path) }}" target="_blank"
+                                            <a href="{{ Storage::disk('s3')->url($attachment->file_path) }}" target="_blank"
                                                 class="d-block">View PDF</a>
                                         @endif
                                     </div>

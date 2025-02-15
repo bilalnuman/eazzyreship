@@ -252,10 +252,15 @@
             @if (isset($shipment->carrier_doc))
                 <p>Attached File:</p>
                 @if (Str::endsWith($shipment->carrier_doc, ['.jpg', '.jpeg', '.png', '.pdf']))
-                    <img src="{{ asset('storage/' . $shipment->carrier_doc) }}" alt="Attachment"
+
+                    <img src="{{ Storage::disk('s3')->url($shipment->carrier_doc) }}" alt="Attachment"
                         style="max-width: 200px;">
+
+                    <!--img src="{ { asset('storage/' . $shipment->carrier_doc) }}" alt="Attachment"
+                        style="max-width: 200px;"-->
+
                 @elseif (Str::endsWith($shipment->carrier_doc, ['.pdf']))
-                    <a href="{{ asset('storage/' . $shipment->carrier_doc) }}" target="_blank">View PDF</a>
+                    <a href="{{ Storage::disk('s3')->url($shipment->carrier_doc) }}" target="_blank">View PDF</a>
                 @endif
             @endif
         </div>
@@ -280,10 +285,10 @@
                     @foreach ($shipment->attachments as $attachment)
                         <div class="col-6 col-sm-4 col-md-2 text-center mb-4">
                             @if (Str::endsWith($attachment->file_path, ['.jpg', '.jpeg', '.png']))
-                                <img src="{{ asset('storage/' . $attachment->file_path) }}" alt="Attachment"
+                                <img src="{{ Storage::disk('s3')->url($attachment->file_path) }}" alt="Attachment"
                                     class="img-fluid" style="max-width: 100px;">
                             @elseif (Str::endsWith($attachment->file_path, ['.pdf']))
-                                <a href="{{ asset('storage/' . $attachment->file_path) }}" target="_blank"
+                                <a href="{{ Storage::disk('s3')->url($attachment->file_path) }}" target="_blank"
                                     class="d-block">View PDF</a>
                             @endif
                             <a href="#" class="btn btn-warning btn-sm remove-attachment mt-2"

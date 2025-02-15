@@ -99,7 +99,7 @@ class ClientController extends Controller
         $client->update(['code' => $request->branch_code . $client->id]);
 
         if ($request->hasFile('picture')) {
-            $path = $request->file('picture')->store('customers', 'public');
+            $path = $request->file('picture')->store('customers', 's3');
             $client->update(['picture' => $path]);
         }
 
@@ -160,7 +160,7 @@ class ClientController extends Controller
                 Storage::disk('public')->delete($client->picture);
             }
             
-            $path = $request->file('picture')->store('customers', 'public');
+            $path = $request->file('picture')->store('customers', 's3');
             $client->update(['picture' => $path]);  
         }
 

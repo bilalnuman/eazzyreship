@@ -71,9 +71,9 @@
             @if (isset($client->picture))
             <p>Attached File:</p>
             @if (Str::endsWith($client->picture, ['.jpg', '.jpeg', '.png', '.pdf']))
-                <img src="{{ asset('storage/' . $client->picture) }}" alt="Attachment" style="max-width: 200px;">
+                <img src="{{ Storage::disk('s3')->url($client->picture) }}" alt="Attachment" style="max-width: 200px;">
             @elseif (Str::endsWith($client->picture, ['.pdf']))
-                <a href="{{ asset('storage/' . $client->picture) }}" target="_blank">View PDF</a>
+                <a href="{{ Storage::disk('s3')->url($client->picture) }}" target="_blank">View PDF</a>
             @endif
         @endif
         </div>

@@ -278,13 +278,13 @@ class ShipmentController extends Controller
             }
 
             if ($request->hasFile('carrier_doc')) {
-                $path = $request->file('carrier_doc')->store('shippers', 'public');
+                $path = $request->file('carrier_doc')->store('shippers', 's3');
                 $shipment->update(['carrier_doc' => $path]);
             }
 
             if ($request->hasFile('attachments_before_shipping')) {
                 foreach ($request->file('attachments_before_shipping') as $file) {
-                    $path = $file->store('attachments', 'public'); // Guardar archivo
+                    $path = $file->store('attachments', 's3'); // Guardar archivo
 
                     // Guardar la ruta en la tabla de adjuntos
                     ShipmentAttachment::create([
@@ -314,11 +314,12 @@ class ShipmentController extends Controller
             
                                 // Guardar la imagen utilizando el almacenamiento de Laravel
                                 $path = 'attachments/' . $imageName;
-                                \Storage::disk('public')->put($path, $image); // Guardar el archivo decodificado
+                                //\Storage::disk('public')->put($path, $image); // Guardar el archivo decodificado
+                                \Storage::disk('s3')->put($path, $image);
                                 \Log::info("Intentando guardar la imagen para el shipment ID: {$shipment->id}");
 
                                 // Verificar si el archivo realmente fue guardado
-                                if (!\Storage::disk('public')->exists($path)) {
+                                if (!\Storage::disk('s3')->exists($path)) {
                                     throw new \Exception("No se pudo guardar la imagen en el disco 'public'");
                                 }
             
@@ -654,16 +655,16 @@ class ShipmentController extends Controller
 
             if ($request->hasFile('carrier_doc')) {
                 if (isset($shipment->carrier_doc) && !empty($shipment->carrier_doc)) {
-                    Storage::disk('public')->delete($shipment->carrier_doc);
+                    Storage::disk('s3')->delete($shipment->carrier_doc);//'public'
                 }
 
-                $path = $request->file('carrier_doc')->store('shippers', 'public');
+                $path = $request->file('carrier_doc')->store('shippers', 's3');
                 $shipment->update(['carrier_doc' => $path]);
             }
 
             if ($request->hasFile('attachments_before_shipping')) {
                 foreach ($request->file('attachments_before_shipping') as $file) {
-                    $path = $file->store('attachments', 'public'); // Guardar archivo
+                    $path = $file->store('attachments', 's3'); // Guardar archivo antes 'public'
 
                     // Guardar la ruta en la tabla de adjuntos
                     ShipmentAttachment::create([
@@ -693,11 +694,12 @@ class ShipmentController extends Controller
             
                                 // Guardar la imagen utilizando el almacenamiento de Laravel
                                 $path = 'attachments/' . $imageName;
-                                \Storage::disk('public')->put($path, $image); // Guardar el archivo decodificado
+                                //\Storage::disk('public')->put($path, $image);
+                                \Storage::disk('s3')->put($path, $image); // Guardar el archivo decodificado
                                 \Log::info("Intentando guardar la imagen para el shipment ID: {$shipment->id}");
 
                                 // Verificar si el archivo realmente fue guardado
-                                if (!\Storage::disk('public')->exists($path)) {
+                                if (!\Storage::disk('s3')->exists($path)) {
                                     throw new \Exception("No se pudo guardar la imagen en el disco 'public'");
                                 }
             
@@ -945,7 +947,7 @@ class ShipmentController extends Controller
         }
 
         // Eliminar archivo físico
-        Storage::disk('public')->delete($attach->file_path);
+        Storage::disk('s3')->delete($attach->file_path);
 
         // Eliminar de la base de datos
         $attach->delete();
