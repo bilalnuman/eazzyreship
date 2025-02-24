@@ -1,23 +1,4 @@
 <!-- Hero Section -->
-<!--section id="hero" class="hero section dark-background">
-
-    <img src="{ { asset('web/img/bg-hero2.jpg') }}" alt="" data-aos="fade-in">
-
-    <div class="container d-flex flex-column align-items-center">
-        <h2 data-aos="fade-up" data-aos-delay="100">PLAN. LAUNCH. GROW.</h2>
-        <p data-aos="fade-up" data-aos-delay="200">We are team of talented designers making websites with
-            Bootstrap</p>
-        <div class="d-flex mt-4" data-aos="fade-up" data-aos-delay="300">
-            <a href="#contact" class="btn-get-started">Get Started</a>
-            <a href="#"
-                class="glightbox btn-watch-video d-flex align-items-center"><i
-                    class="bi bi-play-circle"></i><span>Watch Video</span></a>
-        </div>
-    </div>
-
-</section><!-- /Hero Section -->
-
-<!-- Hero Section -->
 <section id="hero" class="hero section dark-background">
 
     <div id="hero-carousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
@@ -82,39 +63,6 @@
             </div>
         </div>
     </div>
-    <style>
-        .custom-info-section {
-            min-height: 160px;
-            display: flex;
-            align-items: center;
-            background-color: #444444;
-            color: white;
-            padding: 20px 0;
-        }
-
-        .custom-info-section h3 {
-            font-size: 1.2rem;
-            margin-bottom: 0;
-        }
-
-        .custom-btn {
-            font-size: 1.1rem;
-            font-weight: bold;
-            padding: 12px 30px;
-            transition: all 0.3s ease-in-out;
-            box-shadow: 0 4px 10px rgba(27, 25, 25, 0.2);
-            background-color: #008dac;
-            color: white;
-            border: none;
-        }
-
-        .custom-btn:hover {
-            background-color: #037791;
-            transform: scale(1.05);
-            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.3);
-            color: white;
-        }
-    </style>
 
 </section><!-- /Hero Section -->
 

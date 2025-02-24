@@ -29,46 +29,6 @@
     <!-- Main CSS File -->
     <link href="{{ asset('web/css/main2.css') }}" rel="stylesheet">
 
-    <style>
-        .footer-advantages {
-            background-color: #212529;
-            /* Oscuro pero no negro */
-            color: #f8f9fa;
-            /* Blanco suave */
-            font-family: 'Arial', sans-serif;
-        }
-
-        .footer-advantages .advantage-item {
-            padding: 15px;
-            border-radius: 8px;
-            background-color: #2c2f33;
-            /* Contraste sutil */
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .footer-advantages .advantage-item:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .footer-advantages .advantage-image img {
-            max-width: 80px;
-            height: auto;
-        }
-
-        .footer-advantages .advantage-service {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin: 10px 0;
-            color: #ffc107;
-            /* Color acento */
-        }
-
-        .footer-advantages .advantage-description {
-            font-size: 0.9rem;
-            line-height: 1.6;
-        }
-    </style>
 </head>
 
 <body class="index-page" style="background-color:#212529">
