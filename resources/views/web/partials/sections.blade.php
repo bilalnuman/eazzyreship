@@ -120,72 +120,34 @@
 
 
 <!-- Team Section -->
-<section id="team" class="team section light-background">
+<section id="team" class="team section">
 
     <!-- Section Title -->
     <div class="container section-title" data-aos="fade-up">
-        <h2>Team</h2>
-        <p>CHECK OUR TEAM</p>
+        <h2>Steps</h2>
+        <p>THREE SIMPLE STEPS</p>
     </div><!-- End Section Title -->
 
-    <div class="container">
-
-        <div class="row gy-5">
-
-            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-                <div class="member">
-                    <div class="pic"><img src="assets/img/team/team-1.jpg" class="img-fluid" alt="">
-                    </div>
-                    <div class="member-info">
-                        <h4>Walter White</h4>
-                        <span>Chief Executive Officer</span>
-                        <div class="social">
-                            <a href=""><i class="bi bi-twitter-x"></i></a>
-                            <a href=""><i class="bi bi-facebook"></i></a>
-                            <a href=""><i class="bi bi-instagram"></i></a>
-                            <a href=""><i class="bi bi-linkedin"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div><!-- End Team Member -->
-
-            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
-                <div class="member">
-                    <div class="pic"><img src="assets/img/team/team-2.jpg" class="img-fluid" alt="">
-                    </div>
-                    <div class="member-info">
-                        <h4>Sarah Jhonson</h4>
-                        <span>Product Manager</span>
-                        <div class="social">
-                            <a href=""><i class="bi bi-twitter-x"></i></a>
-                            <a href=""><i class="bi bi-facebook"></i></a>
-                            <a href=""><i class="bi bi-instagram"></i></a>
-                            <a href=""><i class="bi bi-linkedin"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div><!-- End Team Member -->
-
-            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
-                <div class="member">
-                    <div class="pic"><img src="assets/img/team/team-3.jpg" class="img-fluid" alt="">
-                    </div>
-                    <div class="member-info">
-                        <h4>William Anderson</h4>
-                        <span>CTO</span>
-                        <div class="social">
-                            <a href=""><i class="bi bi-twitter-x"></i></a>
-                            <a href=""><i class="bi bi-facebook"></i></a>
-                            <a href=""><i class="bi bi-instagram"></i></a>
-                            <a href=""><i class="bi bi-linkedin"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div><!-- End Team Member -->
-
+<!-- Instrucciones Paso a Paso -->
+<div class="container py-5" data-aos="fade-up" data-aos-delay="100">
+    <div class="row text-center">
+        <div class="col-md-4">
+            <img src="{{ asset('web/img/team/step1.svg') }}" alt="Step 1" class="mb-3">
+            <h5>1. Sign up and get your EazzyReship U.S. Address</h5>
+            <p><br/>This will be your own personal address in the USA. No signup or setup fees.</p>
         </div>
-
+        <div class="col-md-4">
+            <img src="{{ asset('web/img/team/step2.svg') }}" alt="Step 2" class="mb-3">
+            <h5>2. Shop in any Online Store and ship it to your new EazzyReship U.S. Address</h5>
+            <p><br/>Use your example U.S. address as your delivery address at checkout.</p>
+        </div>
+        <div class="col-md-4">
+            <img src="{{ asset('web/img/team/step3.svg') }}" alt="Step 3" class="mb-3">
+            <h5>3. Combine your packages and save money</h5>
+            <p><br/>Shop on multiple websites, combine the packages into one box and save up to 80% on shipping.</p>
+        </div>
     </div>
+</div>
 
 </section><!-- /Team Section -->
 
@@ -195,7 +157,7 @@
     <!-- Section Title -->
     <div class="container section-title" data-aos="fade-up">
         <h2>Contact</h2>
-        <p>Necessitatibus eius consequatur</p>
+        <p>NEED HELP? CONTACT US</p>
     </div><!-- End Section Title -->
 
     <div class="container" data-aos="fade-up" data-aos-delay="100">
