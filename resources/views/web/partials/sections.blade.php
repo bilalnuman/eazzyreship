@@ -1,7 +1,7 @@
 <!-- Hero Section -->
-<section id="hero" class="hero section dark-background">
+<!--section id="hero" class="hero section dark-background">
 
-    <img src="{{ asset('web/img/bg-hero2.jpg') }}" alt="" data-aos="fade-in">
+    <img src="{ { asset('web/img/bg-hero2.jpg') }}" alt="" data-aos="fade-in">
 
     <div class="container d-flex flex-column align-items-center">
         <h2 data-aos="fade-up" data-aos-delay="100">PLAN. LAUNCH. GROW.</h2>
@@ -16,6 +16,108 @@
     </div>
 
 </section><!-- /Hero Section -->
+
+<!-- Hero Section -->
+<section id="hero" class="hero section dark-background">
+
+    <div id="hero-carousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
+
+        <div class="carousel-item active">
+            <img src="{{ asset('web/img/bg-hero.jpg') }}" alt="">
+            <div class="carousel-container">
+                <h2>Welcome to Multi<br></h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
+                    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                    aliquip ex ea commodo consequat.</p>
+                <a href="#featured-services" class="btn-get-started">Get Started</a>
+            </div>
+        </div><!-- End Carousel Item -->
+
+        <div class="carousel-item">
+            <img src="{{ asset('web/img/bg-hero2.jpg') }}" alt="">
+            <div class="carousel-container">
+                <h2>At vero eos et accusamus</h2>
+                <p>Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime
+                    placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem
+                    quibusdam et aut officiis debitis aut.</p>
+                <a href="#featured-services" class="btn-get-started">Get Started</a>
+            </div>
+        </div><!-- End Carousel Item -->
+
+        <div class="carousel-item">
+            <img src="{{ asset('web/img/bg-hero3.jpg') }}" alt="">
+            <div class="carousel-container">
+                <h2>Temporibus autem quibusdam</h2>
+                <p>Beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit
+                    aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt omnis iste
+                    natus error sit voluptatem accusantium.</p>
+                <a href="#featured-services" class="btn-get-started">Get Started</a>
+            </div>
+        </div><!-- End Carousel Item -->
+
+        <a class="carousel-control-prev" href="#hero-carousel" role="button" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon bi bi-chevron-left" aria-hidden="true"></span>
+        </a>
+
+        <a class="carousel-control-next" href="#hero-carousel" role="button" data-bs-slide="next">
+            <span class="carousel-control-next-icon bi bi-chevron-right" aria-hidden="true"></span>
+        </a>
+
+        <ol class="carousel-indicators"></ol>
+
+    </div>
+    <!-- Sección Informativa en 3 Columnas Centradas con Estilos Mejorados -->
+    <div class="text-white py-5 text-center custom-info-section">
+        <div class="container">
+            <div class="row align-items-center justify-content-center">
+                <div class="col-md-4 mb-2">
+                    <h3 class="fw-bold">Start Saving Today!</h3>
+                </div>
+                <div class="col-md-4 mb-2">
+                    <h3>Get your free U.S. address!</h3>
+                </div>
+                <div class="col-md-4">
+                    <a href="#" class="btn btn-info btn-lg custom-btn">Sign Up Free</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+        .custom-info-section {
+            min-height: 160px;
+            display: flex;
+            align-items: center;
+            background-color: #444444;
+            color: white;
+            padding: 20px 0;
+        }
+
+        .custom-info-section h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0;
+        }
+
+        .custom-btn {
+            font-size: 1.1rem;
+            font-weight: bold;
+            padding: 12px 30px;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 10px rgba(27, 25, 25, 0.2);
+            background-color: #008dac;
+            color: white;
+            border: none;
+        }
+
+        .custom-btn:hover {
+            background-color: #037791;
+            transform: scale(1.05);
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.3);
+            color: white;
+        }
+    </style>
+
+</section><!-- /Hero Section -->
+
 
 <!-- Team Section -->
 <section id="team" class="team section light-background">
@@ -114,17 +216,17 @@
                     <div class="col-md-6">
                         <div class="info-item d-flex flex-column justify-content-center align-items-center"
                             data-aos="fade-up" data-aos-delay="300">
-                        <div class="d-flex flex-row justify-content-center align-items-center">
-                            <a href="tel:+17868246549" aria-label="Llamar por teléfono">
-                                <i class="bi bi-telephone"></i>
-                            </a>                        
-                            <a href="https://wa.me/17868246549" target="_blank" rel="noopener noreferrer">
-                                <i class="bi bi-whatsapp ms-2"></i>
-                            </a>
-                        </div>                         
+                            <div class="d-flex flex-row justify-content-center align-items-center">
+                                <a href="tel:+17868246549" aria-label="Llamar por teléfono">
+                                    <i class="bi bi-telephone"></i>
+                                </a>
+                                <a href="https://wa.me/17868246549" target="_blank" rel="noopener noreferrer">
+                                    <i class="bi bi-whatsapp ms-2"></i>
+                                </a>
+                            </div>
                             <h3>Call Us</h3>
                             <p>+1 (786) 824-6549</p>
-                    </div>
+                        </div>
                     </div><!-- End Info Item -->
 
                     <div class="col-md-6">
@@ -145,13 +247,13 @@
                     <div class="row gy-4">
 
                         <div class="col-md-6">
-                            <input type="text" name="name" class="form-control"
-                                placeholder="Your Name" required="">
+                            <input type="text" name="name" class="form-control" placeholder="Your Name"
+                                required="">
                         </div>
 
                         <div class="col-md-6 ">
-                            <input type="email" class="form-control" name="email"
-                                placeholder="Your Email" required="">
+                            <input type="email" class="form-control" name="email" placeholder="Your Email"
+                                required="">
                         </div>
 
                         <div class="col-md-12">
@@ -164,12 +266,12 @@
                         </div>
 
                         <div class="col-md-12 text-center">
-                            <div id="formMessage"></div><br/>
+                            <div id="formMessage"></div><br />
                             <!--div class="loading">Loading</div>
                             <div class="error-message"></div>
                             <div class="sent-message" id="formMessage">Your message has been sent. Thank you!</div-->
                             <button type="submit">Send Message</button>
-                            
+
                         </div>
 
                     </div>
