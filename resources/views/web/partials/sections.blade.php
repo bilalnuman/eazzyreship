@@ -12,24 +12,32 @@
         </div><!-- End Carousel Item -->
 
         <div class="carousel-item">
-            <img src="{{ asset('web/img/bg-hero5.jpg') }}" alt="">
-            <div class="carousel-container">
-                <h2>At vero eos et accusamus</h2>
-                <p>Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime
-                    placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem
-                    quibusdam et aut officiis debitis aut.</p>
-                <a href="#featured-services" class="btn-get-started">Get Started</a>
+            <img src="{{ asset('web/img/bg-hero8.jpg') }}" alt="">
+            <div class="carousel-container" style="
+            position: absolute;
+            left: 50px;
+            top: 50%;
+            transform: translateY(-50%);
+            max-width: 900px;
+            text-align: left;
+            padding: 20px;
+        ">
+                <h2>International Package Forwarding Service</h2>
+                <p>Buy Products Worldwide, Ship them to EazzyReship address and We'll Ship Them to You.<br/>
+
+                    Getting started is easy! Simply sign up, get your US-based address
+                    and start shopping. Don't know where to buy, simply click on "Learn more"
+                    and we suggest you few popular shopping websites. confused how to start
+                    Just click on "Learn more" and we will assist you.</p>
+                <a href="#featured-services" class="btn-get-started">Learn More</a>
             </div>
-        </div><!-- End Carousel Item -->
+        </div>
+        <!-- End Carousel Item -->
 
         <div class="carousel-item">
-            <img src="{{ asset('web/img/bg-hero3.jpg') }}" alt="">
+            <img src="{{ asset('web/img/bg-hero9.jpg') }}" alt="">
             <div class="carousel-container">
-                <h2>Temporibus autem quibusdam</h2>
-                <p>Beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit
-                    aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt omnis iste
-                    natus error sit voluptatem accusantium.</p>
-                <a href="#featured-services" class="btn-get-started">Get Started</a>
+                <h2> We offer fast, reliable and efficient package, mail and freight forwarding to over 220 countries.</h2>
             </div>
         </div><!-- End Carousel Item -->
 
@@ -51,7 +59,7 @@
                 <div class="col-md-4 mb-2">
                     <h3 class="fw-bold">Start Saving Today!</h3>
                 </div>
-                <div class="col-md-4 mb-2">
+                <div class="col-md-4 d-none d-md-block">
                     <h3>Get your free U.S. address!</h3>
                 </div>
                 <div class="col-md-4">
@@ -60,10 +68,7 @@
             </div>
         </div>
     </div>
-
 </section><!-- /Hero Section -->
-
-
 <!-- Team Section -->
 <section id="team" class="team section">
 

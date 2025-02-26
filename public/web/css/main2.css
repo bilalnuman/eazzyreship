@@ -990,37 +990,57 @@ section,
 /*--------------------------------------------------------------
   # Info Section
   --------------------------------------------------------------*/
-.custom-info-section {
-  min-height: 160px;
-  display: flex;
-  align-items: center;
-  background-color: #444444;
-  color: white;
-  padding: 20px 0;
-}
+  .custom-info-section {
+    background-color: #444444;
+    color: white;
+    padding: 40px 0;
+  }
+  
+  .custom-info-section h3 {
+    font-size: 1.2rem;
+    margin-bottom: -0;
+  }
+  
+  /* Botón con mejor tamaño y sin recortes */
+  .custom-btn {
+    font-size: 1.1rem;
+    font-weight: bold;
+    padding: 12px 30px;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 10px rgba(27, 25, 25, 0.2);
+    background-color: #008dac;
+    color: white;
+    border: none;
+  }
+  
+  /* Efecto hover del botón */
+  .custom-btn:hover {
+    background-color: #037791;
+    transform: scale(1.05);
+    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Ajustes en móviles */
+  @media (max-width: 768px) {
 
-.custom-info-section h3 {
-  font-size: 1.2rem;
-  margin-bottom: 0;
-}
+    .custom-info-section .row {
+        text-align: center;
+    }
 
-.custom-btn {
-  font-size: 1.1rem;
-  font-weight: bold;
-  padding: 12px 30px;
-  transition: all 0.3s ease-in-out;
-  box-shadow: 0 4px 10px rgba(27, 25, 25, 0.2);
-  background-color: #008dac;
-  color: white;
-  border: none;
-}
+    .custom-info-section h3 {
+        font-size: 1rem;
+        padding: 0px;
+    }
 
-.custom-btn:hover {
-  background-color: #037791;
-  transform: scale(1.05);
-  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.3);
-  color: white;
+    .custom-btn {
+        width: 100%;
+        max-width: 280px;
+        padding: 15px;
+    }
 }
+  
+  
+  
 
 /*--------------------------------------------------------------
   # Footer Section custom new
