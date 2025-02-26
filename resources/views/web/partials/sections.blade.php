@@ -157,7 +157,7 @@
                 </ul>
                 <p><h7>Shipping conditions:
                     Air shipping charges are calculated based on real or volumetric weight, whichever is higher</h7></p>
-                <a href="#" class="buy-btn">Buy Now</a>
+                <a href="#" class="buy-btn">Learn More</a>
               </div>
             </div><!-- End Pricing Item -->
   
@@ -196,7 +196,7 @@
                 <ul>
                     <li><i class=""></i> <span>Currently we do not provide Customs clearance service, we deliver your packages to the destination port customers have to clear their packages themselves</span></li>
                 </ul>
-                <a href="#" class="buy-btn">Buy Now</a>
+                <a href="#" class="buy-btn">Learn More</a>
               </div>
             </div><!-- End Pricing Item -->
   
