@@ -4,7 +4,7 @@
     <div id="hero-carousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
 
         <div class="carousel-item active">
-            <img src="{{ asset('web/img/bg-hero.jpg') }}" alt="">
+            <img src="{{ asset('web/img/bg-hero4.jpg') }}" alt="">
             <div class="carousel-container">
                 <h2>Welcome to Multi<br></h2>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
@@ -15,7 +15,7 @@
         </div><!-- End Carousel Item -->
 
         <div class="carousel-item">
-            <img src="{{ asset('web/img/bg-hero2.jpg') }}" alt="">
+            <img src="{{ asset('web/img/bg-hero5.jpg') }}" alt="">
             <div class="carousel-container">
                 <h2>At vero eos et accusamus</h2>
                 <p>Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime
@@ -98,6 +98,113 @@
 </div>
 
 </section><!-- /Team Section -->
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing section">
+
+        <!-- Section Title -->
+        <div class="container section-title" data-aos="fade-up">
+          <h2>Our Rates</h2>
+          <div><span>Check Our</span> <span class="description-title">Rates</span></div>
+        </div><!-- End Section Title -->
+  
+        <div class="container">
+  
+          <div class="row gy-4">
+  
+            <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="100">
+              <div class="pricing-item">
+                <h3>Ocean Shipping (SXM)</h3>
+                <!--h4><sup>$</sup>0<span> / month</span></h4-->
+                <ul>
+                  <li><i class="bi bi-check"></i> <span>1 - 4 lb  -- $4.00</span></li>
+                  <li><i class="bi bi-check"></i> <span>4.1 - 8 lb --                       $8.00</span></li>
+                  <li><i class="bi bi-check"></i> <span>8.1 - 12 lb --                    $12.00</span></li>
+                  <li><i class="bi bi-check"></i> <span>12.1 - 50 (Each lb)  --          $0.50</span></li>
+                  <li><i class="bi bi-check"></i> <span>50.1 lb & above each lb --  $0.39</span></li>
+                </ul>
+                <a href="#" class="buy-btn">Learn More</a>
+              </div>
+            </div><!-- End Pricing Item -->
+  
+            <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="200">
+              <div class="pricing-item">
+                <h3>Ocean Shipping (other islands)</h3>
+                <!--h4><sup>$</sup>29<span> / month</span></h4-->
+                <ul>
+                    <li><i class="bi bi-check"></i> <span>1 - 4 lb  -- $5.00</span></li>
+                    <li><i class="bi bi-check"></i> <span>4.1 - 8 lb --                       $9.00</span></li>
+                    <li><i class="bi bi-check"></i> <span>8.1 - 12 lb --                    $13.00</span></li>
+                    <li><i class="bi bi-check"></i> <span>12.1 - 50 (Each lb)  --          $0.55</span></li>
+                    <li><i class="bi bi-check"></i> <span>50.1 lb & above each lb --  $0.44</span></li>
+                </ul>
+                <p><h7>Shipping conditions:
+                    Ocean shipping charges are calculated based on Volumetric Weight.</h7></p>
+                <a href="#" class="buy-btn">Learn More</a>
+              </div>
+            </div><!-- End Pricing Item -->
+  
+            <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="300">
+              <div class="pricing-item">
+                <h3>Air Shipping (SXM)</h3>
+                <!--h4><sup>$</sup>49<span> / month</span></h4-->
+                <ul>
+                    <li><i class="bi bi-check"></i> <span>1 lb & above (Each lb)  --          $5.00</span></li>
+                </ul>
+                <h3>Air Shipping (other islands)</h3>
+                <ul>
+                    <li><i class="bi bi-check"></i> <span>1 lb & above (Each lb) --          $6.00</span></li>
+                </ul>
+                <p><h7>Shipping conditions:
+                    Air shipping charges are calculated based on real or volumetric weight, whichever is higher</h7></p>
+                <a href="#" class="buy-btn">Buy Now</a>
+              </div>
+            </div><!-- End Pricing Item -->
+  
+          </div>
+        </div>
+
+        <div class="container" style="padding-top: 30px">
+          <div class="row gy-4">
+  
+            <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="100">
+              <div class="pricing-item">
+                <h3>Insurance</h3>
+                <!--h4><sup>$</sup>0<span> / month</span></h4-->
+                <ul>
+                  <li><i class=""></i> <span>All packages received are automatically insured, free of charge, for a value of up to $50.00. Customers can buy additional insurance at a rate of 1.25% of the package’s invoice value. package coverage is subject to evaluation based on the facts collected in each case.</span></li>
+                </ul>
+                <a href="#" class="buy-btn">Learn More</a>
+              </div>
+            </div><!-- End Pricing Item -->
+  
+            <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="200">
+              <div class="pricing-item">
+                <h3>Local Delivery</h3>
+                <!--h4><sup>$</sup>29<span> / month</span></h4-->
+                <ul>
+                    <li><i class=""></i> <span>Doorstep deliveries can be arranged by coordinating with the local office in destination city.</span></li>
+                </ul>
+                <a href="#" class="buy-btn">Learn More</a>
+              </div>
+            </div><!-- End Pricing Item -->
+  
+            <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="300">
+              <div class="pricing-item">
+                <h3>Customs clearance</h3>
+                <!--h4><sup>$</sup>49<span> / month</span></h4-->
+                <ul>
+                    <li><i class=""></i> <span>Currently we do not provide Customs clearance service, we deliver your packages to the destination port customers have to clear their packages themselves</span></li>
+                </ul>
+                <a href="#" class="buy-btn">Buy Now</a>
+              </div>
+            </div><!-- End Pricing Item -->
+  
+          </div>
+  
+        </div>
+  
+      </section><!-- /Pricing Section -->
 
 <!-- Contact Section -->
 <section id="contact" class="contact section">
