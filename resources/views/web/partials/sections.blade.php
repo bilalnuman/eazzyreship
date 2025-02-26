@@ -4,12 +4,9 @@
     <div id="hero-carousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
 
         <div class="carousel-item active">
-            <img src="{{ asset('web/img/bg-hero4.jpg') }}" alt="">
+            <img src="{{ asset('web/img/bg-hero7.jpg') }}" alt="">
             <div class="carousel-container">
-                <h2>Welcome to Multi<br></h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-                    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                    aliquip ex ea commodo consequat.</p>
+                <h2>Buy online from any US store<br>We'll EazzyReship it to you</h2>
                 <a href="#featured-services" class="btn-get-started">Get Started</a>
             </div>
         </div><!-- End Carousel Item -->
@@ -73,7 +70,7 @@
     <!-- Section Title -->
     <div class="container section-title" data-aos="fade-up">
         <h2>Steps</h2>
-        <p>THREE SIMPLE STEPS</p>
+        <div><span>SIMPLE STEPS</span></div>
     </div><!-- End Section Title -->
 
 <!-- Instrucciones Paso a Paso -->
@@ -212,7 +209,7 @@
     <!-- Section Title -->
     <div class="container section-title" data-aos="fade-up">
         <h2>Contact</h2>
-        <p>NEED HELP? CONTACT US</p>
+        <div><span>NEED HELP? CONTACT US</span></div>
     </div><!-- End Section Title -->
 
     <div class="container" data-aos="fade-up" data-aos-delay="100">
