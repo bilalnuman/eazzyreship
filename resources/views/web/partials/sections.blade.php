@@ -7,7 +7,7 @@
             <img src="{{ asset('web/img/bg-hero7.jpg') }}" alt="">
             <div class="carousel-container">
                 <h2>Buy online from any US store<br>We'll EazzyReship it to you</h2>
-                <a href="#featured-services" class="btn-get-started">Get Started</a>
+                <a href="#steps" class="btn-get-started">Get Started</a>
             </div>
         </div><!-- End Carousel Item -->
 
@@ -20,8 +20,8 @@
             transform: translateY(-50%);
             max-width: 900px;
             text-align: left;
-            padding: 20px;
-        ">
+            padding: 20px;">
+
                 <h2>International Package Forwarding Service</h2>
                 <p>Buy Products Worldwide, Ship them to EazzyReship address and We'll Ship Them to You.<br/>
 
@@ -29,7 +29,7 @@
                     and start shopping. Don't know where to buy, simply click on "Learn more"
                     and we suggest you few popular shopping websites. confused how to start
                     Just click on "Learn more" and we will assist you.</p>
-                <a href="#featured-services" class="btn-get-started">Learn More</a>
+                <a href="#pricing" class="btn-get-started">Learn More</a>
             </div>
         </div>
         <!-- End Carousel Item -->
@@ -69,8 +69,8 @@
         </div>
     </div>
 </section><!-- /Hero Section -->
-<!-- Team Section -->
-<section id="team" class="team section">
+<!-- Steps Section -->
+<section id="steps" class="team section">
 
     <!-- Section Title -->
     <div class="container section-title" data-aos="fade-up">
