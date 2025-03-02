@@ -906,7 +906,7 @@ class ShipmentController extends Controller
 
             // Si no encuentra en Shipment, buscar en package_shipment
             if (!$shipment) {
-                $packageShipment = DB::table('package_shipment')->where('notes', $code)->first();
+                $packageShipment = DB::table('package_shipments')->where('notes', $code)->first();
 
                 if ($packageShipment) {
                     // Buscar el Shipment relacionado
