@@ -279,3 +279,17 @@
         }
     </style>
 </x-guest-layout>
+<div id="preloader"></div>
+
+<!-- Vendor JS Files -->
+<script src="{{ asset('web/vendor/bootstrap/js/bootstrap.min.js') }}"></script>
+<script src="{{ asset('web/vendor/php-email-form/validate.js') }}"></script>
+<script src="{{ asset('web/vendor/aos/aos.js') }}"></script>
+<script src="{{ asset('web/vendor/glightbox/js/glightbox.min.js') }}"></script>
+<script src="{{ asset('web/vendor/purecounter/purecounter_vanilla.js') }}"></script>
+<script src="{{ asset('web/vendor/swiper/swiper-bundle.min.js') }}"></script>
+<script src="{{ asset('web/vendor/imagesloaded/imagesloaded.pkgd.min.js') }}"></script>
+<script src="{{ asset('web/vendor/isotope-layout/isotope.pkgd.min.js') }}"></script>
+
+<!-- Main JS File -->
+<script src="{{ asset('web/js/main.js') }}"></script>

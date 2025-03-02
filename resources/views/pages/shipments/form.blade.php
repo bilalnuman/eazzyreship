@@ -70,7 +70,7 @@
 
     <div class="col-md-6">
         <div class="form-group">
-            <label for="mission_id">Mission</label>
+            <label for="mission_id">Manifest</label>
             <select name="mission_id" id="mission_id" class="form-control @error('mission_id') is-invalid @enderror"
                 required>
                 <option value="">Select a Mission</option>

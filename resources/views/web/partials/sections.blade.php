@@ -62,7 +62,7 @@
                     <h3>Get your free U.S. address!</h3>
                 </div>
                 <div class="col-md-4">
-                    <a href="#" class="btn btn-info btn-lg custom-btn">Sign Up Free</a>
+                    <a href="{{ route('register') }}" class="btn btn-info btn-lg custom-btn">Sign Up Free</a>
                 </div>
             </div>
         </div>
