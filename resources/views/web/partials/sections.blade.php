@@ -29,7 +29,6 @@
                     and start shopping. Don't know where to buy, simply click on "Learn more"
                     and we suggest you few popular shopping websites. confused how to start
                     Just click on "Learn more" and we will assist you.</p>
-                <a href="#pricing" class="btn-get-started">Learn More</a>
             </div>
         </div>
         <!-- End Carousel Item -->
@@ -56,7 +55,7 @@
     <div class="text-white py-5 text-center custom-info-section">
         <div class="container">
             <div class="row align-items-center justify-content-center">
-                <div class="col-md-4 mb-2">
+                <div class="col-md-4 mb-2 d-none d-md-block">
                     <h3 class="fw-bold">Start Saving Today!</h3>
                 </div>
                 <div class="col-md-4 d-none d-md-block">
