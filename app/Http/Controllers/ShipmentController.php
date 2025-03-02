@@ -418,8 +418,8 @@ class ShipmentController extends Controller
             $shipment->receiver_address = "Pondfill";
             $shipment->total_weight = floatval($request->actualWeight);
 
-            $shipment->barcode = $request->barcode;
-            $parts1 = explode("\x1D", $request->barcode);
+            $shipment->barcode = $request->Barcode;
+            $parts1 = explode("\x1D", $request->Barcode);
             $shipment->order_id = $parts1[1] ?? null;
             $shipment->code = $prefix->value . $request->id;
 

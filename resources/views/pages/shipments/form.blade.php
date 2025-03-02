@@ -402,6 +402,7 @@
 
             let totalVolumetricWeight = 0;
             let sumWeight = 0;
+            let sumValue = 0;
 
             packageItems.each(function() {
                 // Dentro de cada fila, seleccionamos los inputs necesarios
@@ -410,17 +411,20 @@
                 let length = parseFloat($(this).find('input[name*="[length]"]').val()) || 0;
                 let width = parseFloat($(this).find('input[name*="[width]"]').val()) || 0;
                 let height = parseFloat($(this).find('input[name*="[height]"]').val()) || 0;
+                let value = parseFloat($(this).find('input[name*="[value]"]').val()) || 0;
 
                 // Cálculo del peso volumétrico
                 let volumetricWeight = (length * width * height) / 139;
                 totalVolumetricWeight += volumetricWeight * qty;
 
+                sumValue += value * qty;
                 // Sumar el peso real ajustado por cantidad
                 sumWeight += weight * qty;
             });
 
             console.log("Volumetric Weight: ", totalVolumetricWeight.toFixed(2));
             console.log("Total Weight: ", sumWeight.toFixed(2));
+            console.log("Total Value: ", sumValue.toFixed(2));
 
             // Mostrar los valores calculados en los campos respectivos
             // Mostrar Volumetric Weight en el span
@@ -456,7 +460,7 @@
             let insurance = parseFloat($('#insurance').val()) || 0;
             let returnc = parseFloat($('#return_cost').val()) || 0;
             let shipping = parseFloat($('#shipping_cost').val()) || 0;
-            totalCollected = (shipping * (tax / 100)) + (shipping * (insurance / 100)) + returnc + shipping;
+            totalCollected = (sumValue * (tax / 100)) + (sumValue * (insurance / 100)) + returnc + shipping;
             $('#amount_to_be_collected').val(totalCollected.toFixed(2));
 
         }
