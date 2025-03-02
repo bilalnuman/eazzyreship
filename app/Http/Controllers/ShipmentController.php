@@ -171,7 +171,7 @@ class ShipmentController extends Controller
         $packages = Package_shipment::where('shipment_id', $id)->get();
         $company = Branch::where('id', 6)->first();
         $inv = PDF::loadView('pages.shipments.label', compact('shipment', 'packages', 'company', 'client', 'printMode'));
-        $inv->setPaper([0, 0, 576, 432]); 
+        $inv->setPaper([0, 0, 576, 432]);
         return $inv->stream();
     }
 
@@ -296,7 +296,7 @@ class ShipmentController extends Controller
 
             if ($request->has('capturedImages')) {
                 $images = json_decode($request->input('capturedImages'), true);
-            
+
                 if (is_array($images)) {
                     foreach ($images as $key => $imageData) {
                         try {
@@ -304,14 +304,14 @@ class ShipmentController extends Controller
                             if (preg_match('/^data:image\/png;base64,/', $imageData)) {
                                 $image = str_replace('data:image/png;base64,', '', $imageData);
                                 $image = base64_decode($image); // Decodificar la imagen
-            
+
                                 if ($image === false) {
                                     throw new \Exception("Error al decodificar la imagen base64");
                                 }
-            
+
                                 // Crear un nombre de archivo único
                                 $imageName = 'shipment_' . time() . "_{$key}.png";
-            
+
                                 // Guardar la imagen utilizando el almacenamiento de Laravel
                                 $path = 'attachments/' . $imageName;
                                 //\Storage::disk('public')->put($path, $image); // Guardar el archivo decodificado
@@ -322,7 +322,7 @@ class ShipmentController extends Controller
                                 if (!\Storage::disk('s3')->exists($path)) {
                                     throw new \Exception("No se pudo guardar la imagen en el disco 'public'");
                                 }
-            
+
                                 // Guardar la ruta en la tabla de adjuntos
                                 ShipmentAttachment::create([
                                     'shipment_id' => $shipment->id,
@@ -335,8 +335,8 @@ class ShipmentController extends Controller
                     }
                 }
             }
-            
-                    
+
+
 
             Client_shipment_log::create([
                 'from' => 1,
@@ -383,7 +383,7 @@ class ShipmentController extends Controller
         if (!isset($user)) {
             if (isset($token)) {
                 return response()->json(['message' => new \Exception()]);
-            } 
+            }
         }
 
         \Log::info("Receiving data from webhook", ['data' => $request->all()]);
@@ -423,7 +423,7 @@ class ShipmentController extends Controller
             $shipment->order_id = $parts1[1] ?? null;
             $shipment->code = $prefix->value . $request->id;
 
-            $shipment->save(); 
+            $shipment->save();
 
             Client_shipment_log::create([
                 'from' => 1,
@@ -445,7 +445,6 @@ class ShipmentController extends Controller
             DB::commit();
             $message = $shipment->code;
             return $message;
-
         } catch (\Exception $e) {
             DB::rollBack();
             \Log::error('Shipment store error:', ['error' => $e->getMessage()]);
@@ -655,7 +654,7 @@ class ShipmentController extends Controller
 
             if ($request->hasFile('carrier_doc')) {
                 if (isset($shipment->carrier_doc) && !empty($shipment->carrier_doc)) {
-                    Storage::disk('s3')->delete($shipment->carrier_doc);//'public'
+                    Storage::disk('s3')->delete($shipment->carrier_doc); //'public'
                 }
 
                 $path = $request->file('carrier_doc')->store('shippers', 's3');
@@ -676,7 +675,7 @@ class ShipmentController extends Controller
 
             if ($request->has('capturedImages')) {
                 $images = json_decode($request->input('capturedImages'), true);
-            
+
                 if (is_array($images)) {
                     foreach ($images as $key => $imageData) {
                         try {
@@ -684,14 +683,14 @@ class ShipmentController extends Controller
                             if (preg_match('/^data:image\/png;base64,/', $imageData)) {
                                 $image = str_replace('data:image/png;base64,', '', $imageData);
                                 $image = base64_decode($image); // Decodificar la imagen
-            
+
                                 if ($image === false) {
                                     throw new \Exception("Error al decodificar la imagen base64");
                                 }
-            
+
                                 // Crear un nombre de archivo único
                                 $imageName = 'shipment_' . time() . "_{$key}.png";
-            
+
                                 // Guardar la imagen utilizando el almacenamiento de Laravel
                                 $path = 'attachments/' . $imageName;
                                 //\Storage::disk('public')->put($path, $image);
@@ -702,7 +701,7 @@ class ShipmentController extends Controller
                                 if (!\Storage::disk('s3')->exists($path)) {
                                     throw new \Exception("No se pudo guardar la imagen en el disco 'public'");
                                 }
-            
+
                                 // Guardar la ruta en la tabla de adjuntos
                                 ShipmentAttachment::create([
                                     'shipment_id' => $shipment->id,
@@ -904,6 +903,18 @@ class ShipmentController extends Controller
                 ->orWhere('code', $code)
                 ->orWhere('barcode', $code)
                 ->first();
+
+            // Si no encuentra en Shipment, buscar en package_shipment
+            if (!$shipment) {
+                $packageShipment = DB::table('package_shipment')->where('notes', $code)->first();
+
+                if ($packageShipment) {
+                    // Buscar el Shipment relacionado
+                    $shipment = Shipment::with(['fromBranch:id,name', 'toBranch:id,name', 'status:id,name'])
+                        ->where('id', $packageShipment->shipment_id)
+                        ->first();
+                }
+            }
 
             if ($shipment) {
                 // Obtener los registros de seguimiento asociados al envío
