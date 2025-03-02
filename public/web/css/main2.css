@@ -1037,13 +1037,12 @@ section,
         max-width: 280px;
         padding: 15px;
     }
-}
 
-@media (max-width: 768px) {
-  .hide-on-mobile {
+    .hide-on-mobile {
       display: none;
   }
 }
+
   
   
   
