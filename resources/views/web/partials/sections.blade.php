@@ -24,11 +24,12 @@
 
                 <h2>International Package Forwarding Service</h2>
                 <p>Buy Products Worldwide, Ship them to EazzyReship address and We'll Ship Them to You.<br/>
-
+                    <span class="hide-on-mobile">
                     Getting started is easy! Simply sign up, get your US-based address
                     and start shopping. Don't know where to buy, simply click on "Learn more"
                     and we suggest you few popular shopping websites. confused how to start
-                    Just click on "Learn more" and we will assist you.</p>
+                    Just click on "Learn more" and we will assist you.</span></p>
+                    <a href="#steps" class="btn-get-started">Learn More</a>
             </div>
         </div>
         <!-- End Carousel Item -->

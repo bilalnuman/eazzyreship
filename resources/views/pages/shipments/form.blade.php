@@ -73,7 +73,7 @@
             <label for="mission_id">Manifest</label>
             <select name="mission_id" id="mission_id" class="form-control @error('mission_id') is-invalid @enderror"
                 required>
-                <option value="">Select a Mission</option>
+                <option value="">Select a Manifest</option>
                 @foreach ($missions as $id => $code)
                     <option value="{{ $id }}"
                         {{ old('mission_id', $shipment->mission_id ?? '') == $id ? 'selected' : '' }}>
