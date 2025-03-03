@@ -2,7 +2,7 @@
     @section('title', 'Edit Shipment')
 
     @section('content_header')
-        <h1>Edit Shipment</h1>
+        <h1>Edit Shipment | {{ $shipment->code }}</h1>
     @stop
 
     @section('content')
