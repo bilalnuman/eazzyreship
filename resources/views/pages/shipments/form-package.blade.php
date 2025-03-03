@@ -77,7 +77,7 @@
             <label for="packages[{{ $index }}][value]">Value</label>
             <input type="number" name="packages[{{ $index }}][value]"
                 id="packages[{{ $index }}][value]" class="form-control weight-listener" step="0.01" min="0"
-                value="{{ old('packages.{ $index }.value', $package->value ?? '') }}">
+                value="{{ old('packages.{ $index }.value', $package->value ?? '') }}" required>
         </div>
     </div>
 
