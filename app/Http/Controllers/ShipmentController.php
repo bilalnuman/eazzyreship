@@ -216,7 +216,7 @@ class ShipmentController extends Controller
         }
         if ($request->has('attachments_before_shipping')) {
             $request->validate([
-                'attachments_before_shipping.*' => 'nullable|mimes:jpg,jpeg,png,pdf|max:2048',
+                'attachments_before_shipping.*' => 'nullable|mimes:jpg,jpeg,png,pdf|max:4096',
             ]);
         }
 
@@ -319,6 +319,7 @@ class ShipmentController extends Controller
 
                                 // Verificar si el archivo realmente fue guardado
                                 if (!\Storage::disk('s3')->exists($path)) {
+                                    \Log::info("No se pudo guardar la imagen en el disco public");
                                     throw new \Exception("No se pudo guardar la imagen en el disco 'public'");
                                 }
 
@@ -347,7 +348,6 @@ class ShipmentController extends Controller
                     $shipment->update(['carrier_doc' => $path]);
                 }
             }
-
 
 
             Client_shipment_log::create([
@@ -607,7 +607,7 @@ class ShipmentController extends Controller
     {
         if ($request->has('attachments_before_shipping')) {
             $request->validate([
-                'attachments_before_shipping.*' => 'nullable|mimes:jpg,jpeg,png,pdf|max:2048',
+                'attachments_before_shipping.*' => 'nullable|mimes:jpg,jpeg,png,pdf|max:4096',
             ]);
         }
         /*if ($request->has('carrier_doc')) {
