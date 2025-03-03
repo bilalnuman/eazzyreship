@@ -242,29 +242,64 @@
         @enderror
     </div>
 
-    <div class="col-md-3">
+    <!--div class="col-md-3">
         <div class="form-group">
 
             <label for="carrier_doc">Shipper Document</label>
             <input type="file" name="carrier_doc" id="carrier_doc" class="form-control"
                 accept=".jpg,.jpeg,.png,.pdf">
 
-            @if (isset($shipment->carrier_doc))
+            @ if (isset($shipment->carrier_doc))
                 <p>Attached File:</p>
-                @if (Str::endsWith($shipment->carrier_doc, ['.jpg', '.jpeg', '.png', '.pdf']))
+                @ if (Str::endsWith($shipment->carrier_doc, ['.jpg', '.jpeg', '.png', '.pdf']))
 
-                    <img src="{{ Storage::disk('s3')->url($shipment->carrier_doc) }}" alt="Attachment"
+                    <img src="{ { Storage::disk('s3')->url($shipment->carrier_doc) }}" alt="Attachment"
                         style="max-width: 200px;">
 
                     <!--img src="{ { asset('storage/' . $shipment->carrier_doc) }}" alt="Attachment"
-                        style="max-width: 200px;"-->
+                        style="max-width: 200px;">
 
-                @elseif (Str::endsWith($shipment->carrier_doc, ['.pdf']))
-                    <a href="{{ Storage::disk('s3')->url($shipment->carrier_doc) }}" target="_blank">View PDF</a>
-                @endif
-            @endif
+                @ elseif (Str::endsWith($shipment->carrier_doc, ['.pdf']))
+                    < ahref="{ { Storage::disk('s3')->url($shipment->carrier_doc) }}" target="_blank">View PDF</a>
+                @ endif
+            @ endif
         </div>
+    </div-->
+
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="carrier_doc">Shipper Document</label>
+
+            <!-- Botón para activar la cámara -->
+            <br />
+            <button type="button" id="startCamera" class="btn btn-primary mt-2">Take Photo</button>
+
+            <!-- Elementos para la vista de la cámara y la captura -->
+            <div id="cameraContainer2" style="display: none;">
+                <video id="camera" autoplay style="width: 100%; max-width: 200px;"></video>
+                <button type="button" id="capture" class="btn btn-success mt-2">Capture</button>
+            </div>
+
+            <!-- Vista previa de la imagen capturada -->
+            <canvas id="canvas2" style="display: none;"></canvas>
+            <img id="photoPreview" style="display: none; max-width: 200px; margin-top: 10px;">
+
+            <!-- Campo oculto para enviar la imagen capturada -->
+            <input type="hidden" name="captured_image" id="captured_image">
+        </div>
+
+        <!-- Mostrar archivo adjunto si existe -->
+        @if (isset($shipment->carrier_doc))
+            <p>Attached File:</p>
+            @if (Str::endsWith($shipment->carrier_doc, ['.jpg', '.jpeg', '.png']))
+                <img src="{{ Storage::disk('s3')->url($shipment->carrier_doc) }}" alt="Attachment"
+                    style="max-width: 200px;">
+            @elseif (Str::endsWith($shipment->carrier_doc, ['.pdf']))
+                <a href="{{ Storage::disk('s3')->url($shipment->carrier_doc) }}" target="_blank">View PDF</a>
+            @endif
+        @endif
     </div>
+
 
     <div class="col-md-8">
         <div class="form-group">
@@ -302,8 +337,8 @@
     </div>
     <div class="col-md-4">
         <div class="form-group">
-            <label for="capturedImages">webcam</label><br/>
-            
+            <label for="capturedImages">webcam</label><br />
+
             <button type="button" id="openCameraButton">Open camera</button>
             <button type="button" id="closeCameraButton" style="display: none;">Close camera</button>
 
@@ -494,35 +529,35 @@
 
 
             /*$('#to_branch_id').on('change', function() {
-                    let branchId = $(this).val();
-                    let stateSelect = $('#receiver_name');
+                        let branchId = $(this).val();
+                        let stateSelect = $('#receiver_name');
 
-                    // Limpia los receptores actuales
-                    stateSelect.empty();
-                    stateSelect.append('<option value="">Select Receiver</option>');
+                        // Limpia los receptores actuales
+                        stateSelect.empty();
+                        stateSelect.append('<option value="">Select Receiver</option>');
 
-                    if (branchId) {
-                        $.ajax({
-                            url: `/receiver/${branchId}`,
-                            type: 'GET',
-                            success: function(response) {
-                                // Asegúrate de acceder al array "data" del JSON devuelto
-                                $.each(response.data, function(index, receiver) {
-                                    stateSelect.append(
-                                        `<option value="${receiver.id}" 
+                        if (branchId) {
+                            $.ajax({
+                                url: `/receiver/${branchId}`,
+                                type: 'GET',
+                                success: function(response) {
+                                    // Asegúrate de acceder al array "data" del JSON devuelto
+                                    $.each(response.data, function(index, receiver) {
+                                        stateSelect.append(
+                                            `<option value="${receiver.id}" 
                  data-mobile="${receiver.receiver_mobile}" 
                  data-address="${receiver.receiver_address}">
             ${receiver.name}
         </option>`
-                                    );
-                                });
-                            },
-                            error: function() {
-                                alert('Error fetching branch');
-                            }
-                        });
-                    }
-                });*/
+                                        );
+                                    });
+                                },
+                                error: function() {
+                                    alert('Error fetching branch');
+                                }
+                            });
+                        }
+                    });*/
 
             // Evento para capturar datos adicionales al seleccionar un receptor
             $('#to_branch_id').on('change', function() {
@@ -564,64 +599,64 @@
     </script>
     <script>
         /*document.addEventListener('DOMContentLoaded', function() {
-                                //const clientSelect = document.getElementById('client_id');
-                                //const mobileInput = document.getElementById('responsible_mobile');
-                                //const addressInput = document.getElementById('responsible_address');
-                                const branchSelect = document.getElementById('to_branch_id');
+                                    //const clientSelect = document.getElementById('client_id');
+                                    //const mobileInput = document.getElementById('responsible_mobile');
+                                    //const addressInput = document.getElementById('responsible_address');
+                                    const branchSelect = document.getElementById('to_branch_id');
 
-                                //const receiverSelect = document.getElementById('receiver_name');
-                                //const receiverMobile = document.getElementById('receiver_mobile');
-                                //const receiverAddress = document.getElementById('receiver_address');
+                                    //const receiverSelect = document.getElementById('receiver_name');
+                                    //const receiverMobile = document.getElementById('receiver_mobile');
+                                    //const receiverAddress = document.getElementById('receiver_address');
 
 
-                                clientSelect.addEventListener('change', function() {
-                                    const selectedOption = clientSelect.options[clientSelect.selectedIndex];
+                                    clientSelect.addEventListener('change', function() {
+                                        const selectedOption = clientSelect.options[clientSelect.selectedIndex];
 
-                                    /* Si no hay selección válida, limpiar todo
-                                    if (!selectedOption.value) {
-                                        mobileInput.value = '';
-                                        addressInput.value = '';
-                                        branchSelect.value = '';
-                                        receiverSelect.innerHTML = '<option value="">Select Receiver</option>';
-                                        receiverMobile.value = '';
-                                        receiverAddress.value = '';
-                                        return;
-                                    }
+                                        /* Si no hay selección válida, limpiar todo
+                                        if (!selectedOption.value) {
+                                            mobileInput.value = '';
+                                            addressInput.value = '';
+                                            branchSelect.value = '';
+                                            receiverSelect.innerHTML = '<option value="">Select Receiver</option>';
+                                            receiverMobile.value = '';
+                                            receiverAddress.value = '';
+                                            return;
+                                        }
 
-                                    // Obtener datos del cliente desde los atributos del <option>
-                                    const mobilec = selectedOption.getAttribute('data-mobilec') || '';
-                                    const addressc = selectedOption.getAttribute('data-addressc') || '';
-                                    const branchId = selectedOption.getAttribute('data-branchc') || '';
+                                        // Obtener datos del cliente desde los atributos del <option>
+                                        const mobilec = selectedOption.getAttribute('data-mobilec') || '';
+                                        const addressc = selectedOption.getAttribute('data-addressc') || '';
+                                        const branchId = selectedOption.getAttribute('data-branchc') || '';
 
-                                    // Asignar valores a los campos
-                                    mobileInput.value = mobilec;
-                                    addressInput.value = addressc;
+                                        // Asignar valores a los campos
+                                        mobileInput.value = mobilec;
+                                        addressInput.value = addressc;
 
-                                    if (branchId) {
-                                        branchSelect.value = branchId; // Seleccionar la opción que coincide con branchId
-                                        $('#to_branch_id').trigger('change');
-                                    } else {
-                                        branchSelect.value = ''; // Restablecer a la opción predeterminada si no hay branchId
-                                        $('#to_branch_id').trigger('change');
-                                    }
-                                });
-                            });*/
+                                        if (branchId) {
+                                            branchSelect.value = branchId; // Seleccionar la opción que coincide con branchId
+                                            $('#to_branch_id').trigger('change');
+                                        } else {
+                                            branchSelect.value = ''; // Restablecer a la opción predeterminada si no hay branchId
+                                            $('#to_branch_id').trigger('change');
+                                        }
+                                    });
+                                });*/
     </script>
     <script>
         /*document.addEventListener('DOMContentLoaded', function() {
-                                                                            const shippingDateInput = document.getElementById('shipping_date');
+                                                                                const shippingDateInput = document.getElementById('shipping_date');
 
-                                                                            if (!shippingDateInput.value) {
-                                                                                // Obtener la fecha actual en formato YYYY-MM-DD
-                                                                                const today = new Date();
-                                                                                const year = today.getFullYear();
-                                                                                const month = String(today.getMonth() + 1).padStart(2, '0'); // Mes en formato 2 dígitos
-                                                                                const day = String(today.getDate()).padStart(2, '0'); // Día en formato 2 dígitos
+                                                                                if (!shippingDateInput.value) {
+                                                                                    // Obtener la fecha actual en formato YYYY-MM-DD
+                                                                                    const today = new Date();
+                                                                                    const year = today.getFullYear();
+                                                                                    const month = String(today.getMonth() + 1).padStart(2, '0'); // Mes en formato 2 dígitos
+                                                                                    const day = String(today.getDate()).padStart(2, '0'); // Día en formato 2 dígitos
 
-                                                                                // Establecer el valor del campo con la fecha actual
-                                                                                shippingDateInput.value = `${year}-${month}-${day}`;
-                                                                            }
-                                                                        });*/
+                                                                                    // Establecer el valor del campo con la fecha actual
+                                                                                    shippingDateInput.value = `${year}-${month}-${day}`;
+                                                                                }
+                                                                            });*/
     </script>
     <script>
         document.getElementById('addPackageBtn').addEventListener('click', function() {
@@ -727,6 +762,54 @@
 
             document.getElementById('cameraContainer').style.display = 'none';
             document.getElementById('closeCameraButton').style.display = 'none';
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const startCameraBtn = document.getElementById("startCamera");
+            const captureBtn = document.getElementById("capture");
+            const cameraContainer = document.getElementById("cameraContainer2");
+            const video = document.getElementById("camera");
+            const canvas = document.getElementById("canvas2");
+            const photoPreview = document.getElementById("photoPreview");
+            const capturedImageInput = document.getElementById("captured_image");
+
+            let stream = null;
+
+            // Activar la cámara
+            startCameraBtn.addEventListener("click", async () => {
+                try {
+                    stream = await navigator.mediaDevices.getUserMedia({
+                        video: true
+                    });
+                    video.srcObject = stream;
+                    cameraContainer.style.display = "block";
+                } catch (error) {
+                    alert("Error accessing the camera: " + error.message);
+                }
+            });
+
+            // Capturar la imagen
+            captureBtn.addEventListener("click", () => {
+                const context = canvas.getContext("2d");
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                // Convertir la imagen a base64
+                const imageData = canvas.toDataURL("image/png");
+
+                // Mostrar la previsualización
+                photoPreview.src = imageData;
+                photoPreview.style.display = "block";
+
+                // Guardar la imagen en un campo oculto
+                capturedImageInput.value = imageData;
+
+                // Detener la cámara
+                stream.getTracks().forEach(track => track.stop());
+                cameraContainer.style.display = "none";
+            });
         });
     </script>
 @endpush

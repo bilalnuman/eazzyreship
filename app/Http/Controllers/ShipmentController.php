@@ -238,7 +238,6 @@ class ShipmentController extends Controller
             'order_id' => 'nullable|string',
             'amount_to_be_collected' => 'nullable|numeric|min:0.1',
             'carrier' => 'nullable|string',
-            'carrier_doc' => 'nullable||mimes:jpg,jpeg,png,pdf|max:2048',
 
             'packages.*.package_id' => 'required|integer',
             'packages.*.description' => 'nullable|string',
@@ -277,10 +276,10 @@ class ShipmentController extends Controller
                 $shipment->update(['code' => $prefix->value . $shipment->id]);
             }
 
-            if ($request->hasFile('carrier_doc')) {
+            /*if ($request->hasFile('carrier_doc')) {
                 $path = $request->file('carrier_doc')->store('shippers', 's3');
                 $shipment->update(['carrier_doc' => $path]);
-            }
+            }*/
 
             if ($request->hasFile('attachments_before_shipping')) {
                 foreach ($request->file('attachments_before_shipping') as $file) {
@@ -333,6 +332,19 @@ class ShipmentController extends Controller
                             \Log::error("Error al guardar imagen capturada: {$e->getMessage()}");
                         }
                     }
+                }
+            }
+
+            if ($request->has('captured_image') && !empty($request->captured_image)) {
+                if (preg_match('/^data:image\/png;base64,/', $request->captured_image)) {
+                    $image = $request->captured_image;
+                    $image = str_replace('data:image/png;base64,', '', $image);
+                    $image = str_replace(' ', '+', $image);
+                    $imageName = 'shipper_' . uniqid() . '.png';
+                    $path = 'shippers/' . $imageName;
+                    // Guardar la imagen en S3 o en storage local
+                    Storage::disk('s3')->put($path, base64_decode($image));
+                    $shipment->update(['carrier_doc' => $path]);
                 }
             }
 
@@ -598,11 +610,11 @@ class ShipmentController extends Controller
                 'attachments_before_shipping.*' => 'nullable|mimes:jpg,jpeg,png,pdf|max:2048',
             ]);
         }
-        if ($request->has('carrier_doc')) {
+        /*if ($request->has('carrier_doc')) {
             $request->validate([
                 'carrier_doc' => 'nullable|mimes:jpg,jpeg,png,pdf|max:2048',
             ]);
-        }
+        }*/
 
         $validated = $request->validate([
             'code' => 'nullable|string',
@@ -652,13 +664,29 @@ class ShipmentController extends Controller
                 }
             }
 
-            if ($request->hasFile('carrier_doc')) {
+            /*if ($request->hasFile('carrier_doc')) {
                 if (isset($shipment->carrier_doc) && !empty($shipment->carrier_doc)) {
                     Storage::disk('s3')->delete($shipment->carrier_doc); //'public'
                 }
 
                 $path = $request->file('carrier_doc')->store('shippers', 's3');
                 $shipment->update(['carrier_doc' => $path]);
+            }*/
+            if ($request->has('captured_image') && !empty($request->captured_image)) {
+                if (isset($shipment->carrier_doc) && !empty($shipment->captured_image)) {
+                    Storage::disk('s3')->delete($shipment->carrier_doc); //'public'
+                }
+
+                if (preg_match('/^data:image\/png;base64,/', $request->captured_image)) {
+                    $image = $request->captured_image;
+                    $image = str_replace('data:image/png;base64,', '', $image);
+                    $image = str_replace(' ', '+', $image);
+                    $imageName = 'shipper_' . uniqid() . '.png';
+                    $path = 'shippers/' . $imageName;
+                    // Guardar la imagen en S3 o en storage local
+                    Storage::disk('s3')->put($path, base64_decode($image));
+                    $shipment->update(['carrier_doc' => $path]);
+                }
             }
 
             if ($request->hasFile('attachments_before_shipping')) {
