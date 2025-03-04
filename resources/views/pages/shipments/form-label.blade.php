@@ -79,13 +79,22 @@
                                             </tr>
                                             <tr>
                                                 <td style="text-align: center; padding: 10px;">
-                                                    <br />
+                                                    <br/>
                                                     @if ($shipment->code)
                                                         <div style="display: inline-block; text-align: center;">
                                                             {!! $d->getBarcodeHTML($shipment->code, 'C128') !!}
+
+                                                            
                                                         </div>
                                                     @endif
-                                                    <br />
+                                                    <br/>
+                                                    @if ($multiple === 'true' && !empty($package->notes))
+                                                        <br/>
+                                                        <div style="display: inline-block; text-align: center;">
+                                                            {!! $d->getBarcodeHTML($package->notes, 'C128') !!}
+                                                        </div>
+                                                    @endif
+
                                                 </td>
                                             </tr>
                                             <tr>
