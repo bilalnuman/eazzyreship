@@ -92,6 +92,7 @@
                                                         <br/>
                                                         <div style="display: inline-block; text-align: center;">
                                                             {!! $d->getBarcodeHTML($package->notes, 'C128') !!}
+                                                            {{$package->notes}}
                                                         </div>
                                                     @endif
 
