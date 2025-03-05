@@ -107,6 +107,7 @@
         <tbody>
             <?php
             $counter = 1;
+            $declaredvalue = 0;
             foreach ($packages as $package) {
                 echo '<tr>';
                 echo "<th scope='row'>" . $counter . '</th>';
@@ -115,6 +116,7 @@
                 echo "<td align='right'>" . $package->qty . '</td>';
                 echo "<td align='right'>" . $package->weight . ' LB' . '</td>';
                 echo "<td align='right'>" . $package->length . ' IN x ' . $package->width . ' IN x ' . $package->height . ' IN ' . '</td></tr>';
+                $declaredvalue += $package->qty * $package->value;
             }
             ?>
             <tr><span></span></tr>
@@ -132,17 +134,22 @@
             <tr>
                 <td colspan="3"></td>
                 <td align="right">Tax $</td>
-                <?php echo "<td align='right'>" . $shipment->tax . '</td>'; ?>
+                <?php echo "<td align='right'>" . $declaredvalue * ($shipment->tax / 100) . '</td>'; ?>
             </tr>
             <tr>
                 <td colspan="3"></td>
                 <td align="right">Insurance $</td>
-                <?php echo "<td align='right'>" . $shipment->insurance . '</td>'; ?>
+                <?php echo "<td align='right'>" . $declaredvalue * ($shipment->insurance / 100) . '</td>'; ?>
             </tr>
             <tr>
                 <td colspan="3"></td>
                 <td align="right">Delivery $</td>
                 <?php echo "<td align='right'>" . $shipment->return_cost . '</td>'; ?>
+            </tr>
+            <tr>
+                <td colspan="3"></td>
+                <td align="right">Discount $</td>
+                <?php echo "<td align='right'>" . '-' . $shipment->shipping_cost * ($shipment->discount / 100) . '</td>'; ?>
             </tr>
             <tr>
                 <td colspan="3"></td>

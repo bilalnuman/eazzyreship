@@ -219,7 +219,7 @@
 <div class="row">
     <div class="col-md-6">
         <div class="form-group">
-            <label for="order_id">Tracking code</label>
+            <label for="order_id">Order ID</label>
             <input type="text" name="order_id" id="order_id"
                 class="form-control @error('order_id') is-invalid @enderror"
                 value="{{ old('order_id', $shipment->order_id ?? '') }}">
@@ -374,20 +374,28 @@
 <hr><br>
 
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-4">
         <div class="form-group">
             <label for="tax">Tax & Duty (%):</label>
             <input type="number" name="tax" id="tax" class="form-control" step="0.01" min="0"
                 value="{{ old('tax', $shipment->tax ?? '0.00') }}">
         </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-4">
         <div class="form-group">
             <label for="insurance">Insurance (%):</label>
             <input type="number" name="insurance" id="insurance" class="form-control" step="0.01"
                 min="0" value="{{ old('insurance', $shipment->insurance ?? '0.00') }}">
         </div>
     </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            <label for="discount">Discount (%):</label>
+            <input type="number" name="discount" id="discount" class="form-control" step="0.01"
+                min="0" value="{{ old('discount', $shipment->discount ?? '0.00') }}">
+        </div>
+    </div>
+
     <div class="col-md-6">
         <div class="form-group">
             <label for="shipping_cost">Shipping Cost:</label>
@@ -493,9 +501,10 @@
 
             let tax = parseFloat($('#tax').val()) || 0;
             let insurance = parseFloat($('#insurance').val()) || 0;
+            let discount = parseFloat($('#discount').val()) || 0;
             let returnc = parseFloat($('#return_cost').val()) || 0;
             let shipping = parseFloat($('#shipping_cost').val()) || 0;
-            totalCollected = (sumValue * (tax / 100)) + (sumValue * (insurance / 100)) + returnc + shipping;
+            totalCollected = (sumValue * (tax / 100)) + (sumValue * (insurance / 100)) + returnc + shipping - (shipping * (discount / 100));
             $('#amount_to_be_collected').val(totalCollected.toFixed(2));
 
         }

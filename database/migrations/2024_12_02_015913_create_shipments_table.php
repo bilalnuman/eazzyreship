@@ -33,6 +33,7 @@ return new class extends Migration
             $table->string('payment_method_id')->nullable();
             $table->double('tax')->default(0);
             $table->double('insurance')->default(0);
+            $table->double('discount')->default(0);
             $table->dateTime('delivery_time')->nullable();
             $table->double('shipping_cost')->default(0);
             $table->double('return_cost')->default(0);

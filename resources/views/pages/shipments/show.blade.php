@@ -228,7 +228,8 @@
                                         <td>{{ $shipment['paid'] == 1 ? __('Paid') : __('Pending') }}</td>
                                         <td>{{ $shipment['paid'] ? $shipment['collection_time'] : '-' }}</td>
                                         <td class="text-right">
-                                            {{ $shipment['shipping_cost'] + $shipment['tax'] + $shipment['insurance'] + $shipment['return_cost'] }}
+                                            <!--{ { $shipment['shipping_cost'] + $shipment['tax'] + $shipment['insurance'] + $shipment['return_cost'] }}-->
+                                            {{ $shipment['amount_to_be_collected']}}
                                         </td>
                                     </tr>
                                 </tbody>

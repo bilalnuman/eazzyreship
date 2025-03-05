@@ -30,6 +30,7 @@ class Shipment extends Model
         'payment_method_id',
         'tax',
         'insurance',
+        'discount',
         'delivery_time',
         'shipping_cost',
         'return_cost',
