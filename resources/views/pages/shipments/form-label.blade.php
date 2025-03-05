@@ -65,13 +65,13 @@
                                                             style="font-size:16px; font-weight:bold; margin-bottom:10px;padding: 2px;">
                                                             {{ __('Total Weight') }}:
                                                             {{ $package->weight * $package->qty }}
-                                                            {{ __('KG') }}
+                                                            {{ __('Lb') }}
                                                         </span>
                                                     @else
                                                         <span
                                                             style="font-size:16px; font-weight:bold; margin-bottom:10px;padding: 2px;">
                                                             {{ __('Total Weight') }}: {{ $shipment->total_weight }}
-                                                            {{ __('KG') }}
+                                                            {{ __('Lb') }}
                                                         </span>
                                                     @endif
 
@@ -99,13 +99,13 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td colspan="2">
+                                                <td>
                                                     <span style="font-size:16px; font-weight:bold;">
                                                         <br />
                                                         @if ($shipment['order_id'] != null)
                                                             {{ __('order_id') }}: {{ $shipment['order_id'] }} /
                                                         @endif {{ $shipment['code'] }} /
-                                                        {{ $shipment['total_weight'] }} {{ __('KG') }} /
+                                                        {{ $shipment['total_weight'] }} {{ __('Lb') }} /
                                                         @if (strpos($shipment['shipping_date'], '/'))
                                                         @else
                                                             {{ \Carbon\Carbon::parse($shipment['shipping_date'])->format('d-m-Y') }}
