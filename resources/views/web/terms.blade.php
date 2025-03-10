@@ -105,7 +105,7 @@
                                 <li><a href="/calculator">Calculator</a></li>
                                 <li><a href="#pre_notifications">Pre-Notifications</a></li>
                                 <li><a href="#where_to_shop">Where To Shop</a></li>
-                                <li><a href="#contact">Contact Us</a></li>
+                                <li><a href="/#contact">Contact Us</a></li>
                                 <li><a href="#faqs">FAQS</a></li>
                             </ul>
                         </li>
