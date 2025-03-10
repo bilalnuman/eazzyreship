@@ -383,16 +383,50 @@
     </div>
     <div class="col-md-4">
         <div class="form-group">
-            <label for="insurance">Insurance (%):</label>
+            <label for="insurance">Insurance (%)</label>
             <input type="number" name="insurance" id="insurance" class="form-control" step="0.01"
                 min="0" value="{{ old('insurance', $shipment->insurance ?? '0.00') }}">
         </div>
     </div>
     <div class="col-md-4">
         <div class="form-group">
-            <label for="discount">Discount (%):</label>
+            <label for="discount">Discount (%)</label>
             <input type="number" name="discount" id="discount" class="form-control" step="0.01"
                 min="0" value="{{ old('discount', $shipment->discount ?? '0.00') }}">
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="hazmat">Hazmat</label>
+            <input type="number" name="hazmat"
+                id="hazmat" class="form-control" step="0.01" min="0" value="{{ old('hazmat', $shipment->hazmat?? '0') }}">
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="imo">Imo</label>
+            <input type="number" name="imo" id="imo"
+                class="form-control" step="0.01" min="0" value="{{ old('imo', $shipment->imo ?? '0') }}">
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="handling">Handling</label>
+            <input type="number" name="handling"
+                id="handling" class="form-control" step="0.01" min="0"
+                value="{{ old('handling', $shipment->handling ?? '0') }}">
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="sed">Sed</label>
+            <input type="number" name="sed"
+                id="sed" class="form-control" step="0.01" min="0"
+                value="{{ old('sed', $shipment->sed ?? '0') }}">
         </div>
     </div>
 
@@ -502,9 +536,15 @@
             let tax = parseFloat($('#tax').val()) || 0;
             let insurance = parseFloat($('#insurance').val()) || 0;
             let discount = parseFloat($('#discount').val()) || 0;
+            let hazmat = parseFloat($('#hazmat').val()) || 0;
+            let imo = parseFloat($('#imo').val()) || 0;
+            let handling = parseFloat($('#handling').val()) || 0;
+            let sed = parseFloat($('#sed').val()) || 0;
             let returnc = parseFloat($('#return_cost').val()) || 0;
             let shipping = parseFloat($('#shipping_cost').val()) || 0;
-            totalCollected = (sumValue * (tax / 100)) + (sumValue * (insurance / 100)) + returnc + shipping - (shipping * (discount / 100));
+
+            totalCollected = (sumValue * (tax / 100)) 
+            + (sumValue * (insurance / 100)) + returnc + (shipping - (shipping * (discount / 100))) + hazmat + imo + handling + sed;
             $('#amount_to_be_collected').val(totalCollected.toFixed(2));
 
         }

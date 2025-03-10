@@ -29,9 +29,49 @@
     <!-- Main CSS File -->
     <link href="{{ asset('web/css/main2.css') }}" rel="stylesheet">
 
+    <style>
+        .footer-advantages {
+            background-color: #212529;
+            /* Oscuro pero no negro */
+            color: #f8f9fa;
+            /* Blanco suave */
+            font-family: 'Arial', sans-serif;
+        }
+
+        .footer-advantages .advantage-item {
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #2c2f33;
+            /* Contraste sutil */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .footer-advantages .advantage-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .footer-advantages .advantage-image img {
+            max-width: 80px;
+            height: auto;
+        }
+
+        .footer-advantages .advantage-service {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 10px 0;
+            color: #ffc107;
+            /* Color acento */
+        }
+
+        .footer-advantages .advantage-description {
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+    </style>
 </head>
 
-<body class="index-page" style="background-color:#212529">
+<body class="index-page">
 
     <header id="header" class="header d-flex align-items-center fixed-top">
         <div class="container-fluid container-xl position-relative d-flex align-items-center">
@@ -45,7 +85,7 @@
             @if (Route::has('login'))
                 <nav id="navmenu" class="navmenu">
                     <ul>
-                        <li><a href="{{ url('/') }}" class="active">Home</a></li>
+                        <li><a href="{{ url('/') }}">Home</a></li>
                         <li><a href="/tracking">Tracking</a></li>
                         <li><a href="/terms">Terms and conditions</a></li>
                         @auth
@@ -58,7 +98,7 @@
                         <li class="dropdown"><a href="#"><span>More</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
                             <ul>
                                 <li><a href="#buy_for_me">Buy For Me</a></li>
-                                <li><a href="#pricing">Rates</a></li>
+                                <li><a href="/#pricing">Rates</a></li>
                                 <li><a href="#services">Services</a></li>
                                 <li><a href="#how_it_works">How It Works</a></li>
                                 <li><a href="#locations">Locations</a></li>
@@ -90,10 +130,68 @@
     </header>
 
     <main class="main">
-        @include('web.partials.sections');
+        @include('web.partials.calc-form');
 
     </main>
-    @include('web.partials.footer');
+    <footer id="footer" class="footer dark-background footer-advantages py-5 bg-dark text-white">
+        <div class="container footer-top">
+            <div class="container">
+                <div class="row text-center">
+                    <div class="col-md-3 col-sm-6 mb-4">
+                        <div class="advantage-item">
+                            <div class="advantage-image mb-3">
+                                <img src="{{asset('web/img/pricing.svg') }}"
+                                    alt="Pricing" width="80" />
+                            </div>
+                            <h5 class="advantage-service">Competitive Pricing</h5>
+                            <p class="advantage-description">We offer the best competitive prices to save you on
+                                shipping rates.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-4">
+                        <div class="advantage-item">
+                            <div class="advantage-image mb-3">
+                                <img src="{{asset('web/img/delivery.svg')}}"
+                                    alt="Delivery" width="80" />
+                            </div>
+                            <h5 class="advantage-service">International Delivery</h5>
+                            <p class="advantage-description">We offer one of the best shipping solutions for
+                                international shipping.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-4">
+                        <div class="advantage-item">
+                            <div class="advantage-image mb-3">
+                                <img src="{{asset('web/img/payment.svg')}}"
+                                    alt="Payment" width="80" />
+                            </div>
+                            <h5 class="advantage-service">Secure Payment Methods</h5>
+                            <p class="advantage-description">Pay with peace of mind with our Safe Pay systems.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-4">
+                        <div class="advantage-item">
+                            <div class="advantage-image mb-3">
+                                <img src="{{asset('web/img/safety.svg')}}"
+                                    alt="Safety" width="80" />
+                            </div>
+                            <h5 class="advantage-service">Shop Safely</h5>
+                            <p class="advantage-description">Shop with us knowing that we are protecting your account
+                                around the clock.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="container copyright text-center mt-4">
+                <p>© <span>Copyright</span> <strong class="px-1 sitename">EazzyReship</strong> <span>All Rights
+                        Reserved</span></p>
+                <div class="credits">
+                    Designed by <a href="#">Emptech N.V.</a>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     <!-- Scroll Top -->
     <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
@@ -104,7 +202,7 @@
 
     <!-- Vendor JS Files -->
     <script src="{{ asset('web/vendor/bootstrap/js/bootstrap.min.js') }}"></script>
-    <!--script src="{/{ asset('web/vendor/php-email-form/validate.js') }}"></script-->
+    <script src="{{ asset('web/vendor/php-email-form/validate.js') }}"></script>
     <script src="{{ asset('web/vendor/aos/aos.js') }}"></script>
     <script src="{{ asset('web/vendor/glightbox/js/glightbox.min.js') }}"></script>
     <script src="{{ asset('web/vendor/purecounter/purecounter_vanilla.js') }}"></script>
@@ -114,39 +212,6 @@
 
     <!-- Main JS File -->
     <script src="{{ asset('web/js/main2.js') }}"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <script>
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        $(document).ready(function() {
-            $('#contactForm').on('submit', function(e) {
-                e.preventDefault(); // Evita el envío por defecto
-                const formData = $(this).serialize();
-
-                $.ajax({
-                    url: '{{ route('contact.store') }}',
-                    type: 'POST',
-                    data: formData,
-                    success: function(response) {
-                        $('#formMessage').text(response.success).css('color', 'green');
-                        $('#contactForm')[0].reset(); // Limpia el formulario
-                    },
-                    error: function(xhr) {
-                        const errors = xhr.responseJSON.errors;
-                        let errorMessage = 'Error: ';
-                        for (const key in errors) {
-                            errorMessage += errors[key] + ' ';
-                        }
-                        $('#formMessage').text(errorMessage).css('color', 'red');
-                    }
-                });
-            });
-        });
-    </script>
 </body>
 
 </html>

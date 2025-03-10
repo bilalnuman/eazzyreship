@@ -33,8 +33,13 @@ Route::get('/tracking', function () {
     return view('web.tracking');
 });
 
-Route::get('/tracking/view/{id}', [ShipmentController::class, 'track'])->name('pages.shipments.tracking'); 
+Route::get('/calculator', function () {
+    return view('web.calculator');
+});
 
+Route::get('/tracking/view/{id}', [ShipmentController::class, 'track'])->name('pages.shipments.tracking'); 
+//Calculator
+//Route::get('/calculator', [ShipmentController::class, 'index'])->name('web..index');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
 

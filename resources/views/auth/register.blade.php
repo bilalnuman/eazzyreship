@@ -24,7 +24,7 @@
     <link href="{{ asset('web/vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
 
     <!-- Main CSS File -->
-    <link href="{{ asset('web/css/main.css') }}" rel="stylesheet">
+    <link href="{{ asset('web/css/main2.css') }}" rel="stylesheet">
 
     <style>
         .footer-advantages {
@@ -67,8 +67,8 @@
         }
     </style>
 </head>
-<div class="index-page" style="background-color:#212529">
-    <header id="header" class="header d-flex align-items-center white-bg">
+<div class="index-page" style="background-color:rgb(243 244 246 / var(--tw-bg-opacity, 1)); padding-top: 80px">
+    <header id="header" class="header d-flex align-items-center fixed-top">
         <div class="container-fluid container-xl position-relative d-flex align-items-center">
 
             <a href="/" class="logo d-flex align-items-center me-auto">
@@ -76,36 +76,56 @@
                 <!-- <img src="assets/img/logo.png" alt=""> -->
                 <h1 class="sitename">EazzyReship</h1>
             </a>
+
             @if (Route::has('login'))
                 <nav id="navmenu" class="navmenu">
                     <ul>
                         <li><a href="{{ url('/') }}">Home</a></li>
-
                         <li><a href="/tracking">Tracking</a></li>
                         <li><a href="/terms">Terms and conditions</a></li>
                         @auth
                             <li><a href="{{ url('/dashboard') }}">Dashboard</a></li>
                         @else
                             @if (Route::has('register'))
-                                <li><a href="{{ route('register') }}">Register</a></li>
+                                <li><a href="{{ route('register') }}" class="active">Register</a></li>
                             @endif
                         @endauth
+                        <li class="dropdown"><a href="#"><span>More</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+                            <ul>
+                                <li><a href="#buy_for_me">Buy For Me</a></li>
+                                <li><a href="/#pricing">Rates</a></li>
+                                <li><a href="#services">Services</a></li>
+                                <li><a href="#how_it_works">How It Works</a></li>
+                                <li><a href="#locations">Locations</a></li>
+                                <li><a href="/calculator">Calculator</a></li>
+                                <li><a href="#pre_notifications">Pre-Notifications</a></li>
+                                <li><a href="#where_to_shop">Where To Shop</a></li>
+                                <li><a href="#contact">Contact Us</a></li>
+                                <li><a href="#faqs">FAQS</a></li>
+                            </ul>
+                        </li>
+
+                        @auth
+                        <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                            @csrf
+                            <button type="submit" class="btn btn-flat btn-getstarted w-100"> Sign out</button>
+                        </form>
+                        @endauth
+
                     </ul>
                     <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
                 </nav>
                 @auth
-                    <form action="{{ route('logout') }}" method="POST" class="d-inline">
-                        @csrf
-                        <button type="submit" class="btn btn-default btn-flat float-right cta-btn">Sign out</button>
-                    </form>
+
                 @else
-                    <a class="cta-btn" href="{{ route('login') }}">Log in</a>
+                    <a class="btn-getstarted" href="{{ route('login') }}" class="active"> Log in</a>
                 @endauth
             @endif
         </div>
     </header>
 </div>
 <x-guest-layout>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
     <form id="exampleForm" method="POST" action="{{ route('register') }}">
         @csrf
@@ -196,7 +216,6 @@
             </x-primary-button>
         </div>
     </form>
-
 
     <script>
         document.getElementById('branch_id').addEventListener('change', function() {
@@ -292,4 +311,4 @@
 <script src="{{ asset('web/vendor/isotope-layout/isotope.pkgd.min.js') }}"></script>
 
 <!-- Main JS File -->
-<script src="{{ asset('web/js/main.js') }}"></script>
+<script src="{{ asset('web/js/main2.js') }}"></script>

@@ -34,6 +34,10 @@ return new class extends Migration
             $table->double('tax')->default(0);
             $table->double('insurance')->default(0);
             $table->double('discount')->default(0);
+            $table->double('hazmat')->default(0);
+            $table->double('imo')->default(0);
+            $table->double('handling')->default(0);
+            $table->double('sed')->default(0);
             $table->dateTime('delivery_time')->nullable();
             $table->double('shipping_cost')->default(0);
             $table->double('return_cost')->default(0);
