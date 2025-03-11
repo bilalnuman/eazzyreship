@@ -146,6 +146,34 @@
                 <td align="right">Delivery $</td>
                 <?php echo "<td align='right'>" . $shipment->return_cost . '</td>'; ?>
             </tr>
+            @if ($shipment->hazmat > 0)
+                <tr>
+                    <td colspan="3"></td>
+                    <td align="right">Hazmat Cargo $</td>
+                    <?php echo "<td align='right'>" . $shipment->hazmat . '</td>'; ?>
+                </tr>
+            @endif
+            @if ($shipment->imo > 0)
+                <tr>
+                    <td colspan="3"></td>
+                    <td align="right">IMO $</td>
+                    <?php echo "<td align='right'>" . $shipment->imo . '</td>'; ?>
+                </tr>
+            @endif
+            @if ($shipment->handling > 0)
+                <tr>
+                    <td colspan="3"></td>
+                    <td align="right">Special handling $</td>
+                    <?php echo "<td align='right'>" . $shipment->handling . '</td>'; ?>
+                </tr>
+            @endif
+            @if ($shipment->sed > 0)
+                <tr>
+                    <td colspan="3"></td>
+                    <td align="right">SED $</td>
+                    <?php echo "<td align='right'>" . $shipment->sed . '</td>'; ?>
+                </tr>
+            @endif
             <tr>
                 <td colspan="3"></td>
                 <td align="right">Discount $</td>

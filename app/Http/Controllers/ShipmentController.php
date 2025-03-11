@@ -607,8 +607,10 @@ class ShipmentController extends Controller
         $clients = Client::with('addresses:client_id,address')
             ->select('name', 'id', 'mobile', 'branch_id')->get();
 
-        $excludedBranchIds1 = [1, 2, 3, 4, 5]; // IDs a excluir
-        $branches0 = Branch::whereNotIn('id', $excludedBranchIds1)->pluck('name', 'id');
+        //$excludedBranchIds1 = [1, 2, 3, 4, 5]; // IDs a excluir
+        //$branches0 = Branch::whereNotIn('id', $excludedBranchIds1)->pluck('name', 'id');
+        $branches0 = Branch::where('id',6)->pluck('name', 'id');
+
         $excludedBranchIds2 = [6]; // IDs a excluir
         //$branches = Branch::whereNotIn('id', $excludedBranchIds2)->pluck('name', 'id');
         $branches = Branch::whereNotIn('id', $excludedBranchIds2)->get();
