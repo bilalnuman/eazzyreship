@@ -216,7 +216,6 @@
             </x-primary-button>
         </div>
     </form>
-
     <script>
         document.getElementById('branch_id').addEventListener('change', function() {
             var selectedOption = this.options[this.selectedIndex];
