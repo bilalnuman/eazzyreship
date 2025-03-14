@@ -22,7 +22,7 @@
             text-align: left;
             padding: 20px;">
 
-                <h2>International Package Forwarding Service</h2>
+                <h2>IInternational Package Forwarding Service</h2>
                 <p>Buy Products Worldwide, Ship them to EazzyReship address and We'll Ship Them to You.<br/>
                     <span class="hide-on-mobile">
                     Getting started is easy! Simply sign up, get your US-based address
