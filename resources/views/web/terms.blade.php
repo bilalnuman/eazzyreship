@@ -99,7 +99,7 @@
                             <ul>
                                 <li><a href="#buy_for_me">Buy For Me</a></li>
                                 <li><a href="/#pricing">Rates</a></li>
-                                <li><a href="#services">Services</a></li>
+                                <li><a href="/services">Services</a></li>
                                 <li><a href="#how_it_works">How It Works</a></li>
                                 <li><a href="#locations">Locations</a></li>
                                 <li><a href="/calculator">Calculator</a></li>
