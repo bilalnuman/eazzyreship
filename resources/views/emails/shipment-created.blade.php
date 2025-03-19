@@ -25,7 +25,7 @@
     <h1>Shipment Notification</h1>
     <p>One or more package(s) with tracking</p>
     <p>Warehouse ID: {{ $shipment->code ?? ''}} <br/></p>
-    <p>Tacking: {{ $shipment->barcode ?? ''}} <br/></p>
+    <p>Tracking: {{ $shipment->barcode ?? ''}} <br/></p>
     <p>Have been received for you at Miami warehouse. We will email you when you package is shipped to destination city.<br/></p>
     <p>Thank you,<br/>
     Eazzyreship Team.</P>
