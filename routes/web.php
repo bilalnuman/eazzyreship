@@ -48,6 +48,10 @@ Route::post('/contact', [ContactController::class, 'store'])->name('contact.stor
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');*/
 
+Route::get('/services', function () {
+    return view('web.services');
+});
+
 Route::middleware('auth', 'verified')->group(function () {
 
     //dashboard
