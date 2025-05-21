@@ -43,7 +43,7 @@ class MissionController extends Controller
 
         // Obtén la misión específica
         $mission = Mission::findOrFail($id);
-        $shipmentsData = Shipment::where('mission_id', $id)
+        /*$shipmentsData = Shipment::where('mission_id', $id)
             ->get()
             ->map(function ($shipment) {
                 return [
@@ -55,7 +55,29 @@ class MissionController extends Controller
                     'receiver' => $shipment->toBranch->address?? '',
                     'actions' => ''
                 ];
-            });
+            });*/
+
+
+        $shipmentsData = Shipment::where('mission_id', $id)
+        ->with([
+            'client:id,name',
+            'status:id,name',
+            'toBranch:id,name,address'
+        ])
+        ->select('id', 'code', 'client_id', 'status_id', 'to_branch_id')
+        ->get()
+        ->map(function ($shipment) {
+            return [
+                'id' => $shipment->id,
+                'code' => $shipment->code,
+                'client' => $shipment->client->name ?? 'N/A',
+                'status' => $shipment->status->name ?? 'N/A',
+                'to_branch' => $shipment->toBranch->name ?? 'N/A',
+                'receiver' => $shipment->toBranch->address ?? 'N/A',
+                'actions' => ''
+            ];
+        });
+
 
         /*$shipmentsData = $mission->shipment->map(function ($shipment) {
             return [
