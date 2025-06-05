@@ -19,6 +19,8 @@
         href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
         rel="stylesheet">
 
+        
+
     <!-- Vendor CSS Files -->
     <link href="{{ asset('web/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('web/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
@@ -29,9 +31,75 @@
     <!-- Main CSS File -->
     <link href="{{ asset('web/css/main2.css') }}" rel="stylesheet">
 
+    <style>
+            .hero-header {
+            background: linear-gradient(rgba(77, 49, 231, 0.1), rgba(235, 203, 25, 0.308)), url(../img/hero-img.jpg);
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            transition: background 0.5s ease-in-out;
+        }
+
+        .carousel-item {
+            position: relative;
+        }
+        .carousel-item  img {
+            width: 100% !important; 
+            height: 100% !important; 
+        }
+
+        .carousel-control-next,
+        .carousel-control-prev {
+            width: 48px;
+            height: 48px;
+            border-radius: 48px;
+            border: 1px solid var(--bs-white);
+            background: #001F54 !important;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+    
+
+        .carousel-control-next {
+            margin-right: 20px;
+        }
+
+        .carousel-control-prev {
+            margin-left: 20px;
+        }
+
+        .content-container {
+            transition: opacity 0.5s ease-in-out;
+        }
+        .content-container .btn-primary {
+            background-color: #001F54;
+            border: 2px solid #FFA500;
+        }
+        .content-container h4 {
+            color: #FFA500;
+            font-size: 1.5rem !important;
+        }
+
+        @media (min-width: 992px) {
+            .hero-header {
+                /* margin-top: 152px !important; */
+            }
+        }
+
+        @media (max-width: 720px) {
+            .hero-header {
+                /* margin-top: 97px !important; */
+            }
+            .carousel {
+                margin-top: 1rem;
+            }
+        }
+    </style>
+
 </head>
 
-<body class="index-page" style="background-color:#212529">
+<body class="index-page">
 
     <header id="header" class="header d-flex align-items-center fixed-top">
         <div class="container-fluid container-xl position-relative d-flex align-items-center">
@@ -57,14 +125,14 @@
                         @endauth
                         <li class="dropdown"><a href="#"><span>More</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
                             <ul>
-                                <li><a href="#buy_for_me">Buy For Me</a></li>
+                                <li><a href="/buy-for-me">Buy For Me</a></li>
                                 <li><a href="#pricing">Rates</a></li>
                                 <li><a href="/services">Services</a></li>
                                 <li><a href="#how_it_works">How It Works</a></li>
                                 <li><a href="#locations">Locations</a></li>
                                 <li><a href="/calculator">Calculator</a></li>
-                                <li><a href="#pre_notifications">Pre-Notifications</a></li>
-                                <li><a href="#where_to_shop">Where To Shop</a></li>
+                                <li><a href="/notification">Pre-Notifications</a></li>
+                                <li><a href="/where-to-buy">Where To Shop</a></li>
                                 <li><a href="#contact">Contact Us</a></li>
                                 <li><a href="#faqs">FAQS</a></li>
                             </ul>
@@ -90,10 +158,10 @@
     </header>
 
     <main class="main">
-        @include('web.partials.sections');
+        @include('web.partials.sections')
 
     </main>
-    @include('web.partials.footer');
+    @include('web.partials.footer')
 
     <!-- Scroll Top -->
     <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
@@ -145,6 +213,21 @@
                     }
                 });
             });
+        });
+
+
+          // Change content dynamically when the slider changes
+        $('#carouselId').on('slide.bs.carousel', function (event) {
+            var nextSlide = $(event.relatedTarget);
+            var newTitle = nextSlide.data('title');
+            var newDesc = nextSlide.data('desc');
+
+            $('#hero-content').css('opacity', '0'); // Fade out effect
+            setTimeout(function () {
+                $('#hero-content h4').text(newTitle);
+                $('#hero-content p').text(newDesc);
+                $('#hero-content').css('opacity', '1'); // Fade in effect
+            }, 500);
         });
     </script>
 </body>

@@ -98,14 +98,14 @@
                         @endauth
                         <li class="dropdown"><a href="#"><span>More</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
                             <ul>
-                                <li><a href="#buy_for_me">Buy For Me</a></li>
+                                <li><a href="/buy-for-me">Buy For Me</a></li>
                                 <li><a href="/#pricing">Rates</a></li>
-                                <li><a href="/services" class="active">Services</a></li>
+                                <li><a href="services" class="active">Services</a></li>
                                 <li><a href="#how_it_works">How It Works</a></li>
                                 <li><a href="#locations">Locations</a></li>
                                 <li><a href="/calculator">Calculator</a></li>
-                                <li><a href="#pre_notifications">Pre-Notifications</a></li>
-                                <li><a href="#where_to_shop">Where To Shop</a></li>
+                                <li><a href="/notification">Pre-Notifications</a></li>
+                                <li><a href="where-to-buy">Where To Shop</a></li>
                                 <li><a href="/#contact">Contact Us</a></li>
                                 <li><a href="#faqs">FAQS</a></li>
                             </ul>
@@ -133,65 +133,99 @@
     <main class="main">
         @include('web.partials.services-section');
     </main>
-    <footer id="footer" class="footer dark-background footer-advantages py-5 bg-dark text-white">
+    <footer id="footer" class="footer py-5 text-white position-relative overflow-hidden">
         <div class="container footer-top">
-            <div class="container">
-                <div class="row text-center">
-                    <div class="col-md-3 col-sm-6 mb-4">
-                        <div class="advantage-item">
-                            <div class="advantage-image mb-3">
-                                <img src="{{asset('web/img/pricing.svg') }}"
-                                    alt="Pricing" width="80" />
-                            </div>
-                            <h5 class="advantage-service">Competitive Pricing</h5>
-                            <p class="advantage-description">We offer the best competitive prices to save you on
-                                shipping rates.</p>
+            <div class="row text-center justify-content-center">
+                <div class="col-md-3 col-sm-6 mb-4">
+                    <div class="advantage-item p-4 shadow-3d rounded-3d text-center">
+                        <div class="advantage-image mb-3">
+                            <img src="{{asset('web/img/pricing.svg') }}" alt="Pricing" width="80" />
                         </div>
-                    </div>
-                    <div class="col-md-3 col-sm-6 mb-4">
-                        <div class="advantage-item">
-                            <div class="advantage-image mb-3">
-                                <img src="{{asset('web/img/delivery.svg')}}"
-                                    alt="Delivery" width="80" />
-                            </div>
-                            <h5 class="advantage-service">International Delivery</h5>
-                            <p class="advantage-description">We offer one of the best shipping solutions for
-                                international shipping.</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-6 mb-4">
-                        <div class="advantage-item">
-                            <div class="advantage-image mb-3">
-                                <img src="{{asset('web/img/payment.svg')}}"
-                                    alt="Payment" width="80" />
-                            </div>
-                            <h5 class="advantage-service">Secure Payment Methods</h5>
-                            <p class="advantage-description">Pay with peace of mind with our Safe Pay systems.</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-6 mb-4">
-                        <div class="advantage-item">
-                            <div class="advantage-image mb-3">
-                                <img src="{{asset('web/img/safety.svg')}}"
-                                    alt="Safety" width="80" />
-                            </div>
-                            <h5 class="advantage-service">Shop Safely</h5>
-                            <p class="advantage-description">Shop with us knowing that we are protecting your account
-                                around the clock.</p>
-                        </div>
+                        <h5 class="advantage-service">Competitive Pricing</h5>
+                        <p class="advantage-description">We offer the best competitive prices to save you on shipping rates.</p>
                     </div>
                 </div>
-            </div>
-    
-            <div class="container copyright text-center mt-4">
-                <p>© <span>Copyright</span> <strong class="px-1 sitename">EazzyReship</strong> <span>All Rights
-                        Reserved</span></p>
-                <div class="credits">
-                    Designed by <a href="#">Emptech N.V.</a>
+                <div class="col-md-3 col-sm-6 mb-4">
+                    <div class="advantage-item p-4 shadow-3d rounded-3d text-center">
+                        <div class="advantage-image mb-3">
+                            <img src="{{asset('web/img/delivery.svg')}}" alt="Delivery" width="80" />
+                        </div>
+                        <h5 class="advantage-service">International Delivery</h5>
+                        <p class="advantage-description">We offer one of the best shipping solutions for international shipping.</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-4">
+                    <div class="advantage-item p-4 shadow-3d rounded-3d text-center">
+                        <div class="advantage-image mb-3">
+                            <img src="{{asset('web/img/payment.svg')}}" alt="Payment" width="80" />
+                        </div>
+                        <h5 class="advantage-service">Secure Payment Methods</h5>
+                        <p class="advantage-description">Pay with peace of mind with our Safe Pay systems.</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-4">
+                    <div class="advantage-item p-4 shadow-3d rounded-3d text-center">
+                        <div class="advantage-image mb-3">
+                            <img src="{{asset('web/img/safety.svg')}}" alt="Safety" width="80" />
+                        </div>
+                        <h5 class="advantage-service">Shop Safely</h5>
+                        <p class="advantage-description">Shop with us knowing that we are protecting your account around the clock.</p>
+                    </div>
                 </div>
             </div>
         </div>
+        
+        <div class="container text-center mt-4">
+            <p class="mb-2">© <span>Copyright</span> <strong class="px-1 sitename">EazzyReship</strong> <span>All Rights Reserved</span></p>
+            <div class="credits">
+                Designed by <a href="#" class="text-decoration-none">Emptech N.V.</a>
+            </div>
+        </div>
     </footer>
+    
+    <style>
+        .footer {
+            background: linear-gradient(135deg, #121212, #1f1f1f);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+            padding-bottom: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+        .advantage-item {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 25px;
+            transition: all 0.4s ease-in-out;
+            position: relative;
+            overflow: hidden;
+            transform: perspective(1000px) rotateX(0deg) rotateY(0deg);
+        }
+        .advantage-image img {
+            border: 2px solid #ffa600c2;
+            border-radius: 50%;
+        }
+        .advantage-service {
+            color: #FFA500;
+        }
+        .advantage-item:hover {
+            transform: perspective(1000px) rotateX(5deg) rotateY(-5deg) scale(1.05);
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 15px 30px rgba(255, 255, 255, 0.3);
+        }
+        .shadow-3d {
+            box-shadow: inset 5px 5px 15px rgba(0, 0, 0, 0.4), inset -5px -5px 15px rgba(255, 255, 255, 0.1), 5px 5px 20px rgba(0, 0, 0, 0.3);
+        }
+        .rounded-3d {
+            border-radius: 30px;
+        }
+        .credits a {
+            color: #EC57D6;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+        .credits a:hover {
+            color: #E6A81B;
+        }
+    </style>
 
     <!-- Scroll Top -->
     <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i

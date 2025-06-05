@@ -52,6 +52,20 @@ Route::get('/services', function () {
     return view('web.services');
 });
 
+Route::get('/where-to-buy', function () {
+    return view('web.where-to-buy');
+});
+
+Route::get('/notification', function () {
+    return view('web.notification');
+});
+
+Route::get('/buy-for-me', function () {
+    return view('web.buy-for-me');
+});
+
+
+
 Route::middleware('auth', 'verified')->group(function () {
 
     //dashboard
