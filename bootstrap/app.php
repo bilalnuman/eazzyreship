@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware
         ->trustProxies('*') // Confía en todos los proxies
+        ->trustHosts(['eazzytest.herokuapp.com'])
         ->trustHosts(['eazzyreship.com'])
         ->trustHosts(['www.eazzyreship.com']); // Define los hosts confiables
     })
