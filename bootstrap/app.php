@@ -11,11 +11,14 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
-    //->withMiddleware(function (Middleware $middleware) {
-      //  $middleware
-       // ->trustProxies('*') // Confía en todos los proxies
-       // ->trustHosts(['.*']);
-    //})
+    ->withMiddleware(function (Middleware $middleware) {
+        $middleware
+        ->trustProxies('*') // Confía en todos los proxies
+        ->trustHosts(['eazzytest-56eae52159df.herokuapp.com'])
+        ->trustHosts(['www.eazzytest-56eae52159df.herokuapp.com']); 
+        ->trustHosts(['eazzyreship.com'])
+        ->trustHosts(['www.eazzyreship.com']); // Define los hosts confiables
+    })
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
