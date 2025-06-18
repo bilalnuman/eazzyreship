@@ -1,105 +1,82 @@
-<!-- Hero Section -->
-<section id="hero" class="hero section dark-background">
 
-    <div id="hero-carousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
-
-        <div class="carousel-item active">
-            <img src="{{ asset('web/img/bg-hero7.jpg') }}" alt="">
-            <div class="carousel-container">
-                <h2>Buy online from any US store<br>We'll EazzyReship it to you</h2>
-                <a href="#steps" class="btn-get-started">Get Started</a>
-            </div>
-        </div><!-- End Carousel Item -->
-
-        <div class="carousel-item">
-            <img src="{{ asset('web/img/bg-hero8.jpg') }}" alt="">
-            <div class="carousel-container" style="
-            position: absolute;
-            left: 50px;
-            top: 50%;
-            transform: translateY(-50%);
-            max-width: 900px;
-            text-align: left;
-            padding: 20px;">
-
-                <h2>International Package Forwarding Service</h2>
-                <p>Buy Products Worldwide, Ship them to EazzyReship address and We'll Ship Them to You.<br/>
-                    <span class="hide-on-mobile">
-                    Getting started is easy! Simply sign up, get your US-based address
-                    and start shopping. Don't know where to buy, simply click on "Learn more"
-                    and we suggest you few popular shopping websites. confused how to start
-                    Just click on "Learn more" and we will assist you.</span></p>
-                    <a href="#steps" class="btn-get-started">Learn More</a>
-            </div>
-        </div>
-        <!-- End Carousel Item -->
-
-        <div class="carousel-item">
-            <img src="{{ asset('web/img/bg-hero9.jpg') }}" alt="">
-            <div class="carousel-container">
-                <h2> We offer fast, reliable and efficient package, mail and freight forwarding to over 220 countries.</h2>
-            </div>
-        </div><!-- End Carousel Item -->
-
-        <a class="carousel-control-prev" href="#hero-carousel" role="button" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon bi bi-chevron-left" aria-hidden="true"></span>
-        </a>
-
-        <a class="carousel-control-next" href="#hero-carousel" role="button" data-bs-slide="next">
-            <span class="carousel-control-next-icon bi bi-chevron-right" aria-hidden="true"></span>
-        </a>
-
-        <ol class="carousel-indicators"></ol>
-
-    </div>
-    <!-- Sección Informativa en 3 Columnas Centradas con Estilos Mejorados -->
-    <div class="text-white py-5 text-center custom-info-section">
-        <div class="container">
-            <div class="row align-items-center justify-content-center">
-                <div class="col-md-4 mb-2 d-none d-md-block">
-                    <h3 class="fw-bold">Start Saving Today!</h3>
+<!-- Hero Start -->
+<div class="container-fluid py-5 hero-header position-relative overflow-hidden" style="background: linear-gradient(135deg, #011864, #626e04); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);">
+    <div class="container-fluid py-5 position-relative px-5" style="z-index: 2;">
+        <div class="row align-items-center pt-5">
+            <div class="col-md-12 col-lg-5 text-white">
+                <div id="hero-content" class="content-container">
+                    <h4 class="mb-4 fw-bold" style="font-size: 2rem; text-shadow: 2px 2px 5px rgba(0,0,0,0.2);">Buy online from any US store We'll <span style="color: #ffcc00;">EazzyReship</span> it to you</h4>
+                    <p class="mb-4 fs-6" style="text-shadow: 1px 1px 5px rgba(0,0,0,0.2);">Buy Products Worldwide, Ship them to <strong>EazzyReship</strong> address <br> and We'll Ship Them to You.</p>
+                    <a href="#" class="btn btn-lg btn-warning px-4 py-2 rounded-pill text-dark fw-bold shadow-lg" style="border: 2px solid white;">Get Started</a>
                 </div>
-                <div class="col-md-4 d-none d-md-block">
-                    <h3>Get your free U.S. address!</h3>
-                </div>
-                <div class="col-md-4">
-                    <a href="{{ route('register') }}" class="btn btn-info btn-lg custom-btn">Sign Up Free</a>
+            </div>
+            <div class="col-md-12 col-lg-7">
+                <div id="carouselId" class="carousel slide position-relative rounded shadow-lg" data-bs-ride="carousel" style="border-radius: 20px; overflow: hidden;">
+                    <div class="carousel-inner" role="listbox">
+                        <div class="carousel-item active rounded" data-title="International Package Forwarding Service" data-desc="Getting started is easy! Simply sign up, get your US-based address and start shopping. Don't know where to buy">
+                            <img src="{{ asset('web/img/bg-hero10.jpg') }}" class="img-fluid w-100 h-100 bg-secondary rounded" alt="First slide" style="object-fit: cover;">
+                        </div>
+                        <div class="carousel-item rounded" data-title="We offer fast, reliable and efficient package." data-desc="Buy Products Worldwide, Ship them to EazzyReship address and We'll Ship Them to You.">
+                            <img src="{{ asset('web/img/bg-hero11.jpg') }}" class="img-fluid w-100 h-100 rounded" alt="Second slide" style="object-fit: cover;">
+                        </div>
+                        {{-- <div class="carousel-item rounded" data-title="Shop in any Online Store and ship it to your new EazzyReship U.S. Address" data-desc="Use your example U.S. address as your delivery address at checkout.">
+                            <img src="{{ asset('web/img/bg-hero8.jpg') }}" class="img-fluid w-100 h-100 rounded" alt="Third slide" style="object-fit: cover;">
+                        </div> --}}
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselId" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon p-3 rounded-circle" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselId" data-bs-slide="next">
+                        <span class="carousel-control-next-icon p-3 rounded-circle" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
                 </div>
             </div>
         </div>
     </div>
-</section><!-- /Hero Section -->
+    <div class="position-absolute top-0 start-0 w-100 h-100" style="background: url('{{ asset('web/img/hero-bg-pattern.png') }}') no-repeat center center / cover; opacity: 0.2;"></div>
+</div>
+<!-- Hero End -->
+
+
 <!-- Steps Section -->
-<section id="steps" class="team section">
+<section id="steps" class="team section py-5 bg-white">
 
     <!-- Section Title -->
     <div class="container section-title" data-aos="fade-up">
-        <h2>Steps</h2>
-        <div><span>SIMPLE STEPS</span></div>
+        <h2 class="fw-bold display-5 text-gradient">Steps</h2>
+        <div class="subtitle"><span>SIMPLE STEPS</span></div>
     </div><!-- End Section Title -->
 
-<!-- Instrucciones Paso a Paso -->
-<div class="container py-5" data-aos="fade-up" data-aos-delay="100">
-    <div class="row text-center">
-        <div class="col-md-4">
-            <img src="{{ asset('web/img/team/step1.svg') }}" alt="Step 1" class="mb-3">
-            <h5>1. Sign up and get your EazzyReship U.S. Address</h5>
-            <p><br/>This will be your own personal address in the USA. No signup or setup fees.</p>
-        </div>
-        <div class="col-md-4">
-            <img src="{{ asset('web/img/team/step2.svg') }}" alt="Step 2" class="mb-3">
-            <h5>2. Shop in any Online Store and ship it to your new EazzyReship U.S. Address</h5>
-            <p><br/>Use your example U.S. address as your delivery address at checkout.</p>
-        </div>
-        <div class="col-md-4">
-            <img src="{{ asset('web/img/team/step3.svg') }}" alt="Step 3" class="mb-3">
-            <h5>3. Combine your packages and save money</h5>
-            <p><br/>Shop on multiple websites, combine the packages into one box and save up to 80% on shipping.</p>
+    <!-- Step-by-Step Instructions -->
+    <div class="container py-5" data-aos="fade-up" data-aos-delay="100">
+        <div class="row text-center g-4">
+            <div class="col-md-4">
+                <div class="step-card p-4 shadow-lg rounded-3d">
+                    <img src="{{ asset('web/img/team/step1.svg') }}" alt="Step 1" class="mb-3 step-icon">
+                    <h5 class="fw-bold">1. Sign up and get your EazzyReship U.S. Address</h5>
+                    <p>This will be your own personal address in the USA. No signup or setup fees.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="step-card p-4 shadow-lg rounded-3d">
+                    <img src="{{ asset('web/img/team/step2.svg') }}" alt="Step 2" class="mb-3 step-icon">
+                    <h5 class="fw-bold">2. Shop in any Online Store and ship it to your new EazzyReship U.S. Address</h5>
+                    <p>Use your EazzyReship U.S. address as your delivery address at checkout.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="step-card p-4 shadow-lg rounded-3d">
+                    <img src="{{ asset('web/img/team/step3.svg') }}" alt="Step 3" class="mb-3 step-icon">
+                    <h5 class="fw-bold">3. Combine your packages and save money</h5>
+                    <p>Shop on multiple websites, combine the packages into one box and save up to 80% on shipping.</p>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-
-</section><!-- /Team Section -->
+</section>
+<!-- /Team Section -->
 
     <!-- Pricing Section -->
     <section id="pricing" class="pricing section">
@@ -300,3 +277,15 @@
 
     </div>
 </section><!-- /Contact Section -->
+
+
+<style>
+    .step-card {
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        border-top: 2px solid #ffcc00;
+    }
+    .step-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.15);
+    }
+</style>
