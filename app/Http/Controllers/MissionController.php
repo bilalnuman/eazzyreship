@@ -43,20 +43,6 @@ class MissionController extends Controller
 
         // Obtén la misión específica
         $mission = Mission::findOrFail($id);
-        /*$shipmentsData = Shipment::where('mission_id', $id)
-            ->get()
-            ->map(function ($shipment) {
-                return [
-                    'id' => $shipment->id,
-                    'code' => $shipment->code,
-                    'client' => $shipment->client->name,
-                    'status' => $shipment->status->name,
-                    'to_branch' => $shipment->toBranch->name,
-                    'receiver' => $shipment->toBranch->address?? '',
-                    'actions' => ''
-                ];
-            });*/
-
 
         $shipmentsData = Shipment::where('mission_id', $id)
         ->with([
@@ -78,20 +64,12 @@ class MissionController extends Controller
             ];
         });
 
+        // Sumar total_weight y total_volumetric de los envíos de la misión
+        $totals = Shipment::where('mission_id', $id)
+        ->selectRaw('SUM(total_weight) as total_weight_sum, SUM(total_volumetric) as total_volumetric_sum')
+        ->first();
 
-        /*$shipmentsData = $mission->shipment->map(function ($shipment) {
-            return [
-                'id' => $shipment->id,
-                'code' => $shipment->code,
-                'client' => $shipment->client->name,
-                'status' => $shipment->status->name,
-                'to_branch' => $shipment->toBranch->name,
-                'receiver' => $shipment->receiver->name,
-                'actions' => ''
-            ];
-        });*/
-
-        // Obtén la lista de envíos que no están asignados a esta misión
+        // Obtener la lista de envíos que no están asignados a esta misión
         $availableShipments = Shipment::whereNull('mission_id')
             ->where('to_branch_id', $mission->to_branch_id)
             ->select('id', 'code', 'client_id', 'type', 'from_branch_id', 'to_branch_id', 'receiver_name', 'total_weight')
@@ -115,7 +93,7 @@ class MissionController extends Controller
                 ];
             });
 
-        return view('pages.missions.manifest', compact('mission', 'availableShipments', 'shipmentsData'));
+        return view('pages.missions.manifest', compact('mission', 'availableShipments', 'shipmentsData','totals'));
     }
 
     public function addShipments(Request $request, $id)
@@ -157,9 +135,6 @@ class MissionController extends Controller
         $mission = Mission::with(['shipment.client', 'shipment.receiver', 'shipment.fromBranch', 'shipment.toBranch'])
             ->where('id', $id)
             ->firstOrFail();
-
-        // Obtén la información adicional si es necesario
-        //$company = Branch::where('id', 1)->first();
 
         // Genera el PDF utilizando una vista
         $manifest = PDF::loadView('pages.missions.manifest-report', compact('mission'));
@@ -273,7 +248,7 @@ class MissionController extends Controller
         $type = ($var === 'active') ? '1' : (($var === 'close') ? '0' : null);
 
         if ($type != null) {
-            $missions = Mission::with('tobranch:id,name', 'frombranch:id,name') // Asegúrate de tener una relación definida entre Mission y Branch
+            $missions = Mission::with('tobranch:id,name', 'frombranch:id,name')
                 ->select(['id', 'code', 'status_id', 'type', 'due_date', 'from_branch_id', 'to_branch_id'])
                 ->where('status_id', $type)
                 ->orderBy('id', 'desc')
@@ -290,7 +265,7 @@ class MissionController extends Controller
                     ];
                 });
         } else {
-            $missions = Mission::with('tobranch:id,name', 'frombranch:id,name') // Asegúrate de tener una relación definida entre Mission y Branch
+            $missions = Mission::with('tobranch:id,name', 'frombranch:id,name')
                 ->select(['id', 'code', 'status_id', 'type', 'due_date', 'from_branch_id', 'to_branch_id'])
                 ->orderBy('id', 'desc')
                 ->get()
@@ -306,18 +281,8 @@ class MissionController extends Controller
                     ];
                 });
         }
-        //return response()->json(['data' => $missions]);
         return $missions;
     }
-
-    /*public function exportManifest(Request $request)
-    {
-        $mission_id = $request->input('mission_id');
-        if($mission_id > 0){
-            return Excel::download(new ManifestExport($mission_id), 'manifest.xlsx');
-        }
-        return "no records";
-    }*/
 
     public function exportManifest(Request $request)
     {
