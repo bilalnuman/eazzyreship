@@ -39,6 +39,7 @@ class Shipment extends Model
         'shipping_cost',
         'return_cost',
         'total_weight',
+        'total_volumetric',
         'amount_to_be_collected',
         'employee_user_id',
         'attachments_before_shipping',
@@ -62,6 +63,7 @@ class Shipment extends Model
         'shipping_cost' => 'float',
         'return_cost' => 'float',
         'total_weight' => 'float',
+        'total_volumetric' => 'float',
         'amount_to_be_collected' => 'float',
         'paid' => 'boolean',
     ];

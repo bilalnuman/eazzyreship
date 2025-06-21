@@ -12,6 +12,8 @@
                     <p>Date: {{ $mission->due_date }}</p>
                     <p>From: {{ $mission->fromBranch->name }}</p>
                     <p>To: {{ $mission->toBranch->name }}</p>
+                    <p>Total weight: {{$totals->total_weight_sum}} </p>
+                    <p>Total weight volumetric: {{$totals->total_volumetric_sum}} </p>
                 </div>
             </div>
 

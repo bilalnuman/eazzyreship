@@ -42,6 +42,7 @@ return new class extends Migration
             $table->double('shipping_cost')->default(0);
             $table->double('return_cost')->default(0);
             $table->double('total_weight')->default(0);
+            $table->double('total_volumetric')->default(0);
             $table->integer('amount_to_be_collected')->default(0);
             $table->integer('employee_user_id')->unsigned()->nullable();
             $table->text('attachments_before_shipping')->nullable();
