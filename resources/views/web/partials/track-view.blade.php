@@ -49,8 +49,10 @@
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <p class="text-muted mb-1">Tracking Number:</p>
+                    <p class="text-muted mb-1">Local Tracking Number:</p>
                     <span class="tracking-number">{{ $shipment->code }}</span>
+                    <p class="text-muted mb-1">Vendor Tracking Number:</p>
+                    <span class="tracking-number">{{ $shipment->barcode ?? "" }}</span>
                 </div>
                 <div>
                     <p class="text-muted mb-1">Status:</p>

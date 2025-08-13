@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Schema; // 👈 Add this line
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,7 +21,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // 👇 Add this line to fix MySQL key length error
+        Schema::defaultStringLength(191);
+
         if (env('FORCE_HTTPS', false)) {
             URL::forceScheme('https');
             $host = request()->getHost();
