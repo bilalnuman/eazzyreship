@@ -73,42 +73,7 @@
 
 <body class="index-page">
 
-    <header id="header" class="header d-flex align-items-center fixed-top white-bg">
-        <div class="container-fluid container-xl position-relative d-flex align-items-center">
-
-            <a href="/" class="logo d-flex align-items-center me-auto">
-                <!-- Uncomment the line below if you also wish to use an image logo -->
-                <!-- <img src="assets/img/logo.png" alt=""> -->
-                <h1 class="sitename">EazzyReship</h1>
-            </a>
-            @if (Route::has('login'))
-                <nav id="navmenu" class="navmenu">
-                    <ul>
-                        <li><a href="{{ url('/') }}" >Home</a></li>
-
-                        <li><a href="#" class="active">Tracking</a></li>
-                        <li><a href="/terms" >Terms and conditions</a></li>
-                        @auth
-                            <li><a href="{{ url('/dashboard') }}">Dashboard</a></li>
-                        @else
-                            @if (Route::has('register'))
-                                <li><a href="{{ route('register') }}">Register</a></li>
-                            @endif
-                        @endauth
-                    </ul>
-                    <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
-                </nav>
-                @auth
-                    <form action="{{ route('logout') }}" method="POST" class="d-inline">
-                        @csrf
-                        <button type="submit" class="btn btn-default btn-flat float-right cta-btn">Sign out</button>
-                    </form>
-                @else
-                <a class="cta-btn" href="{{route('login') }}">Log in</a>
-                @endauth
-            @endif
-        </div>
-    </header>
+    @include('web.partials.header')
 
     <main class="main">
         @include('web.partials.track-view');
