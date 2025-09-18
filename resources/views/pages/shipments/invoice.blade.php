@@ -72,6 +72,7 @@
                 if ($shipment->code) {
                     echo '<span style="display: block; text-align: right; float: right">' . $d->getBarcodeHTML($shipment->code, 'C128') . '</span><br><br><br>';
                 }
+                echo '<br>' . "Invoice # " . $shipment->id ?? '';
                 echo '<br>' . $company->name;
                 echo '<br>' . $company->address;
                 echo '<br>' . $company->email;
@@ -187,5 +188,4 @@
         </tfoot>
     </table>
 </body>
-
 </html>
