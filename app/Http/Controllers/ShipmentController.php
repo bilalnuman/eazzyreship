@@ -190,7 +190,7 @@ class ShipmentController extends Controller
     {
         //$clients = Client::pluck('name', 'id', 'address', 'mobile', );
         $clients = Client::with('addresses:client_id,address')
-            ->select('name', 'id', 'mobile', 'branch_id')->get();
+            ->select("email",'name', 'id', 'mobile', 'branch_id')->get();
 
         $excludedBranchIds1 = [1, 2, 3, 4, 5]; // IDs a excluir
         $branches0 = Branch::whereNotIn('id', $excludedBranchIds1)->pluck('name', 'id');
@@ -200,12 +200,14 @@ class ShipmentController extends Controller
         $packages = Package::pluck('name', 'id');
         $missions = Mission::where('status_id', 1)->pluck('code', 'id');
         $receivers = Receiver::all();
+       
 
         return view('pages.shipments.create', compact('clients', 'branches0', 'branches', 'receivers', 'packages', 'missions'));
     }
 
     public function store(Request $request, $token = null)
     {
+        
         if (isset($token)) {
             $user = User::where('password', $token)->first();
             $prefix = Shipment_setting::where('key', 'shipment_prefix_ex')->first();
@@ -238,6 +240,7 @@ class ShipmentController extends Controller
             'from_branch_id' => 'required|integer',
             'to_branch_id' => 'required|integer',
             'client_id' => 'required|integer',
+            "client_email"=>'required|email',
             'receiver_name' => 'nullable|string',
             'receiver_mobile' => 'nullable|string',
             'receiver_address' => 'nullable|string',
@@ -384,6 +387,9 @@ class ShipmentController extends Controller
             if ($token) {
                 $message = $shipment->code;
                 return $message;
+            }
+            if ($shipment->client && $shipment->client->email) {
+                Mail::to($request->client_email)->send(new ShipmentCreatedMail($shipment));
             }
             return redirect()->route('pages.shipments.index')
                 ->with('message', 'Client created successfully.')
@@ -609,7 +615,7 @@ class ShipmentController extends Controller
 
         //$excludedBranchIds1 = [1, 2, 3, 4, 5]; // IDs a excluir
         //$branches0 = Branch::whereNotIn('id', $excludedBranchIds1)->pluck('name', 'id');
-        $branches0 = Branch::where('id',6)->pluck('name', 'id');
+        $branches0 = Branch::where('id', 6)->pluck('name', 'id');
 
         $excludedBranchIds2 = [6]; // IDs a excluir
         //$branches = Branch::whereNotIn('id', $excludedBranchIds2)->pluck('name', 'id');
