@@ -463,7 +463,6 @@
             <input type="number" name="total_weight" id="total_weight" class="form-control" step="0.01"
                 min="0.0" value="{{ old('total_weight', $shipment->total_weight ?? '0.00') }}">
             <span name="volumetric_weight" id="volumetric_weight"></span>
-            <input type="hidden" id="total_volumetric" name="total_volumetric">
         </div>
     </div>
 </div>
@@ -507,10 +506,8 @@
             // Mostrar los valores calculados en los campos respectivos
             // Mostrar Volumetric Weight en el span
             $('#volumetric_weight').text('volumetric weight: ' + totalVolumetricWeight.toFixed(2))
-            
             //$('#volumetric_weight').val(totalVolumetricWeight.toFixed(2));
             $('#total_weight').val(sumWeight.toFixed(2));
-            $('#total_volumetric').val(totalVolumetricWeight.toFixed(2));
 
             // Obtener el tipo de envío
             let shipmentType = $('input[name="type"]:checked').val();
@@ -577,6 +574,40 @@
                 //console.log('Address:', address);
             });
 
+
+
+
+            /*$('#to_branch_id').on('change', function() {
+                        let branchId = $(this).val();
+                        let stateSelect = $('#receiver_name');
+
+                        // Limpia los receptores actuales
+                        stateSelect.empty();
+                        stateSelect.append('<option value="">Select Receiver</option>');
+
+                        if (branchId) {
+                            $.ajax({
+                                url: `/receiver/${branchId}`,
+                                type: 'GET',
+                                success: function(response) {
+                                    // Asegúrate de acceder al array "data" del JSON devuelto
+                                    $.each(response.data, function(index, receiver) {
+                                        stateSelect.append(
+                                            `<option value="${receiver.id}" 
+                 data-mobile="${receiver.receiver_mobile}" 
+                 data-address="${receiver.receiver_address}">
+            ${receiver.name}
+        </option>`
+                                        );
+                                    });
+                                },
+                                error: function() {
+                                    alert('Error fetching branch');
+                                }
+                            });
+                        }
+                    });*/
+
             // Evento para capturar datos adicionales al seleccionar un receptor
             $('#to_branch_id').on('change', function() {
                 let selectedOption = $(this).find(':selected');
@@ -614,6 +645,67 @@
                 });
             }
         });
+    </script>
+    <script>
+        /*document.addEventListener('DOMContentLoaded', function() {
+                                    //const clientSelect = document.getElementById('client_id');
+                                    //const mobileInput = document.getElementById('responsible_mobile');
+                                    //const addressInput = document.getElementById('responsible_address');
+                                    const branchSelect = document.getElementById('to_branch_id');
+
+                                    //const receiverSelect = document.getElementById('receiver_name');
+                                    //const receiverMobile = document.getElementById('receiver_mobile');
+                                    //const receiverAddress = document.getElementById('receiver_address');
+
+
+                                    clientSelect.addEventListener('change', function() {
+                                        const selectedOption = clientSelect.options[clientSelect.selectedIndex];
+
+                                        /* Si no hay selección válida, limpiar todo
+                                        if (!selectedOption.value) {
+                                            mobileInput.value = '';
+                                            addressInput.value = '';
+                                            branchSelect.value = '';
+                                            receiverSelect.innerHTML = '<option value="">Select Receiver</option>';
+                                            receiverMobile.value = '';
+                                            receiverAddress.value = '';
+                                            return;
+                                        }
+
+                                        // Obtener datos del cliente desde los atributos del <option>
+                                        const mobilec = selectedOption.getAttribute('data-mobilec') || '';
+                                        const addressc = selectedOption.getAttribute('data-addressc') || '';
+                                        const branchId = selectedOption.getAttribute('data-branchc') || '';
+
+                                        // Asignar valores a los campos
+                                        mobileInput.value = mobilec;
+                                        addressInput.value = addressc;
+
+                                        if (branchId) {
+                                            branchSelect.value = branchId; // Seleccionar la opción que coincide con branchId
+                                            $('#to_branch_id').trigger('change');
+                                        } else {
+                                            branchSelect.value = ''; // Restablecer a la opción predeterminada si no hay branchId
+                                            $('#to_branch_id').trigger('change');
+                                        }
+                                    });
+                                });*/
+    </script>
+    <script>
+        /*document.addEventListener('DOMContentLoaded', function() {
+                                                                                const shippingDateInput = document.getElementById('shipping_date');
+
+                                                                                if (!shippingDateInput.value) {
+                                                                                    // Obtener la fecha actual en formato YYYY-MM-DD
+                                                                                    const today = new Date();
+                                                                                    const year = today.getFullYear();
+                                                                                    const month = String(today.getMonth() + 1).padStart(2, '0'); // Mes en formato 2 dígitos
+                                                                                    const day = String(today.getDate()).padStart(2, '0'); // Día en formato 2 dígitos
+
+                                                                                    // Establecer el valor del campo con la fecha actual
+                                                                                    shippingDateInput.value = `${year}-${month}-${day}`;
+                                                                                }
+                                                                            });*/
     </script>
     <script>
         document.getElementById('addPackageBtn').addEventListener('click', function() {
@@ -770,3 +862,4 @@
         });
     </script>
 @endpush
+
