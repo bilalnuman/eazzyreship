@@ -1,3 +1,5 @@
+
+
 @push('css')
     <style>
         .select2-container .select2-selection--single {
@@ -28,6 +30,40 @@
         .select2-container--bootstrap-5 .select2-selection__arrow {
             top: 50%;
             transform: translateY(-50%);
+        }
+        
+        .camera-options {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .camera-options button {
+            flex: 1;
+        }
+        
+        #cameraContainer2 {
+            margin-top: 15px;
+        }
+        
+        #cameraContainer2 video {
+            width: 100%;
+            max-width: 300px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .capture-actions {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        #photoPreview {
+            max-width: 100%;
+            margin-top: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
         }
     </style>
 @endpush
@@ -86,20 +122,26 @@
             @enderror
         </div>
     </div>
-
+<input type="hidden"
+       name="client_email"
+       id="client_email"
+       value="{{ old('client_email', $shipment->client->email ?? '') }}">
     <div class="col-md-6">
         <div class="form-group">
             <label for="client_id">Customer/sender</label>
             <select name="client_id" id="client_id"
                 class="form-control select2 @error('client_id') is-invalid @enderror">
                 <option value="">Select a client</option>
+               
                 @foreach ($clients as $client)
                     <option value="{{ $client->id }}"
                         {{ old('client_id', $shipment->client_id ?? '') == $client->id ? 'selected' : '' }}
                         data-mobilec="{{ $client->mobile }}"
                         @foreach ($client->addresses as $var)
                         data-addressc="{{ $var->address }}" @endforeach
-                        data-branchc="{{ $client->branch_id }}">
+                        data-branchc="{{ $client->branch_id }}"
+                        data-email="{{ $client->email }}"
+                        >
                         {{ $client->name }}</option>
                 @endforeach
             </select>
@@ -242,63 +284,123 @@
         @enderror
     </div>
 
-    <!--div class="col-md-3">
-        <div class="form-group">
+   
 
-            <label for="carrier_doc">Shipper Document</label>
-            <input type="file" name="carrier_doc" id="carrier_doc" class="form-control"
-                accept=".jpg,.jpeg,.png,.pdf">
 
-            @ if (isset($shipment->carrier_doc))
-                <p>Attached File:</p>
-                @ if (Str::endsWith($shipment->carrier_doc, ['.jpg', '.jpeg', '.png', '.pdf']))
-
-                    <img src="{ { Storage::disk('s3')->url($shipment->carrier_doc) }}" alt="Attachment"
-                        style="max-width: 200px;">
-
-                    <!--img src="{ { asset('storage/' . $shipment->carrier_doc) }}" alt="Attachment"
-                        style="max-width: 200px;">
-
-                @ elseif (Str::endsWith($shipment->carrier_doc, ['.pdf']))
-                    < ahref="{ { Storage::disk('s3')->url($shipment->carrier_doc) }}" target="_blank">View PDF</a>
-                @ endif
-            @ endif
+    <div class="col-md-8">
+    <div class="form-group">
+        <label for="attachments_before_shipping">Shipper Document</label>
+        
+        <!-- Hidden main input field -->
+        <input type="file" 
+               name="attachments_before_shipping[]" 
+               id="attachments_before_shipping"
+               accept=".jpg,.jpeg,.png,.pdf"
+               class="form-control d-none @error('attachments_before_shipping') is-invalid @enderror" 
+               multiple>
+        
+        <!-- Custom buttons -->
+        <div class="d-flex flex-wrap gap-2 mt-2">
+            <button type="button" id="openCameraBtn" class="btn btn-primary">
+                <i class="fas fa-camera"></i> Open Camera
+            </button>
+            <button type="button" id="chooseFileBtn" class="btn btn-info ml-2">
+                <i class="fas fa-folder-open"></i> Choose Files
+            </button>
         </div>
-    </div-->
+        
+        <small class="form-text text-muted mt-2">
+            You can upload files (.jpg, .jpeg, .png, .pdf).
+        </small>
 
-    <div class="col-md-3">
-        <div class="form-group">
-            <label for="carrier_doc">Shipper Document</label>
-
-            <!-- Botón para activar la cámara -->
-            <br />
-            <button type="button" id="startCamera" class="btn btn-primary mt-2">Take Photo</button>
-
-            <!-- Elementos para la vista de la cámara y la captura -->
-            <div id="cameraContainer2" style="display: none;">
-                <video id="camera" autoplay style="width: 100%; max-width: 200px;"></video>
-                <button type="button" id="capture" class="btn btn-success mt-2">Capture</button>
-            </div>
-
-            <!-- Vista previa de la imagen capturada -->
-            <canvas id="canvas2" style="display: none;"></canvas>
-            <img id="photoPreview" style="display: none; max-width: 200px; margin-top: 10px;">
-
-            <!-- Campo oculto para enviar la imagen capturada -->
-            <input type="hidden" name="captured_image" id="captured_image">
-        </div>
-
-        <!-- Mostrar archivo adjunto si existe -->
-        @if (isset($shipment->carrier_doc))
-            <p>Attached File:</p>
-            @if (Str::endsWith($shipment->carrier_doc, ['.jpg', '.jpeg', '.png']))
-                <img src="{{ Storage::disk('s3')->url($shipment->carrier_doc) }}" alt="Attachment"
-                    style="max-width: 200px;">
-            @elseif (Str::endsWith($shipment->carrier_doc, ['.pdf']))
-                <a href="{{ Storage::disk('s3')->url($shipment->carrier_doc) }}" target="_blank">View PDF</a>
-            @endif
-        @endif
+        @error('attachments_before_shipping')
+            <span class="invalid-feedback">{{ $message }}</span>
+        @enderror
     </div>
+
+    <!-- Preview for captured or selected files -->
+    <div id="previewContainer" class="mt-3"></div>
+
+    @if (isset($shipment->attachments) && $shipment->attachments->isNotEmpty())
+        <h3>Attached files:</h3>
+        <div class="container">
+            <div class="row">
+                @foreach ($shipment->attachments as $attachment)
+                    <div class="col-6 col-sm-4 col-md-2 text-center mb-4">
+                        @if (Str::endsWith($attachment->file_path, ['.jpg', '.jpeg', '.png']))
+                            <img src="{{ Storage::disk('s3')->url($attachment->file_path) }}" 
+                                 alt="Attachment"
+                                 class="img-fluid" style="max-width: 100px;">
+                        @elseif (Str::endsWith($attachment->file_path, ['.pdf']))
+                            <a href="{{ Storage::disk('s3')->url($attachment->file_path) }}" 
+                               target="_blank" class="d-block">View PDF</a>
+                        @endif
+                        <a href="#" class="btn btn-warning btn-sm remove-attachment mt-2"
+                           data-id="{{ $attachment->id }}">
+                           <i class="fas fa-trash"></i>
+                        </a>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    @endif
+</div>
+
+<!-- JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const fileInput = document.getElementById('attachments_before_shipping');
+    const openCameraBtn = document.getElementById('openCameraBtn');
+    const chooseFileBtn = document.getElementById('chooseFileBtn');
+    const previewContainer = document.getElementById('previewContainer');
+
+    // 📸 Open Camera functionality
+    openCameraBtn.addEventListener('click', function () {
+        // Recreate input with capture attribute for camera
+        const cameraInput = document.createElement('input');
+        cameraInput.type = 'file';
+        cameraInput.accept = 'image/*';
+        cameraInput.capture = 'environment'; // opens back camera
+        cameraInput.multiple = true;
+
+        cameraInput.addEventListener('change', function (e) {
+            handleFilePreview(e.target.files);
+        });
+
+        cameraInput.click();
+    });
+
+    // 📂 Choose Files functionality
+    chooseFileBtn.addEventListener('click', function () {
+        fileInput.click();
+    });
+
+    // File preview handler
+    fileInput.addEventListener('change', function (e) {
+        handleFilePreview(e.target.files);
+    });
+
+    function handleFilePreview(files) {
+        previewContainer.innerHTML = "";
+        Array.from(files).forEach(file => {
+            if (file.type.startsWith("image/")) {
+                const img = document.createElement("img");
+                img.src = URL.createObjectURL(file);
+                img.className = "img-fluid m-2";
+                img.style.maxWidth = "100px";
+                previewContainer.appendChild(img);
+            } else if (file.type === "application/pdf") {
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(file);
+                link.target = "_blank";
+                link.textContent = "View PDF";
+                link.className = "d-block m-2";
+                previewContainer.appendChild(link);
+            }
+        });
+    }
+});
+</script>
 
 
     <div class="col-md-8">
@@ -346,9 +448,9 @@
                 <video id="video" width="320" height="240" autoplay></video>
                 <button type="button" id="captureButton">Capture</button>
             </div>
-            <!-- Contenedor para las imágenes capturadas -->
+            <!-- Container for captured images -->
             <div id="capturedImagesContainer"></div>
-            <!-- Campo oculto para almacenar múltiples imágenes capturadas -->
+            <!-- Hidden field for storing multiple captured images -->
             <input type="hidden" id="capturedImages" name="capturedImages">
         </div>
     </div>
@@ -358,7 +460,7 @@
 
 <div class="row" id="packagesContainer">
     @if (isset($package_shipments) && count($package_shipments) > 0)
-        <!-- Loop para mostrar los paquetes existentes al editar -->
+        <!-- Loop to show existing packages when editing -->
         @foreach ($package_shipments as $index => $package)
             @include('pages.shipments.form-package')
         @endforeach
@@ -474,7 +576,7 @@
             function roundUpToNearestTenth(value) {
                 return Math.ceil(value * 10) / 10;
             }
-            // Selector para obtener todas las filas de paquetes
+            // Selector to get all package rows
             let packageItems = $('.package-item');
 
             let totalVolumetricWeight = 0;
@@ -482,7 +584,7 @@
             let sumValue = 0;
 
             packageItems.each(function() {
-                // Dentro de cada fila, seleccionamos los inputs necesarios
+                // Inside each row, select the necessary inputs
                 let qty = parseInt($(this).find('input[name*="[qty]"]').val()) || 1;
                 let weight = parseFloat($(this).find('input[name*="[weight]"]').val()) || 0;
                 let length = parseFloat($(this).find('input[name*="[length]"]').val()) || 0;
@@ -490,12 +592,12 @@
                 let height = parseFloat($(this).find('input[name*="[height]"]').val()) || 0;
                 let value = parseFloat($(this).find('input[name*="[value]"]').val()) || 0;
 
-                // Cálculo del peso volumétrico
+                // Volumetric weight calculation
                 let volumetricWeight = (length * width * height) / 139;
                 totalVolumetricWeight += volumetricWeight * qty;
 
                 sumValue += value * qty;
-                // Sumar el peso real ajustado por cantidad
+                // Sum real weight adjusted by quantity
                 sumWeight += weight * qty;
             });
 
@@ -503,21 +605,21 @@
             console.log("Total Weight: ", sumWeight.toFixed(2));
             console.log("Total Value: ", sumValue.toFixed(2));
 
-            // Mostrar los valores calculados en los campos respectivos
-            // Mostrar Volumetric Weight en el span
+            // Show calculated values in respective fields
+            // Show Volumetric Weight in the span
             $('#volumetric_weight').text('volumetric weight: ' + totalVolumetricWeight.toFixed(2))
             //$('#volumetric_weight').val(totalVolumetricWeight.toFixed(2));
             $('#total_weight').val(sumWeight.toFixed(2));
 
-            // Obtener el tipo de envío
+            // Get shipment type
             let shipmentType = $('input[name="type"]:checked').val();
             let totalCost = 0;
 
             if (shipmentType === '1') {
-                // Envíos aéreos: $5 por libra (peso mayor entre real y volumétrico)
+                // Air shipments: $5 per pound (greater of real and volumetric weight)
                 totalCost = Math.max(sumWeight, totalVolumetricWeight) * 5;
             } else if (shipmentType === '2') {
-                // Envíos marítimos
+                // Sea shipments
                 let weightToUse = Math.max(4, totalVolumetricWeight);
                 //let weightToUse = Math.ceil(totalVolumetricWeight);
                 if (weightToUse <= 12) {
@@ -530,7 +632,7 @@
             }
             console.log("Total Cost: ", totalCost.toFixed(2));
             totalCost = roundUpToNearestTenth(totalCost);
-            // Mostrar el costo total calculado en el campo de costo de envío
+            // Show calculated total cost in shipping cost field
             $('#shipping_cost').val(totalCost.toFixed(2));
 
             let tax = parseFloat($('#tax').val()) || 0;
@@ -551,195 +653,124 @@
     </script>
     <script>
         $(document).ready(function() {
-            // Inicializar Select2
+            // Initialize Select2
             $('.select2').select2();
             const mobileInput = document.getElementById('responsible_mobile');
             const addressInput = document.getElementById('responsible_address');
-            // Manejar el cambio de selección
+            const emailInput = document.getElementById('client_email');
+
+            // Handle selection change
+            // $('#client_id').on('change', function() {
+            //     // Get selected value
+            //     const selectedOption = $(this).find(':selected');
+
+            //     // Access custom data
+            //     const mobile = selectedOption.data('mobilec');
+            //     const branch = selectedOption.data('branchc');
+            //     const address = selectedOption.data('addressc');
+            //       const email   = selectedOption.data('email');
+
+            //     // Show data in console or use in your logic
+            //     mobileInput.value = mobile;
+            //     addressInput.value = address;
+
+            //     //console.log('Mobile:', mobile);
+            //     //console.log('Branch:', branch);
+            //     //console.log('Address:', address);
+            // });
+
             $('#client_id').on('change', function() {
-                // Obtener el valor seleccionado
-                const selectedOption = $(this).find(':selected');
+    const selectedOption = $(this).find(':selected');
 
-                // Acceder a los datos personalizados
-                const mobile = selectedOption.data('mobilec');
-                const branch = selectedOption.data('branchc');
-                const address = selectedOption.data('addressc');
+    const mobile  = selectedOption.data('mobilec');
+    const branch  = selectedOption.data('branchc');
+    const address = selectedOption.data('addressc');
+    const email   = selectedOption.data('email');   // 👈 new
 
-                // Mostrar los datos en la consola o usarlos en tu lógica
-                mobileInput.value = mobile;
-                addressInput.value = address;
-
-                //console.log('Mobile:', mobile);
-                //console.log('Branch:', branch);
-                //console.log('Address:', address);
-            });
+    mobileInput.value  = mobile || '';
+    addressInput.value = address || '';
+    if (emailInput) {
+        emailInput.value = email || '';
+    }
+});
 
 
 
 
-            /*$('#to_branch_id').on('change', function() {
-                        let branchId = $(this).val();
-                        let stateSelect = $('#receiver_name');
 
-                        // Limpia los receptores actuales
-                        stateSelect.empty();
-                        stateSelect.append('<option value="">Select Receiver</option>');
 
-                        if (branchId) {
-                            $.ajax({
-                                url: `/receiver/${branchId}`,
-                                type: 'GET',
-                                success: function(response) {
-                                    // Asegúrate de acceder al array "data" del JSON devuelto
-                                    $.each(response.data, function(index, receiver) {
-                                        stateSelect.append(
-                                            `<option value="${receiver.id}" 
-                 data-mobile="${receiver.receiver_mobile}" 
-                 data-address="${receiver.receiver_address}">
-            ${receiver.name}
-        </option>`
-                                        );
-                                    });
-                                },
-                                error: function() {
-                                    alert('Error fetching branch');
-                                }
-                            });
-                        }
-                    });*/
-
-            // Evento para capturar datos adicionales al seleccionar un receptor
+            // Event to capture additional data when selecting a receiver
             $('#to_branch_id').on('change', function() {
                 let selectedOption = $(this).find(':selected');
-                let receiverMobile = selectedOption.data('mobile'); // Obtiene el móvil
-                let receiverAddress = selectedOption.data('address'); // Obtiene la dirección
+                let receiverMobile = selectedOption.data('mobile'); // Get mobile
+                let receiverAddress = selectedOption.data('address'); // Get address
 
-                // Aquí puedes llenar otros campos o ejecutar acciones con los datos
+                // Here you can fill other fields or execute actions with the data
                 $('#receiver_mobile').val(receiverMobile);
                 $('#receiver_address').val(receiverAddress);
             });
 
-            //search para campo cliente
+            //search for client field
             $('#client_id').select2({
                 placeholder: "Select customer",
                 allowClear: true,
-                width: '100%' // Ajusta el ancho
+                width: '100%' // Adjust width
             });
 
         });
     </script>
     <script>
-        // Inicializar el plugin intl-tel-input para múltiples campos
-        const inputs = ["#receiver_mobile", "#responsible_mobile"]; // IDs de los inputs
+        // Initialize intl-tel-input plugin for multiple fields
+        const inputs = ["#receiver_mobile", "#responsible_mobile"]; // Input IDs
 
         inputs.forEach(function(selector) {
             const input = document.querySelector(selector);
 
             if (input) {
                 window.intlTelInput(input, {
-                    initialCountry: "sx", // Configurar el país predeterminado
-                    onlyCountries: ["sx", "mf", "ai", "kn", "bl", "us"], // Países permitidos
+                    initialCountry: "sx", // Set default country
+                    onlyCountries: ["sx", "mf", "ai", "kn", "bl", "us"], // Allowed countries
                     separateDialCode: false,
-                    nationalMode: false, // Mostrar código de área separado
-                    utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js" // Para formateo adicional
+                    nationalMode: false, // Show separate area code
+                    utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js" // For additional formatting
                 });
             }
         });
     </script>
-    <script>
-        /*document.addEventListener('DOMContentLoaded', function() {
-                                    //const clientSelect = document.getElementById('client_id');
-                                    //const mobileInput = document.getElementById('responsible_mobile');
-                                    //const addressInput = document.getElementById('responsible_address');
-                                    const branchSelect = document.getElementById('to_branch_id');
-
-                                    //const receiverSelect = document.getElementById('receiver_name');
-                                    //const receiverMobile = document.getElementById('receiver_mobile');
-                                    //const receiverAddress = document.getElementById('receiver_address');
-
-
-                                    clientSelect.addEventListener('change', function() {
-                                        const selectedOption = clientSelect.options[clientSelect.selectedIndex];
-
-                                        /* Si no hay selección válida, limpiar todo
-                                        if (!selectedOption.value) {
-                                            mobileInput.value = '';
-                                            addressInput.value = '';
-                                            branchSelect.value = '';
-                                            receiverSelect.innerHTML = '<option value="">Select Receiver</option>';
-                                            receiverMobile.value = '';
-                                            receiverAddress.value = '';
-                                            return;
-                                        }
-
-                                        // Obtener datos del cliente desde los atributos del <option>
-                                        const mobilec = selectedOption.getAttribute('data-mobilec') || '';
-                                        const addressc = selectedOption.getAttribute('data-addressc') || '';
-                                        const branchId = selectedOption.getAttribute('data-branchc') || '';
-
-                                        // Asignar valores a los campos
-                                        mobileInput.value = mobilec;
-                                        addressInput.value = addressc;
-
-                                        if (branchId) {
-                                            branchSelect.value = branchId; // Seleccionar la opción que coincide con branchId
-                                            $('#to_branch_id').trigger('change');
-                                        } else {
-                                            branchSelect.value = ''; // Restablecer a la opción predeterminada si no hay branchId
-                                            $('#to_branch_id').trigger('change');
-                                        }
-                                    });
-                                });*/
-    </script>
-    <script>
-        /*document.addEventListener('DOMContentLoaded', function() {
-                                                                                const shippingDateInput = document.getElementById('shipping_date');
-
-                                                                                if (!shippingDateInput.value) {
-                                                                                    // Obtener la fecha actual en formato YYYY-MM-DD
-                                                                                    const today = new Date();
-                                                                                    const year = today.getFullYear();
-                                                                                    const month = String(today.getMonth() + 1).padStart(2, '0'); // Mes en formato 2 dígitos
-                                                                                    const day = String(today.getDate()).padStart(2, '0'); // Día en formato 2 dígitos
-
-                                                                                    // Establecer el valor del campo con la fecha actual
-                                                                                    shippingDateInput.value = `${year}-${month}-${day}`;
-                                                                                }
-                                                                            });*/
-    </script>
+  
     <script>
         document.getElementById('addPackageBtn').addEventListener('click', function() {
             const container = document.getElementById('packagesContainer');
             //const lastIndex = container.querySelectorAll('.package-item').length;
             const newPackage = container.firstElementChild.cloneNode(true);
             const packageItems = container.querySelectorAll('.package-item');
-            // Obtener los valores de data-index de los paquetes existentes
+            // Get data-index values of existing packages
             const indices = Array.from(packageItems).map(item => {
                 return parseInt(item.getAttribute('data-index'), 10);
             });
 
-            // Calcular el nuevo índice
+            // Calculate new index
             const ultimoIndex = indices.length > 0 ? Math.max(...indices) : -1;
             const lastIndex = ultimoIndex + 1;
 
 
-            // Actualiza los atributos de los campos en el nuevo paquete
+            // Update field attributes in the new package
             newPackage.dataset.index = lastIndex;
             newPackage.querySelectorAll('input, select').forEach(input => {
                 const name = input.name.replace(/\[\d+\]/, `[${lastIndex}]`);
                 input.name = name;
                 input.id = name.replace(/\\/g, '_');
-                input.value = ''; // Limpia los valores
+                input.value = ''; // Clear values
             });
 
-            // Crear el botón de eliminación dinámicamente
+            // Create remove button dynamically
             const removeButton = document.createElement('button');
             removeButton.type = 'button';
             removeButton.className = 'btn btn-danger btn-sm remove-package';
             removeButton.textContent = 'Remove';
             removeButton.setAttribute('data-index', lastIndex);
 
-            // Añadir el botón al paquete
+            // Add button to package
             const removeButtonContainer = document.createElement('div');
             removeButtonContainer.className = 'form-group mb0';
             removeButtonContainer.appendChild(removeButton);
@@ -776,7 +807,7 @@
                     document.getElementById('video').srcObject = stream;
                 })
                 .catch(function(err) {
-                    alert("Error al acceder a la cámara: " + err.message);
+                    alert("Error accessing camera: " + err.message);
                 });
         });
 
@@ -799,13 +830,13 @@
             img.style.margin = '5px';
             document.getElementById('capturedImagesContainer').appendChild(img);
 
-            alert('Imagen capturada.');
+            alert('Image captured.');
         });
 
         document.getElementById('closeCameraButton').addEventListener('click', function() {
             if (videoStream) {
                 let tracks = videoStream.getTracks();
-                tracks.forEach(track => track.stop()); // Detiene cada pista de la cámara
+                tracks.forEach(track => track.stop()); // Stop each camera track
                 videoStream = null;
             }
 
@@ -816,50 +847,110 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const startCameraBtn = document.getElementById("startCamera");
+            const switchCameraBtn = document.getElementById("switchCamera");
             const captureBtn = document.getElementById("capture");
+            const cancelCameraBtn = document.getElementById("cancelCamera");
             const cameraContainer = document.getElementById("cameraContainer2");
             const video = document.getElementById("camera");
             const canvas = document.getElementById("canvas2");
             const photoPreview = document.getElementById("photoPreview");
             const capturedImageInput = document.getElementById("captured_image");
+            const fileInput = document.getElementById("carrier_doc");
 
             let stream = null;
+            let currentFacingMode = 'user'; // 'user' for front camera, 'environment' for back
 
-            // Activar la cámara
+            // Check if device is mobile
+            function isMobileDevice() {
+                return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            }
+
+            // Activate camera
             startCameraBtn.addEventListener("click", async () => {
                 try {
-                    stream = await navigator.mediaDevices.getUserMedia({
-                        video: true
-                    });
+                    const constraints = {
+                        video: {
+                            facingMode: currentFacingMode
+                        }
+                    };
+                    
+                    stream = await navigator.mediaDevices.getUserMedia(constraints);
                     video.srcObject = stream;
                     cameraContainer.style.display = "block";
+                    
+                    // Show switch camera button only on mobile devices
+                    if (isMobileDevice() && navigator.mediaDevices.enumerateDevices) {
+                        switchCameraBtn.style.display = "inline-block";
+                    }
                 } catch (error) {
                     alert("Error accessing the camera: " + error.message);
                 }
             });
 
-            // Capturar la imagen
+            // Switch between front and back camera (mobile only)
+            switchCameraBtn.addEventListener("click", async () => {
+                if (stream) {
+                    stream.getTracks().forEach(track => track.stop());
+                }
+                
+                currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
+                
+                try {
+                    const constraints = {
+                        video: {
+                            facingMode: currentFacingMode
+                        }
+                    };
+                    
+                    stream = await navigator.mediaDevices.getUserMedia(constraints);
+                    video.srcObject = stream;
+                } catch (error) {
+                    alert("Error switching camera: " + error.message);
+                }
+            });
+
+            // Capture image
             captureBtn.addEventListener("click", () => {
                 const context = canvas.getContext("2d");
                 canvas.width = video.videoWidth;
                 canvas.height = video.videoHeight;
                 context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-                // Convertir la imagen a base64
+                // Convert image to base64
                 const imageData = canvas.toDataURL("image/png");
 
-                // Mostrar la previsualización
+                // Show preview
                 photoPreview.src = imageData;
                 photoPreview.style.display = "block";
 
-                // Guardar la imagen en un campo oculto
+                // Save image in hidden field
                 capturedImageInput.value = imageData;
 
-                // Detener la cámara
-                stream.getTracks().forEach(track => track.stop());
+                // Stop camera
+                if (stream) {
+                    stream.getTracks().forEach(track => track.stop());
+                    stream = null;
+                }
                 cameraContainer.style.display = "none";
+                switchCameraBtn.style.display = "none";
+            });
+
+            // Cancel camera
+            cancelCameraBtn.addEventListener("click", () => {
+                if (stream) {
+                    stream.getTracks().forEach(track => track.stop());
+                    stream = null;
+                }
+                cameraContainer.style.display = "none";
+                switchCameraBtn.style.display = "none";
+            });
+
+            // Handle file input change
+            fileInput.addEventListener("change", function() {
+                // Clear captured image when a file is selected
+                capturedImageInput.value = "";
+                photoPreview.style.display = "none";
             });
         });
     </script>
 @endpush
-
