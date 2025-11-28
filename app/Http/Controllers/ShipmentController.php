@@ -251,7 +251,6 @@ class ShipmentController extends Controller
             'shipping_cost' => 'nullable|numeric|min:0',
             'return_cost' => 'nullable|numeric|min:0',
             'total_weight' => 'nullable|numeric',
-            'total_volumetric' => 'nullable|numeric',
             'order_id' => 'nullable|string',
             'amount_to_be_collected' => 'nullable|numeric|min:0.1',
             'carrier' => 'nullable|string',
@@ -280,19 +279,9 @@ class ShipmentController extends Controller
                 $parts = explode('-', $order);
 
                 if (isset($parts[1]) && $parts[1] !== 'NA') {
-
                     $subparts = explode("\x1D", $parts[1]);
-
-                    if(count($subparts) > 1 ){
-                        $shipment->update(['order_id' => $subparts[1] ?? null]);
-                    }else{
-                        if(strlen($parts[1]) === 34){
-                            $doce  = substr($parts[1], 22);
-                            $shipment->update(['order_id' => $doce ?? null]);
-                        }
-                    }
-
-                } else {                                 
+                    $shipment->update(['order_id' => $subparts[1] ?? null]);
+                } else {
                     $shipment->update(['order_id' => null]);
                 }
 
@@ -675,7 +664,6 @@ class ShipmentController extends Controller
             'shipping_cost' => 'nullable|numeric|min:0',
             'return_cost' => 'nullable|numeric|min:0',
             'total_weight' => 'nullable|numeric',
-            'total_volumetric' => 'nullable|numeric',
             'order_id' => 'nullable|string',
             'amount_to_be_collected' => 'nullable|numeric',
             'carrier' => 'nullable|string',
