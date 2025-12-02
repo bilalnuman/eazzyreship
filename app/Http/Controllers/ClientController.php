@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 use App\Models\State;
 use App\Models\Branch;
@@ -57,72 +58,156 @@ class ClientController extends Controller
     }
 
     // Store a newly created client in storage
+    // public function store(Request $request)
+    // {
+    //     $request->validate([
+    //         'name' => 'required|string|max:255',
+    //         'email' => 'nullable|email|max:255',
+    //         'mobile' => 'nullable|string|max:15',
+    //         'national_id' => 'nullable|string',
+    //         'picture' => 'nullable|mimes:jpg,jpeg,png,pdf|max:2048',
+    //         'branch_id' => 'required|integer',
+    //         'addresses.*.address' => 'nullable|string',
+    //         'addresses.*.country_id' => 'required|exists:countries,id',
+    //         'addresses.*.state_id' => 'required|exists:states,id',
+    //         'branch_code' => ['required', 'string'],
+    //     ]);
+        
+    //     //$parsedPhone = $this->parsePhoneNumber($request->phone);
+
+    //     $user = User::create([
+    //         'name' => $request->name,
+    //         'email' => $request->email,
+    //         'password' => Hash::make('password'),
+    //         'role' => '4',
+    //     ]);
+
+    //     if ($user) {
+    //         $user->assignRole('user');
+    //     }
+
+
+
+    //     $client = Client::create([
+    //         'code' => '1',
+    //         'user_id' => $user->id,
+    //         'name' => $request->name,
+    //         'email' => $request->email,
+    //         'mobile' => $request->mobile,
+    //         'branch_id' => $request->branch_id,
+    //     ]);
+
+    //     $client->update(['code' => $request->branch_code . $client->id]);
+
+    //     if ($request->hasFile('picture')) {
+    //         $path = $request->file('picture')->store('customers', 's3');
+    //         $client->update(['picture' => $path]);
+    //     }
+
+    //     foreach ($request->addresses as $address) {
+    //         $client->addresses()->create($address);
+    //     }
+
+    //     event(new Registered($user));
+        
+    //     $userData = [
+    //     'id' => $client->id,
+    //     'name' => $request->name,
+    //     'email' => $request->email,
+    //     'address' => "",
+    //     'branch' => $request->branch_code,
+    //     ];
+        
+    //     Http::post('https://shopandtake-9dcc127c6236.herokuapp.com/tekcore/registerLocation', $userData);
+
+    //     return redirect()->route('pages.clients.index')
+    //     ->with('message', 'Client created successfully.')
+    //     ->with('icon', 'success');
+    // }
+
+
     public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'nullable|email|max:255',
-            'mobile' => 'nullable|string|max:15',
-            'national_id' => 'nullable|string',
-            'picture' => 'nullable|mimes:jpg,jpeg,png,pdf|max:2048',
-            'branch_id' => 'required|integer',
-            'addresses.*.address' => 'nullable|string',
-            'addresses.*.country_id' => 'required|exists:countries,id',
-            'addresses.*.state_id' => 'required|exists:states,id',
-            'branch_code' => ['required', 'string'],
-        ]);
-        
-        //$parsedPhone = $this->parsePhoneNumber($request->phone);
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'nullable|email|max:255',
+        'mobile' => 'nullable|string|max:15',
+        'national_id' => 'nullable|string',
+        'picture' => 'nullable|mimes:jpg,jpeg,png,pdf|max:2048',
+        'branch_id' => 'required|integer',
+        'addresses.*.address' => 'nullable|string',
+        'addresses.*.country_id' => 'required|exists:countries,id',
+        'addresses.*.state_id' => 'required|exists:states,id',
+        'branch_code' => 'required|string',
+    ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make('password'),
-            'role' => '4',
-        ]);
+    // Create User
+    $user = User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => Hash::make('password'),
+        'role' => '4',
+    ]);
 
-        if ($user) {
-            $user->assignRole('user');
-        }
+    $user->assignRole('user');
 
+    // Create Client
+    $client = Client::create([
+        'code' => '1',
+        'user_id' => $user->id,
+        'name' => $request->name,
+        'email' => $request->email,
+        'mobile' => $request->mobile,
+        'branch_id' => $request->branch_id,
+    ]);
 
+    $client->update(['code' => $request->branch_code . $client->id]);
 
-        $client = Client::create([
-            'code' => '1',
-            'user_id' => $user->id,
-            'name' => $request->name,
-            'email' => $request->email,
-            'mobile' => $request->mobile,
-            'branch_id' => $request->branch_id,
-        ]);
+    // Upload Picture to S3
+    if ($request->hasFile('picture')) {
+        $path = $request->file('picture')->store('customers', 's3');
+        $client->update(['picture' => $path]);
+    }
 
-        $client->update(['code' => $request->branch_code . $client->id]);
+    // Create Addresses
+    foreach ($request->addresses as $address) {
+        $client->addresses()->create($address);
+    }
 
-        if ($request->hasFile('picture')) {
-            $path = $request->file('picture')->store('customers', 's3');
-            $client->update(['picture' => $path]);
-        }
+    event(new Registered($user));
 
-        foreach ($request->addresses as $address) {
-            $client->addresses()->create($address);
-        }
-
-        event(new Registered($user));
-        
-        $userData = [
+    // Data to send to external API
+    $userData = [
         'id' => $client->id,
         'name' => $request->name,
         'email' => $request->email,
         'address' => "",
         'branch' => $request->branch_code,
-        ];
-        
-        Http::post('https://shopandtake-9dcc127c6236.herokuapp.com/tekcore/registerLocation', $userData);
+    ];
 
-        return redirect()->route('pages.clients.index')
+    /**
+     * ------------------------------------------------------
+     *  FIXED PART → API CALL VIA BACKGROUND JOB (Non-blocking)
+     * ------------------------------------------------------
+     */
+    dispatch(function () use ($userData) {
+
+        try {
+            Http::timeout(10)        // Max 10 sec
+                ->retry(2, 1000)     // 2 retries, 1s delay
+                ->post('https://shopandtake-9dcc127c6236.herokuapp.com/tekcore/registerLocation', $userData);
+        } catch (\Exception $e) {
+            // Log error (doesn't affect user)
+            Log::error('TekTrack API Error: ' . $e->getMessage());
+        }
+
+    });
+
+    // Instant response to user (no waiting)
+    return redirect()->route('pages.clients.index')
         ->with('message', 'Client created successfully.')
         ->with('icon', 'success');
-    }
+}
 
     // Show the form for editing the specified client
     public function edit($id)
