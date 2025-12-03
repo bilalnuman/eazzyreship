@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Models\Country;
 use App\Models\Branch;
 
@@ -24,73 +24,81 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
-       // $branchCountryIds = Branch::pluck('country_id')->unique()->toArray();
-        //$countries = Country::whereIn('id', [250, 8, 185, 189, 185])->get();
-
         $branches = Branch::with('country:id,iso2')
-        ->whereNotIn('id', [6])
-        ->get();
+            ->whereNotIn('id', [6])
+            ->get();
 
-        /*$countries = Country::whereIn('id', $branchCountryIds)
-        ->whereNotIn('id', [233]) // Excluir el ID 250 (o los IDs que quieras)
-        ->get();*/
         return view('auth.register', compact('branches'));
     }
 
     /**
      * Handle an incoming registration request.
-     *
-     * @throws \Illuminate\Validation\ValidationException
      */
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'mobile' => ['required', 'string'],
-            'dialCode' => ['required', 'string'],
-            'branch_id' => ['required', 'integer'], 
+            'name'        => ['required', 'string', 'max:255'],
+            'email'       => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
+            'password'    => ['required', 'confirmed', Rules\Password::defaults()],
+            'mobile'      => ['required', 'string'],
+            'dialCode'    => ['required', 'string'],
+            'branch_id'   => ['required', 'integer'],
             'branch_code' => ['required', 'string'],
         ]);
-        
-        //$parsedPhone = $this->parsePhoneNumber($request->phone);
 
+        // Create user
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
+            'name'     => $request->name,
+            'email'    => $request->email,
             'password' => Hash::make($request->password),
-            'role' => '4',
+            'role'     => '4',
         ]);
 
         if ($user) {
             $user->assignRole('user');
         }
 
-
+        // Create client
         $client = Client::create([
-            'code' => '1',
-            'user_id' => $user->id,
-            'name' => $request->name,
-            'email' => $request->email,
-            'mobile' => $request->dialCode,
+            'code'      => '1',
+            'user_id'   => $user->id,
+            'name'      => $request->name,
+            'email'     => $request->email,
+            'mobile'    => $request->dialCode,
             'branch_id' => $request->branch_id,
         ]);
 
         $client->update(['code' => $request->branch_code . $client->id]);
-        
-        $userData = [
-        'id' => $user->id,
-        'name' => $request->name,
-        'email' => $request->email,
-        'address' => "",
-        'branch' => $request->branch_code,
-        ];
-        
-        Http::post('https://shopandtake-9dcc127c6236.herokuapp.com/tekcore/registerLocation', $userData);
 
+
+        /**
+         * ********************************************
+         * FIXED — API CALL MOVED TO BACKGROUND
+         * ********************************************
+         */
+        $userData = [
+            'id'     => $user->id,
+            'name'   => $request->name,
+            'email'  => $request->email,
+            'address'=> "",
+            'branch' => $request->branch_code,
+        ];
+
+        dispatch(function () use ($userData) {
+            try {
+                Http::timeout(10)
+                    ->retry(2, 2000)
+                    ->post('https://shopandtake-9dcc127c6236.herokuapp.com/tekcore/registerLocation', $userData);
+            } catch (\Exception $e) {
+                Log::error('User Register API Error: ' . $e->getMessage());
+            }
+        });
+
+
+        // Fire event
         event(new Registered($user));
 
+        // Login user
         Auth::login($user);
 
         return redirect(route('dashboard', absolute: false));
@@ -101,8 +109,8 @@ class RegisteredUserController extends Controller
         preg_match('/^\+(\d{1,4})(.*)$/', $phone, $matches);
 
         return [
-            'country_code' => $matches[1] ?? null,   // Código de área
-            'number' => trim($matches[2] ?? ''),    // Número restante, limpio de espacios
+            'country_code' => $matches[1] ?? null,
+            'number'       => trim($matches[2] ?? ''),
         ];
     }
 }
