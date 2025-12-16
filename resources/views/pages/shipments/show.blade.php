@@ -251,10 +251,10 @@
 
 
                                 <div>
-                                    <a href="{{ route('pages.shipments.invoice', [$shipment['id'], 'invoice']) }}"
+                                    <!-- <a href="{{ route('pages.shipments.invoice', [$shipment['id'], 'invoice']) }}"
                                     class="btn btn-outline-primary">
                                     {{ __('Email invoice') }}
-                                </a>
+                                </a> -->
 
                                 <a href="{{ route('pages.shipments.invoice', [$shipment['id'], 'invoice']) }}"
                                     class="btn btn-outline-secondary">
