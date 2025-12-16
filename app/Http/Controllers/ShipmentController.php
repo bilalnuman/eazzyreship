@@ -567,6 +567,9 @@ class ShipmentController extends Controller
             'shipping_date' => $shipments->shipping_date,
             'collection_time' => $shipments->collection_time ?? '',
             'client_id' => optional($shipments->client)->name ?? 'N/A',
+            'clientName' => $shipments->client->name,
+            'clientId' => optional($shipments->client)->id ?? 'N/A',
+            'clientEmail' => $shipments->client->email,
             'receiver_name' => optional($shipments->toBranch)->address ?? 'N/A',
             'receiver_address' => $shipments->receiver_address ?? 'N/A',
             'from_branch_id' => optional($shipments->fromBranch)->name ?? 'N/A',
@@ -1171,4 +1174,36 @@ class ShipmentController extends Controller
             return response()->json(['message' => 'No file uploaded'], 400);
         }
     }
+
+
+    
+    //    send invoice email to client 
+
+
+    public function sendInvoice(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|integer|exists:clients,id',
+        ]);
+        $mailData = [
+            "name" => $request->name,
+            "packageNum" => $request->code
+        ];
+        try {
+            Mail::to($request->email)->send(new ShipmentInvoiceMail($mailData));
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Invoice emailed successfully!' . " " . $request->name,
+
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to send invoice. ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    // end  send invoice email to client 
 }
