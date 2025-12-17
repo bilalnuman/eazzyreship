@@ -338,7 +338,7 @@ class MissionController extends Controller
                     'to_branch' => optional($shipment->toBranch)->name ?? 'N/A',
                     'carrier' => $shipment->carrier,
                     'shipping_date' => $shipment->shipping_date,
-                    'total_weight' => $shipment->total_weight ?? '1',
+                    'total_weight' => $shipment->total_weight ?? '0',
                     'amount_to_be_collected' => $shipment->amount_to_be_collected ?? '',
                     'created_at' => $shipment->created_at ?? '',
                     'packages' => $shipment->packages->map(function ($package) {
