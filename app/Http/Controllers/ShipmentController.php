@@ -194,6 +194,7 @@ class ShipmentController extends Controller
 
     public function create()
     {
+        
         //$clients = Client::pluck('name', 'id', 'address', 'mobile', );
         $clients = Client::with('addresses:client_id,address')
             ->select("email", 'name', 'id', 'mobile', 'branch_id')->get();
@@ -264,6 +265,7 @@ class ShipmentController extends Controller
             'order_id' => 'nullable|string',
             'amount_to_be_collected' => 'nullable|numeric|min:0',
             'carrier' => 'nullable|string',
+            'total_volumetric'=>'numeric',
 
             // packages
             'packages' => 'required|array|min:1',

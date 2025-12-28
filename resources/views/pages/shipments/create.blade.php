@@ -11,7 +11,7 @@
                 <h3 class="card-title">New Shipment</h3>
             </div>
             <div class="card-body">
-                <form action="{{ route('shipments.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('shipments.store') }}" method="POST" id="shipments_form" enctype="multipart/form-data">
                     @csrf
                     @include('pages.shipments.form')
 
