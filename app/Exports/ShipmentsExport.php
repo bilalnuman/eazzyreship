@@ -23,7 +23,7 @@ class ShipmentsExport implements FromQuery, WithMapping, WithHeadings, WithChunk
 
     public function query(): Builder
     {
-        $packages = Package_shipment::query()
+        return Package_shipment::query()
             ->whereHas('shipment', fn($q) => $q->where('mission_id', $this->missionId))
             ->with([
                 'package:id,name',
@@ -33,8 +33,6 @@ class ShipmentsExport implements FromQuery, WithMapping, WithHeadings, WithChunk
             ->select('id', 'shipment_id', 'qty', 'description', 'value', 'notes', 'package_id')
             ->orderBy('shipment_id')
             ->orderBy('id');
-            $data=$packages->get();
-        return  $packages->get();
     }
 
     public function headings(): array
