@@ -45,29 +45,29 @@ class MissionController extends Controller
         $mission = Mission::findOrFail($id);
 
         $shipmentsData = Shipment::where('mission_id', $id)
-        ->with([
-            'client:id,name',
-            'status:id,name',
-            'toBranch:id,name,address'
-        ])
-        ->select('id', 'code', 'client_id', 'status_id', 'to_branch_id')
-        ->get()
-        ->map(function ($shipment) {
-            return [
-                'id' => $shipment->id,
-                'code' => $shipment->code,
-                'client' => $shipment->client->name ?? 'N/A',
-                'status' => $shipment->status->name ?? 'N/A',
-                'to_branch' => $shipment->toBranch->name ?? 'N/A',
-                'receiver' => $shipment->toBranch->address ?? 'N/A',
-                'actions' => ''
-            ];
-        });
+            ->with([
+                'client:id,name',
+                'status:id,name',
+                'toBranch:id,name,address'
+            ])
+            ->select('id', 'code', 'client_id', 'status_id', 'to_branch_id')
+            ->get()
+            ->map(function ($shipment) {
+                return [
+                    'id' => $shipment->id,
+                    'code' => $shipment->code,
+                    'client' => $shipment->client->name ?? 'N/A',
+                    'status' => $shipment->status->name ?? 'N/A',
+                    'to_branch' => $shipment->toBranch->name ?? 'N/A',
+                    'receiver' => $shipment->toBranch->address ?? 'N/A',
+                    'actions' => ''
+                ];
+            });
 
         // Sumar total_weight y total_volumetric de los envíos de la misión
         $totals = Shipment::where('mission_id', $id)
-        ->selectRaw('SUM(total_weight) as total_weight_sum, SUM(total_volumetric) as total_volumetric_sum')
-        ->first();
+            ->selectRaw('SUM(total_weight) as total_weight_sum, SUM(total_volumetric) as total_volumetric_sum')
+            ->first();
 
         // Obtener la lista de envíos que no están asignados a esta misión
         $availableShipments = Shipment::whereNull('mission_id')
@@ -93,7 +93,7 @@ class MissionController extends Controller
                 ];
             });
 
-        return view('pages.missions.manifest', compact('mission', 'availableShipments', 'shipmentsData','totals'));
+        return view('pages.missions.manifest', compact('mission', 'availableShipments', 'shipmentsData', 'totals'));
     }
 
     public function addShipments(Request $request, $id)
@@ -358,61 +358,74 @@ class MissionController extends Controller
 
     public function packagesManifest(Request $request)
     {
-        $missionId = $request->input('mission_id');
+        $missionId = (int) $request->input('mission_id');
 
-        if ($missionId > 0) {
-            $packages = Package_shipment::whereHas('shipment', function ($query) use ($missionId) {
-                $query->where('mission_id', $missionId); // Filtrar por misión
-            })
-                ->with([
-                    'package:id,name',
-                    'shipment' => function ($query) {
-                        $query->with([
-                            'toBranch:id,name',
-                            'mission:id,code,due_date',
-                            'client:id,name',
-                        ]);
-                    },
-                ])
-                ->select([
-                    'id', // ID del paquete
-                    'shipment_id', // ID del envío relacionado
-                    'qty', // Cantidad
-                    'description', // Descripción
-                    'value',
-                    'notes',
-                    'package_id',
-                ])
-                ->get();
-
-            // Formatear los datos para exportar
-            $formattedPackages = $packages->map(function ($package) {
-                $shipment = $package->shipment;
-                return [
-                    'mission_code' => optional($shipment->mission)->code?? '',
-                    'mission_date' => optional($shipment->mission)->due_date ?? '',
-                    'shipment_id' => optional($shipment)->id ?? '',
-                    'code' => optional($shipment)->code ?? '',
-                    'sender' => optional($shipment)->carrier ?? '',
-                    'receiver' => optional($shipment->client)->name ?? '',
-                    'vendor_tracking' => optional($shipment)->barcode ?? '',
-                    'qty' => $package->qty,
-                    'type' => $package->package->name ?? '',
-                    'invoice' => optional($shipment)->otp ?? '',
-                    'notes' => $package->notes ?? '',
-                    'contents' => $package->description ?? '',
-                    'value' => $package->value ?? '',
-                    'LBS' => optional($shipment)->otp ?? '',
-                    'weight' => optional($shipment)->total_weight ?? '0',
-                    'freight' => optional($shipment)->shipping_cost ?? '0',
-                    'total_charges' => optional($shipment)->amount_to_be_collected ?? '0',
-                ];
-            });
-
-
-            return Excel::download(new ShipmentsExport($formattedPackages), 'packages_manifest.xlsx');
-        } else {
-            return "no records";
+        if ($missionId <= 0) {
+            return response("no records", 400);
         }
+        // dd($missionId);
+
+        return Excel::download(new ShipmentsExport($missionId), 'packages_manifest.xlsx');
     }
+
+
+    // public function packagesManifest(Request $request)
+    // {
+    //     $missionId = $request->input('mission_id');
+
+    //     if ($missionId > 0) {
+    //         $packages = Package_shipment::whereHas('shipment', function ($query) use ($missionId) {
+    //             $query->where('mission_id', $missionId);
+    //         })
+    //             ->with([
+    //                 'package:id,name',
+    //                 'shipment' => function ($query) {
+    //                     $query->with([
+    //                         'toBranch:id,name',
+    //                         'mission:id,code,due_date',
+    //                         'client:id,name',
+    //                     ]);
+    //                 },
+    //             ])
+    //             ->select([
+    //                 'id', // ID del paquete
+    //                 'shipment_id', // ID del envío relacionado
+    //                 'qty', // Cantidad
+    //                 'description', // Descripción
+    //                 'value',
+    //                 'notes',
+    //                 'package_id',
+    //             ])
+    //             ->get();
+
+    //         // Formatear los datos para exportar
+    //         $formattedPackages = $packages->map(function ($package) {
+    //             $shipment = $package->shipment;
+    //             return [
+    //                 'mission_code' => optional($shipment->mission)->code?? '',
+    //                 'mission_date' => optional($shipment->mission)->due_date ?? '',
+    //                 'shipment_id' => optional($shipment)->id ?? '',
+    //                 'code' => optional($shipment)->code ?? '',
+    //                 'sender' => optional($shipment)->carrier ?? '',
+    //                 'receiver' => optional($shipment->client)->name ?? '',
+    //                 'vendor_tracking' => optional($shipment)->barcode ?? '',
+    //                 'qty' => $package->qty,
+    //                 'type' => $package->package->name ?? '',
+    //                 'invoice' => optional($shipment)->otp ?? '',
+    //                 'notes' => $package->notes ?? '',
+    //                 'contents' => $package->description ?? '',
+    //                 'value' => $package->value ?? '',
+    //                 'LBS' => optional($shipment)->otp ?? '',
+    //                 'weight' => optional($shipment)->total_weight ?? '0',
+    //                 'freight' => optional($shipment)->shipping_cost ?? '0',
+    //                 'total_charges' => optional($shipment)->amount_to_be_collected ?? '0',
+    //             ];
+    //         });
+
+
+    //         return Excel::download(new ShipmentsExport($formattedPackages), 'packages_manifest.xlsx');
+    //     } else {
+    //         return "no records";
+    //     }
+    // }
 }
