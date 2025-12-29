@@ -17,7 +17,7 @@
 
                     <div class="row">
                         <div class="col-md-6">
-                            <a href="#" class="btn btn-outline-primary" onclick="calcTotalWeight(); return false;">Calculate</a>
+                            <button type="button" class="btn btn-outline-primary" id="calculate-fn">Calculate</button>
 
                         </div>
                         <div class="col-md-6 text-right">
@@ -30,6 +30,7 @@
         </div>
     @stop
     @push('js')
+   
     @if (($message = Session::get('message')) && ($icon = Session::get('icon')))
             <script>
                 Swal.fire({
