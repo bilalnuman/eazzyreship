@@ -194,7 +194,7 @@ class ShipmentController extends Controller
 
     public function create()
     {
-        
+
         //$clients = Client::pluck('name', 'id', 'address', 'mobile', );
         $clients = Client::with('addresses:client_id,address')
             ->select("email", 'name', 'id', 'mobile', 'branch_id')->get();
@@ -265,7 +265,9 @@ class ShipmentController extends Controller
             'order_id' => 'nullable|string',
             'amount_to_be_collected' => 'nullable|numeric|min:0',
             'carrier' => 'nullable|string',
-            'total_volumetric'=>'numeric',
+            'total_volumetric' => 'numeric',
+            'cubic_feet' => 'nullable|numeric|min:0',
+
 
             // packages
             'packages' => 'required|array|min:1',
@@ -561,8 +563,6 @@ class ShipmentController extends Controller
 
     public function show($id)
     {
-
-
         $shipments = Shipment::with(
             'client:id,name,email',
             'fromBranch.state.country:id,name',
@@ -730,6 +730,8 @@ class ShipmentController extends Controller
             'order_id' => 'nullable|string',
             'amount_to_be_collected' => 'nullable|numeric',
             'carrier' => 'nullable|string',
+            'total_volumetric' => 'numeric',
+            'cubic_feet' => 'nullable|numeric|min:0',
 
 
             'packages.*.package_id' => 'required|integer',
@@ -1169,22 +1171,22 @@ class ShipmentController extends Controller
 
 
     public function attachments($id)
-{
-    $attachments = ShipmentAttachment::where('shipment_id', $id)->get();
+    {
+        $attachments = ShipmentAttachment::where('shipment_id', $id)->get();
 
-    $data = $attachments
-        ->filter(fn ($att) => !empty($att->file_path)) // safety
-        ->map(function ($att) {
-            return [
-                'id' => $att->id,
-                'path' => $att->file_path, // ✅ correct column
-                'url'  => Storage::disk('s3')->url($att->file_path),
-                'original_name' => basename($att->file_path),
-            ];
-        });
+        $data = $attachments
+            ->filter(fn($att) => !empty($att->file_path)) // safety
+            ->map(function ($att) {
+                return [
+                    'id' => $att->id,
+                    'path' => $att->file_path, // ✅ correct column
+                    'url'  => Storage::disk('s3')->url($att->file_path),
+                    'original_name' => basename($att->file_path),
+                ];
+            });
 
-    return view('pages.shipments.attachments', ['data' => $data]);
-}
+        return view('pages.shipments.attachments', ['data' => $data]);
+    }
 
     public function searchShipments(Request $request)
     {
