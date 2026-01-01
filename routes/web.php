@@ -172,7 +172,7 @@ Route::middleware('role:admin','auth', 'verified')->group(function () {
     //export excel
     Route::get('/mission/export-manifest1', [MissionController::class, 'exportManifest'])->name('export.manifest');
     Route::get('/mission/export-manifest2', [MissionController::class, 'packagesManifest'])->name('export.packages');
-    
+    // Route::get('/download-packages-manifest', [MissionController::class, 'packagesManifest']);
 
     //Payment
     Route::get('/payment', [PaymentController::class, 'index'])->name('pages.payments.index');

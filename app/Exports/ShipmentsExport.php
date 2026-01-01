@@ -2,23 +2,11 @@
 
 namespace App\Exports;
 
-use App\Models\Package;
 use Maatwebsite\Excel\Concerns\FromCollection;
-use Illuminate\Contracts\View\View;
-use Maatwebsite\Excel\Concerns\FromView;
-use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class ShipmentsExport implements FromView
+class ShipmentsExport implements FromCollection
 {
-    /**
-    * @return \Illuminate\Support\Collection
-    */
-    /*public function collection()
-    {
-        return Package::all();
-    }*/
-
     protected $formattedPackages;
 
     public function __construct($formattedPackages)
@@ -26,25 +14,28 @@ class ShipmentsExport implements FromView
         $this->formattedPackages = $formattedPackages;
     }
 
-    public function view(): View
+    /**
+     * Return the data collection for export.
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function collection()
     {
-        return view('pages.exports.packages', [
-            'formattedPackages' => $this->formattedPackages
-        ]);
+        return collect($this->formattedPackages);
     }
 
+    /**
+     * Add styling to the worksheet.
+     *
+     * @param Worksheet $sheet
+     * @return array
+     */
     public function styles(Worksheet $sheet)
     {
         return [
-            // Style the first row as bold text.
-            1    => ['font' => ['bold' => true]],
-
-            // Styling a specific cell by coordinate.
-            'B2' => ['font' => ['italic' => true]],
-
-            // Styling an entire column.
-            'C'  => ['font' => ['size' => 16]],
+            1    => ['font' => ['bold' => true]],  // Style the first row as bold text.
+            'B2' => ['font' => ['italic' => true]], // Styling a specific cell.
+            'C'  => ['font' => ['size' => 16]],    // Styling an entire column.
         ];
     }
-    
 }

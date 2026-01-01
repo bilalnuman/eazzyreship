@@ -190,7 +190,7 @@ class ShipmentController extends Controller
     {
         //$clients = Client::pluck('name', 'id', 'address', 'mobile', );
         $clients = Client::with('addresses:client_id,address')
-            ->select("email",'name', 'id', 'mobile', 'branch_id')->get();
+            ->select("email", 'name', 'id', 'mobile', 'branch_id')->get();
 
         $excludedBranchIds1 = [1, 2, 3, 4, 5]; // IDs a excluir
         $branches0 = Branch::whereNotIn('id', $excludedBranchIds1)->pluck('name', 'id');
@@ -200,14 +200,14 @@ class ShipmentController extends Controller
         $packages = Package::pluck('name', 'id');
         $missions = Mission::where('status_id', 1)->pluck('code', 'id');
         $receivers = Receiver::all();
-       
+
 
         return view('pages.shipments.create', compact('clients', 'branches0', 'branches', 'receivers', 'packages', 'missions'));
     }
 
     public function store(Request $request, $token = null)
     {
-        
+
         if (isset($token)) {
             $user = User::where('password', $token)->first();
             $prefix = Shipment_setting::where('key', 'shipment_prefix_ex')->first();
@@ -240,7 +240,7 @@ class ShipmentController extends Controller
             'from_branch_id' => 'required|integer',
             'to_branch_id' => 'required|integer',
             'client_id' => 'required|integer',
-            "client_email"=>'required|email',
+            "client_email" => 'required|email',
             'receiver_name' => 'nullable|string',
             'receiver_mobile' => 'nullable|string',
             'receiver_address' => 'nullable|string',
@@ -257,7 +257,7 @@ class ShipmentController extends Controller
             'order_id' => 'nullable|string',
             'amount_to_be_collected' => 'nullable|numeric|min:0.1',
             'carrier' => 'nullable|string',
-
+            'volumetric_weight' => 'numeric',
             'packages.*.package_id' => 'required|integer',
             'packages.*.description' => 'nullable|string',
             'packages.*.notes' => 'nullable|string',

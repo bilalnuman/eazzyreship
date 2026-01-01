@@ -576,7 +576,6 @@ document.addEventListener('DOMContentLoaded', function () {
             function roundUpToNearestTenth(value) {
                 return Math.ceil(value * 10) / 10;
             }
-            // Selector to get all package rows
             let packageItems = $('.package-item');
 
             let totalVolumetricWeight = 0;
@@ -584,7 +583,6 @@ document.addEventListener('DOMContentLoaded', function () {
             let sumValue = 0;
 
             packageItems.each(function() {
-                // Inside each row, select the necessary inputs
                 let qty = parseInt($(this).find('input[name*="[qty]"]').val()) || 1;
                 let weight = parseFloat($(this).find('input[name*="[weight]"]').val()) || 0;
                 let length = parseFloat($(this).find('input[name*="[length]"]').val()) || 0;
@@ -592,12 +590,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 let height = parseFloat($(this).find('input[name*="[height]"]').val()) || 0;
                 let value = parseFloat($(this).find('input[name*="[value]"]').val()) || 0;
 
-                // Volumetric weight calculation
                 let volumetricWeight = (length * width * height) / 139;
                 totalVolumetricWeight += volumetricWeight * qty;
 
                 sumValue += value * qty;
-                // Sum real weight adjusted by quantity
                 sumWeight += weight * qty;
             });
 

@@ -45,29 +45,29 @@ class MissionController extends Controller
         $mission = Mission::findOrFail($id);
 
         $shipmentsData = Shipment::where('mission_id', $id)
-        ->with([
-            'client:id,name',
-            'status:id,name',
-            'toBranch:id,name,address'
-        ])
-        ->select('id', 'code', 'client_id', 'status_id', 'to_branch_id')
-        ->get()
-        ->map(function ($shipment) {
-            return [
-                'id' => $shipment->id,
-                'code' => $shipment->code,
-                'client' => $shipment->client->name ?? 'N/A',
-                'status' => $shipment->status->name ?? 'N/A',
-                'to_branch' => $shipment->toBranch->name ?? 'N/A',
-                'receiver' => $shipment->toBranch->address ?? 'N/A',
-                'actions' => ''
-            ];
-        });
+            ->with([
+                'client:id,name',
+                'status:id,name',
+                'toBranch:id,name,address'
+            ])
+            ->select('id', 'code', 'client_id', 'status_id', 'to_branch_id')
+            ->get()
+            ->map(function ($shipment) {
+                return [
+                    'id' => $shipment->id,
+                    'code' => $shipment->code,
+                    'client' => $shipment->client->name ?? 'N/A',
+                    'status' => $shipment->status->name ?? 'N/A',
+                    'to_branch' => $shipment->toBranch->name ?? 'N/A',
+                    'receiver' => $shipment->toBranch->address ?? 'N/A',
+                    'actions' => ''
+                ];
+            });
 
         // Sumar total_weight y total_volumetric de los envíos de la misión
         $totals = Shipment::where('mission_id', $id)
-        ->selectRaw('SUM(total_weight) as total_weight_sum, SUM(total_volumetric) as total_volumetric_sum')
-        ->first();
+            ->selectRaw('SUM(total_weight) as total_weight_sum, SUM(total_volumetric) as total_volumetric_sum')
+            ->first();
 
         // Obtener la lista de envíos que no están asignados a esta misión
         $availableShipments = Shipment::whereNull('mission_id')
@@ -93,7 +93,7 @@ class MissionController extends Controller
                 ];
             });
 
-        return view('pages.missions.manifest', compact('mission', 'availableShipments', 'shipmentsData','totals'));
+        return view('pages.missions.manifest', compact('mission', 'availableShipments', 'shipmentsData', 'totals'));
     }
 
     public function addShipments(Request $request, $id)
@@ -247,40 +247,26 @@ class MissionController extends Controller
     {
         $type = ($var === 'active') ? '1' : (($var === 'close') ? '0' : null);
 
-        if ($type != null) {
-            $missions = Mission::with('tobranch:id,name', 'frombranch:id,name')
-                ->select(['id', 'code', 'status_id', 'type', 'due_date', 'from_branch_id', 'to_branch_id'])
-                ->where('status_id', $type)
-                ->orderBy('id', 'desc')
-                ->get()
-                ->map(function ($mission) {
-                    return [
-                        'id' => $mission->id,
-                        'code' => $mission->code,
-                        'status_id' => $mission->status_id == 1 ? 'Active' : 'Close',
-                        'type' => $mission->type == 1 ? 'Air' : 'Ocean',
-                        'due_date' => $mission->due_date,
-                        'from_branch_id' => $mission->frombranch->name ?? 'N/A',
-                        'to_branch_id' => $mission->tobranch->name ?? 'N/A',
-                    ];
-                });
-        } else {
-            $missions = Mission::with('tobranch:id,name', 'frombranch:id,name')
-                ->select(['id', 'code', 'status_id', 'type', 'due_date', 'from_branch_id', 'to_branch_id'])
-                ->orderBy('id', 'desc')
-                ->get()
-                ->map(function ($mission) {
-                    return [
-                        'id' => $mission->id,
-                        'code' => $mission->code,
-                        'status_id' => $mission->status_id == 1 ? 'Active' : 'Close',
-                        'type' => $mission->type == 1 ? 'Air' : 'Ocean',
-                        'due_date' => $mission->due_date,
-                        'from_branch_id' => $mission->frombranch->name ?? 'N/A',
-                        'to_branch_id' => $mission->tobranch->name ?? 'N/A',
-                    ];
-                });
+        $query = Mission::with('tobranch:id,name', 'frombranch:id,name')
+            ->select(['id', 'code', 'status_id', 'type', 'due_date', 'from_branch_id', 'to_branch_id'])
+            ->orderBy('id', 'desc');
+
+        if ($type !== null) {
+            $query->where('status_id', $type);
         }
+
+        $missions = $query->get()->map(function ($mission) {
+            return [
+                'id' => $mission->id,
+                'code' => $mission->code,
+                'status_id' => $mission->status_id == 1 ? 'Active' : 'Close',
+                'type' => $mission->type == 1 ? 'Air' : 'Ocean',
+                'due_date' => $mission->due_date,
+                'from_branch_id' => $mission->frombranch->name ?? 'N/A',
+                'to_branch_id' => $mission->tobranch->name ?? 'N/A',
+            ];
+        });
+
         return $missions;
     }
 
@@ -355,14 +341,17 @@ class MissionController extends Controller
         return Excel::download(new ManifestExport($shipments), 'shipments.xlsx');
     }
 
-
     public function packagesManifest(Request $request)
     {
         $missionId = $request->input('mission_id');
 
+        // Increase memory and time limit to prevent 500 errors on large files
+        ini_set('memory_limit', '-1');
+        set_time_limit(700);
+
         if ($missionId > 0) {
             $packages = Package_shipment::whereHas('shipment', function ($query) use ($missionId) {
-                $query->where('mission_id', $missionId); // Filtrar por misión
+                $query->where('mission_id', $missionId);  // Filter by mission
             })
                 ->with([
                     'package:id,name',
@@ -375,21 +364,21 @@ class MissionController extends Controller
                     },
                 ])
                 ->select([
-                    'id', // ID del paquete
-                    'shipment_id', // ID del envío relacionado
-                    'qty', // Cantidad
-                    'description', // Descripción
+                    'id',
+                    'shipment_id',
+                    'qty',
+                    'description',
                     'value',
                     'notes',
                     'package_id',
                 ])
                 ->get();
 
-            // Formatear los datos para exportar
+            // Format the data for export
             $formattedPackages = $packages->map(function ($package) {
                 $shipment = $package->shipment;
                 return [
-                    'mission_code' => optional($shipment->mission)->code?? '',
+                    'mission_code' => optional($shipment->mission)->code ?? '',
                     'mission_date' => optional($shipment->mission)->due_date ?? '',
                     'shipment_id' => optional($shipment)->id ?? '',
                     'code' => optional($shipment)->code ?? '',
@@ -409,10 +398,57 @@ class MissionController extends Controller
                 ];
             });
 
+            // Return the Excel download response
+            // Using an anonymous class to implement headers and styles (bold) directly
+            return Excel::download(new class($formattedPackages) implements \Maatwebsite\Excel\Concerns\FromCollection, \Maatwebsite\Excel\Concerns\WithHeadings, \Maatwebsite\Excel\Concerns\WithStyles, \Maatwebsite\Excel\Concerns\ShouldAutoSize {
+                protected $data;
 
-            return Excel::download(new ShipmentsExport($formattedPackages), 'packages_manifest.xlsx');
+                public function __construct($data)
+                {
+                    $this->data = $data;
+                }
+
+                public function collection()
+                {
+                    return $this->data;
+                }
+
+                public function headings(): array
+                {
+                    return [
+                        'Mission Code',
+                        'Mission Date',
+                        'Shipment ID',
+                        'Code',
+                        'Sender',
+                        'Receiver',
+                        'Vendor Tracking',
+                        'Qty',
+                        'Type',
+                        'Invoice',
+                        'Notes',
+                        'Contents',
+                        'Value',
+                        'LBS',
+                        'Weight',
+                        'Freight',
+                        'Total Charges'
+                    ];
+                }
+
+                public function styles(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet $sheet)
+                {
+                    // Apply left text alignment to all cells
+                    $sheet->getStyle('A:Q')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT);
+
+                    // Bold the first row (headers)
+                    return [
+                        1 => ['font' => ['bold' => true]],
+                    ];
+                }
+            }, 'packages_manifest.xlsx');
         } else {
-            return "no records";
+            return response()->json(['message' => 'No records found'], 404);
         }
     }
 }
