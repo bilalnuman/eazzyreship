@@ -30,6 +30,7 @@
         </div>
     @stop
     @push('js')
+
    
     @if (($message = Session::get('message')) && ($icon = Session::get('icon')))
             <script>
