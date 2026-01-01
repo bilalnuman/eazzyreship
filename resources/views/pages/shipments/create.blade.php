@@ -11,17 +11,12 @@
                 <h3 class="card-title">New Shipment</h3>
             </div>
             <div class="card-body">
-<<<<<<< HEAD
                 <form action="{{ route('shipments.store') }}" method="POST" id="shipments_form" enctype="multipart/form-data">
-=======
-                <form action="{{ route('shipments.store') }}" method="POST" enctype="multipart/form-data">
->>>>>>> mbilal
                     @csrf
                     @include('pages.shipments.form')
 
                     <div class="row">
                         <div class="col-md-6">
-<<<<<<< HEAD
                             <button type="button" class="btn btn-outline-primary" id="calculate-fn">Calculate</button>
 
                         </div>
@@ -35,7 +30,7 @@
         </div>
     @stop
     @push('js')
-<<<<<<< HEAD
+
    
     @if (($message = Session::get('message')) && ($icon = Session::get('icon')))
             <script>
